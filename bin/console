@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__).'/bootstrap.php';
+
+use PixelTrack\Command\CreateDatabaseCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new CreateDatabaseCommand());
+$application->run();

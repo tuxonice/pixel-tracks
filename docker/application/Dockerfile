@@ -1,7 +1,7 @@
 #
 # Application
 #
-FROM php:7.4-apache-buster
+FROM php:8.2.4-apache-bullseye
 
 RUN apt-get update && apt-get install -y \
     imagemagick \

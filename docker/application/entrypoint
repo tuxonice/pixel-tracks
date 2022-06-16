@@ -14,10 +14,6 @@ if [ $? -ne 0 ]; then
   printf '%s\t%s\n' "$HOST_IP" "$HOST_DOMAIN" >> /etc/hosts
 fi
 
-# FRONT_DOMAIN="mysite.local"
-# HOST_IP="127.0.0.1"
-# printf '%s\t%s\n' "$HOST_IP" "$FRONT_DOMAIN" >> /etc/hosts
-
 set -e
 
 # first arg is `-f` or `--some-option`

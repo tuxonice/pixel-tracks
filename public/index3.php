@@ -1,10 +1,12 @@
 <?php
 
-use PixelTrack\GpsTrack;
+use PixelTrack\CsvParse;
 
 require '../vendor/autoload.php';
 
-$app = new GpsTrack('19-mar-2023.gpx');
+$app = new CsvParse('test.csv');
+dd($app->getProcessedData());
+
 
 ?>
 <!DOCTYPE html>
@@ -28,9 +30,9 @@ $app = new GpsTrack('19-mar-2023.gpx');
     <canvas id="myChart" width="400"></canvas>
 </div>
 <script>
-    let jsonData = JSON.parse('<?php echo($app->getJsonPoints()) ?>');
-    let datapoints = jsonData.map(function(point) {
-        return {x: point.totalDistance, y: point.elevation}
+    let jsonData = JSON.parse('<?php echo($app->getJsonProcessedData()) ?>');
+    let datapoints = jsonData.map(function(row) {
+        return {x: row., y: row.elevation}
     });
     const ctx = document.getElementById('myChart');
     const data = {

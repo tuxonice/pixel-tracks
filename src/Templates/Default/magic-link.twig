@@ -1,0 +1,29 @@
+{% extends "Default/base.twig" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Send me a Magic link</h1>
+                <p class="lead text-body-secondary">Submit your email to be able to access your profile</p>
+                <!-- -->
+                <div class="py-5 text-left">
+                    <form class="needs-validation" method="POST" action="/send-magic-link">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com" required="required"/>
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-100 btn btn-primary btn-lg mt-4" type="submit">Send</button>
+                    </form>
+                </div>
+                <!-- -->
+            </div>
+        </div>
+    </section>
+{% endblock %}
