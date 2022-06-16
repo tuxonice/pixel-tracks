@@ -6,7 +6,9 @@ require '../vendor/autoload.php';
 
 $gpx = new phpGPX();
 
-$file = $gpx->load('../data/29-mai-2022.gpx');
+$file = $gpx->load('../data/santa-clara-12-jun-2022.gpx');
+
+
 
 
 
