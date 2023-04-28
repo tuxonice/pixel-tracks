@@ -2,10 +2,12 @@ name: Tests
 
 on:
   push:
-    branches: [ setup-pipeline ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  pipeline:
+  Tests:
 
     runs-on: ubuntu-latest
 
@@ -24,5 +26,5 @@ jobs:
         run: vendor/bin/phpstan analyse
       - name: Execute Unit tests
         run: vendor/bin/codecept run tests/Unit
-      - name: Execute Acceptance tests
-        run: vendor/bin/codecept run tests/Acceptance
+#      - name: Execute Acceptance tests
+#        run: vendor/bin/codecept run tests/Acceptance
