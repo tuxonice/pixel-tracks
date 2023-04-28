@@ -2,6 +2,8 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer" xsi:noNamespaceSchemaLocation="phpcs.xsd">
     <description>The coding standard</description>
 	<file>src</file>
+	<file>tests/Acceptance</file>
+    <file>tests/Unit</file>
 	<file>bootstrap.php</file>
     <file>public/index.php</file>
     <file>bin/console</file>

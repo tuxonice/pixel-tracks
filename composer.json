@@ -1,5 +1,5 @@
 {
-    "name": "pi/gpx",
+    "name": "tuxonice/pixel-track",
     "authors": [
         {
             "name": "Helder Correia",
@@ -30,6 +30,8 @@
         "symfony/var-dumper": "^6.2",
         "squizlabs/php_codesniffer": "^3.7",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^10.1"
+        "codeception/codeception": "^5.0",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*"
     }
 }

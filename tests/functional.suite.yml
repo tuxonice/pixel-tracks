@@ -1,0 +1,30 @@
+# Codeception Test Suite Configuration
+#
+# Suite for functional tests
+# Emulate web requests and make application process them
+# Include one of framework modules (Symfony2, Yii2, Laravel5, Phalcon4) to use it
+# Remove this suite if you don't use frameworks
+
+actor: FunctionalTester
+modules:
+    enabled:
+        - PhpBrowser:
+              url: http://localhost/
+        - \Helper\Functional
+        - Db:
+              dsn: 'mysql:host=database;dbname=testdb'
+              user: 'root'
+              password: 'root_secret'
+              populate: true # load dump before all tests
+              cleanup: false # load dump for each test
+              dump: 'tests/_data/dump.sql'
+              initial_queries:
+                  - 'DROP DATABASE testdb;'
+                  - 'CREATE DATABASE testdb'
+                  - 'USE testdb;'
+                  - 'SET NAMES utf8;'
+        - Doctrine2:
+            connection_callback: [ 'CodeceptInit', 'createEntityManager' ]
+        - Filesystem:
+        - Asserts:
+    step_decorators: ~        
