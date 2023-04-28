@@ -23,6 +23,6 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse
       - name: Execute Unit tests
-        run: vendor/bin/codeception run tests/Unit
+        run: vendor/bin/codecept run tests/Unit
       - name: Execute Acceptance tests
-        run: vendor/bin/codeception run tests/Acceptance
+        run: vendor/bin/codecept run tests/Acceptance
