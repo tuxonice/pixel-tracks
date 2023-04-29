@@ -59,7 +59,7 @@ class MagicLinkController
 
         $mailData = [
             'from' => [
-                'email' => 'develop@tlab.pt',
+                'email' => $_ENV['EMAIL_FROM'],
                 'name' => 'PixelTracks',
             ],
             'to' => [

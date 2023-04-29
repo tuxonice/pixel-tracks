@@ -5,8 +5,10 @@ require dirname(__DIR__).'/vendor/autoload.php';
 require dirname(__DIR__).'/bootstrap.php';
 
 use PixelTrack\Command\CreateDatabaseCommand;
+use PixelTrack\Command\GenerateTransferCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new CreateDatabaseCommand());
+$application->add(new GenerateTransferCommand());
 $application->run();

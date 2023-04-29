@@ -10,7 +10,7 @@
                 <h1 class="fw-light">Your tracks</h1>
                 <div class="list-group">
                     {% for track in tracks %}
-                        <a href="/profile/{{ userKey }}/map/{{ track.key }}" class="list-group-item">{{ track.name }}</a>
+                        <a href="/profile/{{ userKey }}/map/{{ track.key }}" target="_blank" class="list-group-item">{{ track.name }}</a>
                     {% endfor %}
                 </div>
             </div>

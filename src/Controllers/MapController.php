@@ -2,6 +2,7 @@
 
 namespace PixelTrack\Controllers;
 
+use PixelTrack\DataTransferObjects\TrackTransfer;
 use PixelTrack\GpsTrack;
 use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Service\Twig;
@@ -18,17 +19,22 @@ class MapController
 
     public function index(string $userKey, string $trackKey): Response
     {
-        $filename = $this->databaseRepository->getTrackFilename($userKey, $trackKey);
+        $trackTransfer = $this->databaseRepository->getTrackFilename($userKey, $trackKey);
 
-        if ($filename === null) {
+        if ($trackTransfer === null) {
             return new RedirectResponse(
                 '/'
             );
         }
 
-        $track = new GpsTrack($userKey . '/' . $filename);
+        $track = new GpsTrack($userKey . '/' . $trackTransfer->getFilename());
         $template = $this->twig->getTwig()->load('Default/map.twig');
-        $view = $template->render(['points' => $track->getJsonPoints()]);
+        $view = $template->render(
+            [
+                'title' => $trackTransfer->getName(),
+                'points' => $track->getJsonPoints()
+            ]
+        );
         return new Response(
             $view,
             Response::HTTP_OK

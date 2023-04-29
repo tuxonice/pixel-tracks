@@ -1,0 +1,29 @@
+{
+  "transfers": [
+    {
+      "name": "Track",
+      "properties": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "userId",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "name": "filename",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
