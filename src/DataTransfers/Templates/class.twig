@@ -6,9 +6,8 @@ use PixelTrack\DataTransfers\AbstractTransfer;
 
 class {{ className }} extends {{ abstractClass }}
 {
-
 {% for property in properties %}
-   {{ property.visibility }} {{ property.type }} ${{ property.camelCaseName }};
+    {{ property.visibility }} {{ property.type }} ${{ property.camelCaseName }};
 
 {% endfor %}
 
@@ -24,7 +23,8 @@ class {{ className }} extends {{ abstractClass }}
     {
         $this->{{ property.camelCaseName }} = ${{ property.camelCaseName }};
     }
+{% if not loop.last %}
 
+{% endif %}
 {% endfor %}
-
 }

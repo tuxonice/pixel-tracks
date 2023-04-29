@@ -20,6 +20,8 @@ jobs:
         run: php -r "file_exists('.env') || copy('.env.dist', '.env');"
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Generate Transfer Objects
+        run: bin/console t:g
       - name: Run Code style
         run: vendor/bin/phpcs
       - name: Run PHPStan
