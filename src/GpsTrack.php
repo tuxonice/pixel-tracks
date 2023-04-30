@@ -18,9 +18,7 @@ class GpsTrack
     public function __construct(string $filename)
     {
         $this->gpx = new phpGPX();
-
-        $this->gpxFile = $this->gpx->load('../var/data/' . $filename);
-
+        $this->gpxFile = $this->gpx->load($filename);
         $this->process();
     }
 

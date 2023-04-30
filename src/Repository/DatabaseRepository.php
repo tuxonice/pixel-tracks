@@ -3,6 +3,7 @@
 namespace PixelTrack\Repository;
 
 use PixelTrack\DataTransferObjects\TrackTransfer;
+use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
 
@@ -163,6 +164,27 @@ class DatabaseRepository
         $trackTransfer->setName($databaseRow['name']);
         $trackTransfer->setKey($databaseRow['key']);
         $trackTransfer->setFilename($databaseRow['filename']);
+
+        return $trackTransfer;
+    }
+
+    public function getUserByKey(string $key): ?UserTransfer
+    {
+        $sql = 'SELECT * FROM users AS u WHERE u.key = :userKey';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':userKey', $key);
+        $result = $statement->execute();
+
+        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+
+        if ($databaseRow === false) {
+            return null;
+        }
+
+        $trackTransfer = new UserTransfer();
+        $trackTransfer->setId($databaseRow['id']);
+        $trackTransfer->setKey($databaseRow['key']);
+        $trackTransfer->setEmail($databaseRow['id']);
 
         return $trackTransfer;
     }

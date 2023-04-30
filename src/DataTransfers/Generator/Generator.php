@@ -58,6 +58,35 @@ class Generator
 
         $this->outputBuilder->save($classContent, 'TrackTransfer');
 
+        $classContent = $template->render(
+            [
+                'className' => 'UserTransfer',
+                'abstractClass' => 'AbstractTransfer',
+                'properties' => [
+                    [
+                        'visibility' => 'private',
+                        'type' => 'int',
+                        'camelCaseName' => 'id',
+                        'getPrefix' => 'get',
+                    ],
+                    [
+                        'visibility' => 'private',
+                        'type' => 'string',
+                        'camelCaseName' => 'key',
+                        'getPrefix' => 'get',
+                    ],
+                    [
+                        'visibility' => 'private',
+                        'type' => 'string',
+                        'camelCaseName' => 'email',
+                        'getPrefix' => 'get',
+                    ]
+                ],
+            ]
+        );
+
+        $this->outputBuilder->save($classContent, 'UserTransfer');
+
         return true;
     }
 }

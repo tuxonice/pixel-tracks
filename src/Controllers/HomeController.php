@@ -3,6 +3,7 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
+use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
@@ -10,6 +11,7 @@ use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class HomeController
 {
@@ -26,8 +28,30 @@ class HomeController
         $this->app = App::getInstance();
     }
 
-    public function index(string $userKey): Response
+    public function index(string $userKey): RedirectResponse
     {
+        if (!$userKey || !$this->databaseRepository->userExists($userKey)) {
+            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
+            return new RedirectResponse(
+                '/send-magic-link'
+            );
+        }
+
+        $cookie = new Cookie('userKey', $userKey, '2037-01-01');
+        $redirectResponse = new RedirectResponse('/profile/', 302, [$cookie]);
+        $redirectResponse->headers->setCookie($cookie);
+
+        return $redirectResponse;
+    }
+
+    public function profile(): Response
+    {
+        $request = $this->app->getRequest();
+        $cookies = $request->cookies;
+
+        $userKey = $cookies->get('userKey');
+
         if (!$userKey || !$this->databaseRepository->userExists($userKey)) {
             $flashes = $this->app->getSession()->getFlashBag();
             $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
@@ -65,16 +89,18 @@ class HomeController
             $flashes->add('danger', 'GPX file has an invalid format');
 
             return new RedirectResponse(
-                '/' . $userKey
+                '/profile/'
             );
         }
 
+        $userTransfer = $this->databaseRepository->getUserByKey($userKey);
+
         $targetFileName = uniqid() . '.' . $file->getClientOriginalExtension();
-        if (!$this->uploadFile($userKey, $file, $targetFileName)) {
+        if (!$this->uploadFile($userTransfer, $file, $targetFileName)) {
             $flashes->add('danger', 'Unable to upload the file');
 
             return new RedirectResponse(
-                '/' . $userKey
+                '/profile/'
             );
         }
 
@@ -82,20 +108,20 @@ class HomeController
             $flashes->add('danger', 'Unable to save track');
 
             return new RedirectResponse(
-                '/' . $userKey
+                '/profile/'
             );
         }
 
         $flashes->add('success', 'New file uploaded');
 
         return new RedirectResponse(
-            '/profile/' . $userKey
+            '/profile/'
         );
     }
 
-    private function uploadFile(string $userKey, UploadedFile $file, string $targetFileName): bool
+    private function uploadFile(UserTransfer $userTransfer, UploadedFile $file, string $targetFileName): bool
     {
-        $userFolder = $this->configService->getDataPath() . '/' . $userKey;
+        $userFolder = $this->configService->getDataPath() . sprintf('/profile-%03d', $userTransfer->getId());
         $splFileInfo = $file->getFileInfo();
         if (!file_exists($userFolder)) {
             if (!mkdir($userFolder)) {
