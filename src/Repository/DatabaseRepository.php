@@ -28,7 +28,8 @@ class DatabaseRepository
                 "id" INTEGER PRIMARY KEY AUTOINCREMENT, 
                 "user_id" INTEGER NOT NULL,
                 "name" VARCHAR NOT NULL,
-                "key" VARCHAR NOT NULL,            
+                "key" VARCHAR NOT NULL,
+                "shared_key" VARCHAR DEFAULT NULL,
                 "filename" VARCHAR NOT NULL
             )');
     }
@@ -77,20 +78,37 @@ class DatabaseRepository
         return (bool)$result->fetchArray(SQLITE3_ASSOC)['userCount'];
     }
 
-    public function findOrCreateUserByEmail(string $email): string
+    public function regenerateUserKey(string $oldKey): string
     {
-        $sql = 'SELECT * FROM users WHERE email = :email';
+        $newKey = sha1(uniqid('pixel', true));
+
+        $sql = 'UPDATE users SET key = :newKey WHERE key = :oldKey';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':newKey', $newKey, SQLITE3_TEXT);
+        $statement->bindValue(':oldKey', $oldKey, SQLITE3_TEXT);
+        $statement->execute();
+
+        return $newKey;
+    }
+
+    public function findUserByEmail(string $email): ?string
+    {
+        $sql = 'SELECT key FROM users WHERE email = :email';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':email', $email, SQLITE3_TEXT);
         $result = $statement->execute();
 
         $row = $result->fetchArray(SQLITE3_ASSOC);
-
-        if ($row !== false) {
-            return $row['key'];
+        if ($row === false) {
+            return null;
         }
 
-        $userKey = md5(uniqid());
+        return $row['key'];
+    }
+
+    public function createUserByEmail(string $email): string
+    {
+        $userKey = sha1(uniqid('pixel', true));
 
         $sql = 'INSERT INTO users (key, email) VALUES (:user_key, :email)';
         $statement = $this->database->prepare($sql);

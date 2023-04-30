@@ -3,6 +3,6 @@
 use PixelTrack\App;
 
 require('../bootstrap.php');
-$boot = App::getInstance();
-$response = $boot->route();
+$app = App::getInstance();
+$response = $app->route();
 $response->send();

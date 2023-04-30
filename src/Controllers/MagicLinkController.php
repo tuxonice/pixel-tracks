@@ -52,7 +52,7 @@ class MagicLinkController
             return new RedirectResponse('/send-magic-link');
         }
 
-        $userKey = $this->databaseRepository->findOrCreateUserByEmail($email);
+        $userKey = $this->generateUserKey($email);
 
         $template = $this->twig->getTwig()->load('Default/Mail/magic-link.twig');
         $view = $template->render(['link' => $this->configService->getBaseUrl() . 'profile/' . $userKey]);
@@ -90,5 +90,21 @@ class MagicLinkController
             $view,
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return string
+     */
+    private function generateUserKey(string $email): string
+    {
+        $userKey = $this->databaseRepository->findUserByEmail($email);
+
+        if ($userKey === null) {
+            return $this->databaseRepository->createUserByEmail($email);
+        }
+
+        return $this->databaseRepository->regenerateUserKey($userKey);
     }
 }

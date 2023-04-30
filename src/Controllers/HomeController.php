@@ -29,6 +29,8 @@ class HomeController
     public function index(string $userKey): Response
     {
         if (!$userKey || !$this->databaseRepository->userExists($userKey)) {
+            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
             return new RedirectResponse(
                 '/send-magic-link'
             );

@@ -6,13 +6,27 @@
 
     <section class="py-5 container">
         <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
+            <div class="col-lg-8 col-md-8 mx-auto">
                 <h1 class="fw-light">Your tracks</h1>
-                <div class="list-group">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Share</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {% for track in tracks %}
-                        <a href="/profile/{{ userKey }}/map/{{ track.key }}" target="_blank" class="list-group-item">{{ track.name }}</a>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td><a href="/profile/{{ userKey }}/map/{{ track.key }}" target="_blank" class="list-group-item">{{ track.name }}</a></td>
+                        <td></td>
+                    </tr>
                     {% endfor %}
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
