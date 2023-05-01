@@ -36,6 +36,7 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Upload new track</h1>
                 <form class="needs-validation" method="POST" enctype="multipart/form-data" action="/profile/{{ userKey }}/upload-track">
+                    <input type="hidden" name="_csrf" value="{{ csrf }}"/>
                     <div class="mb-3">
                         <label for="trackName" class="form-label">Track Name</label>
                         <input class="form-control" name="trackName" type="text" id="trackName" required="required">

@@ -47,6 +47,10 @@ class HomeController
 
     public function profile(): Response
     {
+        $csrf = sha1(uniqid('', true));
+        $session = $this->app->getSession();
+        $session->set('_csrf', $csrf);
+
         $request = $this->app->getRequest();
         $cookies = $request->cookies;
 
@@ -66,7 +70,8 @@ class HomeController
         $view = $template->render([
             'tracks' => $tracks,
             'userKey' => $userKey,
-            'flashes' => $this->app->getSession()->getFlashBag()->all()
+            'flashes' => $this->app->getSession()->getFlashBag()->all(),
+            'csrf' => $csrf,
         ]);
 
         return new Response(
@@ -77,8 +82,23 @@ class HomeController
 
     public function uploadTrack(string $userKey): Response
     {
+        $session = $this->app->getSession();
+        $csrfFormToken = $session->get('_csrf');
+
         $request = $this->app->getRequest();
         $flashes = $this->app->getSession()->getFlashBag();
+
+        $csrfToken = $request->request->get('_csrf');
+
+        if (!hash_equals($csrfFormToken, $csrfToken)) {
+            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes->add(
+                'danger',
+                'Invalid token'
+            );
+
+            return new RedirectResponse('/profile/');
+        }
 
         /** @var UploadedFile $file */
         $file = $request->files->get('trackFile');

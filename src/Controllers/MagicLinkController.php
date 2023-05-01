@@ -25,9 +25,14 @@ class MagicLinkController
 
     public function requestMagicLink(): Response
     {
+        $csrf = sha1(uniqid('', true));
+        $session = $this->app->getSession();
+        $session->set('_csrf', $csrf);
+
         $template = $this->twig->getTwig()->load('Default/magic-link.twig');
         $view = $template->render([
-            'flashes' => $this->app->getSession()->getFlashBag()->all()
+            'flashes' => $this->app->getSession()->getFlashBag()->all(),
+            'csrf' => $csrf,
         ]);
 
         return new Response(
@@ -36,16 +41,29 @@ class MagicLinkController
         );
     }
 
-
     public function sendMagicLink(): Response
     {
+        $session = $this->app->getSession();
+        $csrfFormToken = $session->get('_csrf');
+
         $request = $this->app->getRequest();
         $email = $request->request->get('email');
+        $csrfToken = $request->request->get('_csrf');
+
+        if (!hash_equals($csrfFormToken, $csrfToken)) {
+            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes->add(
+                'danger',
+                'Invalid token'
+            );
+
+            return new RedirectResponse('/send-magic-link');
+        }
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $flashes = $this->app->getSession()->getFlashBag();
             $flashes->add(
-                'error',
+                'danger',
                 'Invalid email'
             );
 
@@ -81,15 +99,7 @@ class MagicLinkController
             'Please verify your mailbox'
         );
 
-        $template = $this->twig->getTwig()->load('Default/magic-link.twig');
-        $view = $template->render([
-            'flashes' => $this->app->getSession()->getFlashBag()->all()
-        ]);
-
-        return new Response(
-            $view,
-            Response::HTTP_OK
-        );
+        return new RedirectResponse('/send-magic-link');
     }
 
     /**
