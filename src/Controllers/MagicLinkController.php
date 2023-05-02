@@ -3,6 +3,8 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
+use PixelTrack\Cache\Cache;
+use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Mail;
@@ -19,6 +21,7 @@ class MagicLinkController
         private readonly Config $configService,
         private readonly Twig $twig,
         private readonly DatabaseRepository $databaseRepository,
+        private readonly Cache $cache,
     ) {
         $this->app = App::getInstance();
     }
@@ -43,10 +46,23 @@ class MagicLinkController
 
     public function sendMagicLink(): Response
     {
+        $request = $this->app->getRequest();
+        $rateLimiter = new RateLimiter([
+            'refillPeriod' => 50,
+            'maxCapacity' => 5,
+            'prefix' => 'magic-link-'
+        ], $this->cache);
+
+        $ipAddress = $request->getClientIp();
+        if (!$rateLimiter->check($ipAddress)) {
+            return new Response(
+                '<h1>429 Too many requests</h1>',
+                Response::HTTP_TOO_MANY_REQUESTS,
+            );
+        }
+
         $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
-
-        $request = $this->app->getRequest();
         $email = $request->request->get('email');
         $csrfToken = $request->request->get('_csrf');
 
