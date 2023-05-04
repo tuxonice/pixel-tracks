@@ -65,13 +65,13 @@ class HomeController
         }
 
         $tracks = $this->databaseRepository->getTracksFromUser($userKey);
-
         $template = $this->twig->getTwig()->load('Default/home.twig');
         $view = $template->render([
             'tracks' => $tracks,
             'userKey' => $userKey,
             'flashes' => $this->app->getSession()->getFlashBag()->all(),
             'csrf' => $csrf,
+            'showLogout' => true,
         ]);
 
         return new Response(
