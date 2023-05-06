@@ -48,8 +48,8 @@ class MagicLinkController
     {
         $request = $this->app->getRequest();
         $rateLimiter = new RateLimiter([
-            'refillPeriod' => 50,
-            'maxCapacity' => 5,
+            'refillPeriod' => $_ENV['RATE_LIMITER_REFILL_PERIOD'],
+            'maxCapacity' => $_ENV['RATE_LIMITER_MAX_CAPACITY'],
             'prefix' => 'magic-link-'
         ], $this->cache);
 
@@ -63,7 +63,6 @@ class MagicLinkController
 
         $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
-        $email = $request->request->get('email');
         $csrfToken = $request->request->get('_csrf');
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
@@ -76,6 +75,7 @@ class MagicLinkController
             return new RedirectResponse('/send-magic-link');
         }
 
+        $email = $request->request->get('email');
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $flashes = $this->app->getSession()->getFlashBag();
             $flashes->add(

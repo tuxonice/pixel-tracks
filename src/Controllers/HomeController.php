@@ -82,13 +82,11 @@ class HomeController
 
     public function uploadTrack(string $userKey): Response
     {
+        $request = $this->app->getRequest();
         $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
-
-        $request = $this->app->getRequest();
-        $flashes = $this->app->getSession()->getFlashBag();
-
         $csrfToken = $request->request->get('_csrf');
+        $flashes = $this->app->getSession()->getFlashBag();
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
             $flashes = $this->app->getSession()->getFlashBag();
@@ -102,7 +100,7 @@ class HomeController
 
         /** @var UploadedFile $file */
         $file = $request->files->get('trackFile');
-        $trackName = $request->request->get('trackName');
+        $trackName = htmlentities($request->request->get('trackName'));
 
 
         if (!$this->isValidFileType($file)) {
