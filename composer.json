@@ -25,7 +25,7 @@
         "ext-libxml": "*",
         "php-di/php-di": "7.0.2",
         "symfony/cache": "6.2.10",
-        "phpmailer/phpmailer": "^6.8"
+        "phpmailer/phpmailer": "6.8.0"
     },
     "require-dev": {
         "symfony/var-dumper": "6.2.10",
