@@ -188,4 +188,50 @@ class DatabaseRepository
 
         return $trackTransfer;
     }
+
+    public function isTrackFromUser(int $trackId, int $userId): bool
+    {
+        $sql = 'SELECT count(*) AS `count` FROM tracks AS t WHERE t.id = :trackId AND t.user_id = :userId';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':userId', $userId, SQLITE3_INTEGER);
+        $statement->bindValue(':trackId', $trackId);
+        $result = $statement->execute();
+
+        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+
+        return (bool)$databaseRow['count'];
+    }
+
+    public function deleteTrack(int $trackId): bool
+    {
+        $sql = 'DELETE FROM tracks WHERE id = :trackId';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':trackId', $trackId);
+        $result = $statement->execute();
+
+        return (bool)$result;
+    }
+
+    public function getTrackById(int $trackId): ?TrackTransfer
+    {
+        $sql = 'SELECT * FROM tracks WHERE id = :trackId';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':trackId', $trackId, SQLITE3_INTEGER);
+        $result = $statement->execute();
+
+        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+
+        if ($databaseRow === false) {
+            return null;
+        }
+
+        $trackTransfer = new TrackTransfer();
+        $trackTransfer->setId($databaseRow['id']);
+        $trackTransfer->setUserid($databaseRow['user_id']);
+        $trackTransfer->setName($databaseRow['name']);
+        $trackTransfer->setKey($databaseRow['key']);
+        $trackTransfer->setFilename($databaseRow['filename']);
+
+        return $trackTransfer;
+    }
 }

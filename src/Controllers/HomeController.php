@@ -3,6 +3,7 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
+use PixelTrack\DataTransferObjects\TrackTransfer;
 use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Service\Config;
@@ -137,6 +138,39 @@ class HomeController
         );
     }
 
+    public function deleteTrack(string $userKey): Response
+    {
+        $request = $this->app->getRequest();
+        $session = $this->app->getSession();
+        $csrfFormToken = $session->get('_csrf');
+        $csrfToken = $request->request->get('_csrf');
+        $trackId = $request->request->get('track_id');
+        $flashes = $this->app->getSession()->getFlashBag();
+
+        if (!hash_equals($csrfFormToken, $csrfToken)) {
+            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes->add(
+                'danger',
+                'Invalid token'
+            );
+
+            return new RedirectResponse('/profile/');
+        }
+        $userTransfer = $this->databaseRepository->getUserByKey($userKey);
+
+        if ($this->databaseRepository->isTrackFromUser($trackId, $userTransfer->getId())) {
+            $trackTransfer = $this->databaseRepository->getTrackById($trackId);
+            $this->deleteTrackFile($trackTransfer);
+            $this->databaseRepository->deleteTrack($trackId);
+        }
+
+        $flashes->add('success', 'Track deleted');
+
+        return new RedirectResponse(
+            '/profile/'
+        );
+    }
+
     private function uploadFile(UserTransfer $userTransfer, UploadedFile $file, string $targetFileName): bool
     {
         $userFolder = $this->configService->getDataPath() . sprintf('/profile-%03d', $userTransfer->getId());
@@ -169,5 +203,18 @@ class HomeController
     private function updateDatabase(string $userKey, string $trackName, string $targetFileName): bool
     {
         return $this->databaseRepository->insertTrack($userKey, $trackName, $targetFileName);
+    }
+
+    private function deleteTrackFile(TrackTransfer $trackTransfer): void
+    {
+        $filename = sprintf("%s/profile-%03d/%s",
+            $this->configService->getDataPath(),
+            $trackTransfer->getUserId(),
+            $trackTransfer->getFilename()
+        );
+
+        if(file_exists($filename)) {
+            unlink($filename);
+        }
     }
 }

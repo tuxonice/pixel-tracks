@@ -13,15 +13,21 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Name</th>
+                        <th scope="col">&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for track in tracks %}
                     <tr>
-                        <th scope="row">1</th>
                         <td><a href="/profile/{{ userKey }}/map/{{ track.key }}" target="_blank" class="list-group-item">{{ track.name }}</a></td>
+                        <td>
+                            <form action="/profile/{{userKey}}/delete-track" method="post" onsubmit="return confirm('Are you sure?')">
+                                <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                                <input type="hidden" name="track_id" value="{{ track.id }}"/>
+                                <input type="submit" value="Delete"/>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>
