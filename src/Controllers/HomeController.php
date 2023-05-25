@@ -207,13 +207,14 @@ class HomeController
 
     private function deleteTrackFile(TrackTransfer $trackTransfer): void
     {
-        $filename = sprintf("%s/profile-%03d/%s",
+        $filename = sprintf(
+            "%s/profile-%03d/%s",
             $this->configService->getDataPath(),
             $trackTransfer->getUserId(),
             $trackTransfer->getFilename()
         );
 
-        if(file_exists($filename)) {
+        if (file_exists($filename)) {
             unlink($filename);
         }
     }

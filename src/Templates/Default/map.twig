@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ title }} - PixelTracks</title>
     <!-- loading jsPanel css -->
     <link href="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.css" rel="stylesheet">
     <!-- jsPanel JavaScript -->
@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
             integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
             crossorigin=""></script>
-    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="/css/map-style.css"/>
     <style>
         body {
             margin: 0;
@@ -31,15 +31,9 @@
 <div id="mapid"></div>
 <div id="samplecontent" style="display: none;">
     <ul class="form-style-1">
-        <li>
-            <label>Upload new track</label>
-            <input type="file" id="value" name="value" class="field-long"/>
-        </li>
-        <li>
-            <input type="button" value="Upload" onclick="go();"/>
-        </li>
-        <li>Lat: <span id="lat"></span></li>
-        <li>Lng: <span id="lng"></span></li>
+        <li>Distance: 0 Km</li>
+        <li>Elevation: 0 m</li>
+        <li>Time: 0:00:00 </li>
     </ul>
 </div>
 <script

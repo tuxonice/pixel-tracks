@@ -7,6 +7,7 @@
 	<file>bootstrap.php</file>
     <file>public/index.php</file>
     <file>bin/console</file>
+    <exclude-pattern>/src/Resources/*</exclude-pattern>
     <arg name="basepath" value="."/>
     <arg name="colors"/>
     <arg name="parallel" value="75"/>

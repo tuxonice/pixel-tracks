@@ -1,0 +1,11 @@
+{% if flashes %}
+<section class="py-2 text-center container">
+{% for label, messages in flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+</section>
+{% endif %}
