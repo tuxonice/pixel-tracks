@@ -32,9 +32,10 @@
 <div id="mapid"></div>
 <div id="samplecontent" style="display: none;">
     <ul class="form-style-1">
-        <li>Distance: 0 Km</li>
-        <li>Elevation: 0 m</li>
-        <li>Time: 0:00:00 </li>
+        <li>Points: {{ info.points }}</li>
+        <li>Distance: {{ info.totalDistance }} Km</li>
+        <li>Elevation: {{ info.totalHeight }} m</li>
+        <li>Time: -- </li>
     </ul>
 </div>
 <script
@@ -60,7 +61,7 @@
             position: {my: "right-top", at: "right-top", offsetY: 15, offsetX: -15},
             content: $("#samplecontent").html(),
             contentSize: {width: 300, height: 280},
-            headerTitle: 'Control panel',
+            headerTitle: 'Information panel',
             theme: 'rebeccapurple',
             callback: function (panel) {
                 $("#samplecontent").remove();

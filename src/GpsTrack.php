@@ -14,6 +14,10 @@ class GpsTrack
 
     private array $data;
 
+    private float $totalDistance = 0.0;
+
+    private float $vDistance = 0.0;
+
 
     public function __construct(string $filename)
     {
@@ -43,10 +47,14 @@ class GpsTrack
                         break;
                     }
                     $endPoint = $segment->points[$key + 1];
-                    $this->data[] = $this->parseDiffPoints($startPoint, $endPoint, $carryDistance);
+                    $parseDiffPoints = $this->parseDiffPoints($startPoint, $endPoint, $carryDistance);
+                    $this->data[] = $parseDiffPoints;
+                    $this->vDistance += $parseDiffPoints['vDistance'] > 0 ? $parseDiffPoints['vDistance'] : 0.0;
                 }
             }
         }
+
+        $this->totalDistance = $carryDistance;
 
         return $this->data;
     }
@@ -67,6 +75,7 @@ class GpsTrack
             //'hSpeed' => $time ? $hDistance / $time : 0.0,
             //'vSpeed' => $time ? $vDistance / $time : 0.0,
             'totalDistance' =>  $carryDistance,
+            'vDistance' => $vDistance,
         ];
     }
 
@@ -85,5 +94,14 @@ class GpsTrack
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $R * $c; // in metres
+    }
+
+    public function getInfo(): array
+    {
+        return [
+            'points' => count($this->data),
+            'totalDistance' => sprintf("%.02f", $this->totalDistance / 1000),
+            'totalHeight' => sprintf("%.02f", $this->vDistance),
+        ];
     }
 }

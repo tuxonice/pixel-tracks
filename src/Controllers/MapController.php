@@ -43,11 +43,13 @@ class MapController
             );
         }
         $track = new GpsTrack($trackFileName);
+        $trackInfo = $track->getInfo();
         $template = $this->twig->getTwig()->load('Default/map.twig');
         $view = $template->render(
             [
                 'title' => $trackTransfer->getName(),
-                'points' => $track->getJsonPoints()
+                'points' => $track->getJsonPoints(),
+                'info' => $trackInfo,
             ]
         );
         return new Response(
