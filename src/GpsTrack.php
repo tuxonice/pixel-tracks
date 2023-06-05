@@ -38,6 +38,7 @@ class GpsTrack
 
     private function process(): array
     {
+        $carryDistance = 0.0;
         foreach ($this->gpxFile->tracks as $track) {
             foreach ($track->segments as $segment) {
                 $carryDistance = 0.0;
