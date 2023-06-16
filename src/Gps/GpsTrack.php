@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelTrack;
+namespace PixelTrack\Gps;
 
 use phpGPX\Models\GpxFile;
 use phpGPX\Models\Point;
@@ -38,44 +38,45 @@ class GpsTrack
 
     private function process(): array
     {
-        $carryDistance = 0.0;
+        $carryHDistance = 0.0;
         foreach ($this->gpxFile->tracks as $track) {
             foreach ($track->segments as $segment) {
-                $carryDistance = 0.0;
+                $carryHDistance = 0.0;
                 foreach ($segment->points as $key => $point) {
                     $startPoint = $segment->points[$key];
                     if (!isset($segment->points[$key + 1])) {
                         break;
                     }
                     $endPoint = $segment->points[$key + 1];
-                    $parseDiffPoints = $this->parseDiffPoints($startPoint, $endPoint, $carryDistance);
+                    $parseDiffPoints = $this->parseDiffPoints($startPoint, $endPoint, $carryHDistance);
                     $this->data[] = $parseDiffPoints;
                     $this->vDistance += $parseDiffPoints['vDistance'] > 0 ? $parseDiffPoints['vDistance'] : 0.0;
                 }
             }
         }
 
-        $this->totalDistance = $carryDistance;
+        $this->totalDistance = $carryHDistance;
 
         return $this->data;
     }
 
-    private function parseDiffPoints(Point $start, Point $end, &$carryDistance): array
+    private function parseDiffPoints(Point $start, Point $end, &$carryHDistance): array
     {
         $hDistance = $this->distance($start, $end);
-        //$time = $end->time->getTimestamp() - $start->time->getTimestamp();
-        $vDistance = $end->elevation - $start->elevation;
-        $carryDistance += $hDistance;
+//        $time = $end->time->getTimestamp() - $start->time->getTimestamp();
+        $vDistance = abs($hDistance) >= 1 ? $end->elevation - $start->elevation : 0.0;
+//        $vDistance = $end->elevation - $start->elevation;
+        $carryHDistance += $hDistance;
         return [
-            //'startTime' => $start->time->format('Y-m-d H:i:s'),
+//            'startTime' => $start->time->format('Y-m-d H:i:s'),
             'latitude' => $start->latitude,
             'longitude' => $start->longitude,
             'distance' => $hDistance,
-            //'time' => $time,
+//            'time' => $time,
             'elevation' => $start->elevation,
-            //'hSpeed' => $time ? $hDistance / $time : 0.0,
-            //'vSpeed' => $time ? $vDistance / $time : 0.0,
-            'totalDistance' =>  $carryDistance,
+//            'hSpeed' => $time ? $hDistance / $time : 0.0,
+//            'vSpeed' => $time ? $vDistance / $time : 0.0,
+            'totalDistance' =>  $carryHDistance,
             'vDistance' => $vDistance,
         ];
     }

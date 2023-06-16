@@ -14,7 +14,6 @@ class HomeControllerTest extends TestCase
 {
     public function testRedirectToMagicLinkWhenUserNotFound()
     {
-        $xmlValidatorMock = $this->createMock(XmlValidator::class);
         $configMock = $this->createMock(Config::class);
         $databaseRepositoryMock = $this->createMock(DatabaseRepository::class);
         $twigMock = $this->createMock(Twig::class);
@@ -25,7 +24,6 @@ class HomeControllerTest extends TestCase
             ->willReturn(false);
 
         $homeController = new HomeController(
-            $xmlValidatorMock,
             $configMock,
             $databaseRepositoryMock,
             $twigMock

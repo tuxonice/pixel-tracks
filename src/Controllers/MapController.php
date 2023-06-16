@@ -3,7 +3,7 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
-use PixelTrack\GpsTrack;
+use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
