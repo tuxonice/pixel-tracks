@@ -5,7 +5,7 @@ namespace PixelTrack\Controllers;
 use PixelTrack\App;
 use PixelTrack\Cache\Cache;
 use PixelTrack\RateLimiter\RateLimiter;
-use PixelTrack\Repository\DatabaseRepository;
+use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Mail;
 use PixelTrack\Service\Twig;
@@ -20,7 +20,7 @@ class MagicLinkController
         private readonly Mail $mail,
         private readonly Config $configService,
         private readonly Twig $twig,
-        private readonly DatabaseRepository $databaseRepository,
+        private readonly UserRepository $userRepository,
         private readonly Cache $cache,
     ) {
         $this->app = App::getInstance();
@@ -125,12 +125,12 @@ class MagicLinkController
      */
     private function generateUserKey(string $email): string
     {
-        $userKey = $this->databaseRepository->findUserByEmail($email);
+        $userKey = $this->userRepository->findUserByEmail($email);
 
         if ($userKey === null) {
-            return $this->databaseRepository->createUserByEmail($email);
+            return $this->userRepository->createUserByEmail($email);
         }
 
-        return $this->databaseRepository->regenerateUserKey($userKey);
+        return $this->userRepository->regenerateUserKey($userKey);
     }
 }

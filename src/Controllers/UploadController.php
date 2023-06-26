@@ -4,7 +4,8 @@ namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
 use PixelTrack\DataTransferObjects\UserTransfer;
-use PixelTrack\Repository\DatabaseRepository;
+use PixelTrack\Repository\TrackRepository;
+use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -20,7 +21,8 @@ class UploadController
     public function __construct(
         private readonly XmlValidator $xmlValidator,
         private readonly Config $configService,
-        private readonly DatabaseRepository $databaseRepository,
+        private readonly UserRepository $userRepository,
+        private readonly TrackRepository $trackRepository,
     ) {
         $this->app = App::getInstance();
     }
@@ -56,7 +58,7 @@ class UploadController
             );
         }
 
-        $userTransfer = $this->databaseRepository->getUserByKey($userKey);
+        $userTransfer = $this->userRepository->getUserByKey($userKey);
 
         $targetFileName = uniqid() . '.' . $file->getClientOriginalExtension();
         if (!$this->uploadFile($userTransfer, $file, $targetFileName)) {
@@ -113,6 +115,6 @@ class UploadController
 
     private function updateDatabase(string $userKey, string $trackName, string $targetFileName): bool
     {
-        return $this->databaseRepository->insertTrack($userKey, $trackName, $targetFileName);
+        return $this->trackRepository->insertTrack($userKey, $trackName, $targetFileName);
     }
 }

@@ -4,7 +4,8 @@ namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
 use PixelTrack\Gps\GpsTrack;
-use PixelTrack\Repository\DatabaseRepository;
+use PixelTrack\Repository\TrackRepository;
+use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +16,8 @@ class MapController
     private App $app;
 
     public function __construct(
-        private readonly DatabaseRepository $databaseRepository,
+        private readonly UserRepository $userRepository,
+        private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
         private readonly Config $config,
     ) {
@@ -24,8 +26,8 @@ class MapController
 
     public function index(string $userKey, string $trackKey): Response
     {
-        $trackTransfer = $this->databaseRepository->getTrackFilename($userKey, $trackKey);
-        $userTransfer = $this->databaseRepository->getUserByKey($userKey);
+        $trackTransfer = $this->trackRepository->getTrackFilename($userKey, $trackKey);
+        $userTransfer = $this->userRepository->getUserByKey($userKey);
 
         if ($trackTransfer === null) {
             return new RedirectResponse(

@@ -4,7 +4,8 @@ namespace PixelTrack\Controllers;
 
 use PixelTrack\App;
 use PixelTrack\DataTransferObjects\TrackTransfer;
-use PixelTrack\Repository\DatabaseRepository;
+use PixelTrack\Repository\TrackRepository;
+use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,7 +18,8 @@ class HomeController
 
     public function __construct(
         private readonly Config $configService,
-        private readonly DatabaseRepository $databaseRepository,
+        private readonly UserRepository $userRepository,
+        private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
     ) {
         $this->app = App::getInstance();
@@ -25,7 +27,7 @@ class HomeController
 
     public function index(string $userKey): RedirectResponse
     {
-        if (!$userKey || !$this->databaseRepository->userExists($userKey)) {
+        if (!$userKey || !$this->userRepository->userExists($userKey)) {
             $flashes = $this->app->getSession()->getFlashBag();
             $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
             return new RedirectResponse(
@@ -51,7 +53,7 @@ class HomeController
 
         $userKey = $cookies->get('userKey');
 
-        if (!$userKey || !$this->databaseRepository->userExists($userKey)) {
+        if (!$userKey || !$this->userRepository->userExists($userKey)) {
             $flashes = $this->app->getSession()->getFlashBag();
             $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
             return new RedirectResponse(
@@ -59,7 +61,7 @@ class HomeController
             );
         }
 
-        $tracks = $this->databaseRepository->getTracksFromUser($userKey);
+        $tracks = $this->trackRepository->getTracksFromUser($userKey);
         $template = $this->twig->getTwig()->load('Default/home.twig');
         $view = $template->render([
             'tracks' => $tracks,
@@ -93,12 +95,12 @@ class HomeController
 
             return new RedirectResponse('/profile/');
         }
-        $userTransfer = $this->databaseRepository->getUserByKey($userKey);
+        $userTransfer = $this->userRepository->getUserByKey($userKey);
 
-        if ($this->databaseRepository->isTrackFromUser($trackId, $userTransfer->getId())) {
-            $trackTransfer = $this->databaseRepository->getTrackById($trackId);
+        if ($this->trackRepository->isTrackFromUser($trackId, $userTransfer->getId())) {
+            $trackTransfer = $this->trackRepository->getTrackById($trackId);
             $this->deleteTrackFile($trackTransfer);
-            $this->databaseRepository->deleteTrack($trackId);
+            $this->trackRepository->deleteTrack($trackId);
         }
 
         $flashes->add('success', 'Track deleted');
