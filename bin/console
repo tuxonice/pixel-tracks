@@ -4,11 +4,15 @@
 require dirname(__DIR__).'/vendor/autoload.php';
 require dirname(__DIR__).'/bootstrap.php';
 
-use PixelTrack\Command\CreateDatabaseCommand;
 use PixelTrack\Command\GenerateTransferCommand;
+use PixelTrack\Command\Migration\MigrationMakeCommand;
+use PixelTrack\Command\Migration\MigrationApplyCommand;
+use PixelTrack\Command\Migration\MigrationStatusCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new CreateDatabaseCommand());
+$application->add(new MigrationApplyCommand());
 $application->add(new GenerateTransferCommand());
+$application->add(new MigrationMakeCommand());
+$application->add(new MigrationStatusCommand());
 $application->run();

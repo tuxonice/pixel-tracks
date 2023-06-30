@@ -4,12 +4,10 @@ namespace Unit\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\HomeController;
-use PixelTrack\Repository\DatabaseRepository;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
-use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeControllerTest extends TestCase

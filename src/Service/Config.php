@@ -25,4 +25,9 @@ class Config
     {
         return dirname(__DIR__, 2) . '/var/database/' . $_ENV['DATABASE_NAME'];
     }
+
+    public function getMigrationsPath(): string
+    {
+        return dirname(__DIR__, 2) . '/src/Database/Migrations';
+    }
 }

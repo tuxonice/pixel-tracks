@@ -1,33 +1,33 @@
 <?php
 
-namespace PixelTrack\Command;
+namespace PixelTrack\Command\Migration;
 
-use PixelTrack\Repository\DatabaseRepository;
+use PixelTrack\Database\MigrationProvider;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Database;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateDatabaseCommand extends Command
+class MigrationApplyCommand extends Command
 {
-    protected static $defaultName = 'setup:create-database';
+    protected static $defaultName = 'migration:apply';
 
     protected function configure(): void
     {
         $this
-            ->setDescription('Create Database')
-            ->setHelp('Initial database creation');
+            ->setDescription('Migrate Database')
+            ->setHelp('Apply migration to database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configService = new Config();
         $database = new Database($configService);
-        $databaseRepository = new DatabaseRepository($database);
-        $databaseRepository->createDatabase();
+        $migrationProvider = new MigrationProvider($database, $configService);
+        $migrationProvider->migrate();
 
-        $output->writeln('Database created');
+        $output->writeln('Database migrated');
         return Command::SUCCESS;
     }
 }
