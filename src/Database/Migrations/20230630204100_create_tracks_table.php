@@ -17,9 +17,4 @@ return new class implements MigrationInterface
                 "filename" VARCHAR NOT NULL
             );';
     }
-
-    public function down(): string
-    {
-        return 'DROP TABLE `tracks`;';
-    }
 };

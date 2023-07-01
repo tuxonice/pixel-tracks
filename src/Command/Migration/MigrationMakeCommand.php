@@ -36,7 +36,7 @@ class MigrationMakeCommand extends Command
     private function getMigrationFileName(string $name): string
     {
         $name = Str::snake($name);
-        return date('YmdHis') . '_' . Str::slug($name, '_') . '.php';
+        return date('Y_m_d_His') . '_' . Str::slug($name, '_') . '.php';
     }
 
     private function getFileTemplate(): string
@@ -51,11 +51,6 @@ use PixelTrack\Database\MigrationInterface;
 return new class implements MigrationInterface
 {
     public function up(): string
-    {
-        //Add your SQL migration here
-    }
-
-    public function down(): string
     {
         //Add your SQL migration here
     }

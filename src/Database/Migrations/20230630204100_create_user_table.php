@@ -14,9 +14,4 @@ return new class implements MigrationInterface
                 "email" VARCHAR NOT NULL
             );';
     }
-
-    public function down(): string
-    {
-        return 'DROP table `users`;';
-    }
 };
