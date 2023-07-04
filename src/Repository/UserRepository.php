@@ -5,6 +5,7 @@ namespace PixelTrack\Repository;
 use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
+use Symfony\Component\Uid\Uuid;
 
 class UserRepository
 {
@@ -31,7 +32,7 @@ class UserRepository
 
     public function regenerateUserKey(string $oldKey): string
     {
-        $newKey = sha1(uniqid('pixel', true));
+        $newKey = Uuid::v4();
 
         $sql = 'UPDATE users SET key = :newKey WHERE key = :oldKey';
         $statement = $this->database->prepare($sql);
@@ -59,7 +60,7 @@ class UserRepository
 
     public function createUserByEmail(string $email): string
     {
-        $userKey = sha1(uniqid('pixel', true));
+        $userKey = Uuid::v4();
 
         $sql = 'INSERT INTO users (key, email) VALUES (:user_key, :email)';
         $statement = $this->database->prepare($sql);
