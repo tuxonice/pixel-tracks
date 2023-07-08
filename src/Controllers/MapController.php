@@ -2,7 +2,6 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\App;
 use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
@@ -10,21 +9,19 @@ use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class MapController
 {
-    private App $app;
-
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
         private readonly Config $config,
     ) {
-        $this->app = App::getInstance();
     }
 
-    public function index(string $userKey, string $trackKey): Response
+    public function index(string $userKey, string $trackKey, Session $session): Response
     {
         $trackTransfer = $this->trackRepository->getTrackFilename($userKey, $trackKey);
         $userTransfer = $this->userRepository->getUserByKey($userKey);
@@ -38,7 +35,7 @@ class MapController
         $userProfileFolder = sprintf('profile-%03d', $userTransfer->getId());
         $trackFileName = $this->config->getDataPath() . '/' . $userProfileFolder . '/' . $trackTransfer->getFilename();
         if (!file_exists($trackFileName)) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes = $session->getFlashBag();
             $flashes->add('danger', 'Track file does not exist');
             return new RedirectResponse(
                 '/profile/'

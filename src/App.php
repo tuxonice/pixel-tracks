@@ -9,7 +9,6 @@ use FastRoute\RouteCollector;
 use PixelTrack\Routes\Web;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 use function FastRoute\simpleDispatcher;
 
@@ -20,23 +19,15 @@ class App
      */
     private static $instance;
 
-    private Request $request;
-
     private Dispatcher $dispatcher;
-
-    private Session $session;
 
     private Container $container;
 
     private function __construct()
     {
         $builder = new ContainerBuilder();
-//        $builder->addDefinitions(dirname(__DIR__, 2) . '/di-config.php');
+        $builder->addDefinitions(__DIR__ . '/di-config.php');
         $this->container = $builder->build();
-
-        $this->session = new Session();
-        $this->session->start();
-        $this->request = Request::createFromGlobals();
 
         $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
             Web::routes($r);
@@ -52,16 +43,6 @@ class App
         return self::$instance;
     }
 
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
-    public function getSession(): Session
-    {
-        return $this->session;
-    }
-
     public function getContainer(): Container
     {
         return $this->container;
@@ -70,10 +51,10 @@ class App
     /**
      * @throws \Exception
      */
-    public function route(): Response
+    public function route(Request $request): Response
     {
-        $uri = $this->request->getRequestUri();
-        $httpMethod = $this->request->getMethod();
+        $uri = $request->getRequestUri();
+        $httpMethod = $request->getMethod();
 
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
         switch ($routeInfo[0]) {

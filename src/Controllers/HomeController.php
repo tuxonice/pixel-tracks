@@ -2,59 +2,55 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\App;
 use PixelTrack\DataTransferObjects\TrackTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
+use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController
 {
-    private App $app;
-
     public function __construct(
         private readonly Config $configService,
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
+        private readonly Utility $utility,
     ) {
-        $this->app = App::getInstance();
     }
 
-    public function index(string $userKey): RedirectResponse
+    public function index(Request $request): RedirectResponse
     {
-        if (!$userKey || !$this->userRepository->userExists($userKey)) {
-            $flashes = $this->app->getSession()->getFlashBag();
-            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
-            return new RedirectResponse(
-                '/send-magic-link'
-            );
-        }
-
-        $cookie = new Cookie('userKey', $userKey, '2037-01-01');
-        $redirectResponse = new RedirectResponse('/profile/', 302, [$cookie]);
-        $redirectResponse->headers->setCookie($cookie);
-
-        return $redirectResponse;
-    }
-
-    public function profile(): Response
-    {
-        $csrf = sha1(uniqid('', true));
-        $session = $this->app->getSession();
-        $session->set('_csrf', $csrf);
-
-        $request = $this->app->getRequest();
         $cookies = $request->cookies;
 
         $userKey = $cookies->get('userKey');
 
         if (!$userKey || !$this->userRepository->userExists($userKey)) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            return new RedirectResponse(
+                '/send-magic-link'
+            );
+        }
+
+        return new RedirectResponse(
+            '/profile'
+        );
+    }
+
+    public function profile(Request $request, Session $session): Response
+    {
+        $csrf = $this->utility->generateCsrfToken();
+        $session->set('_csrf', $csrf);
+        $cookies = $request->cookies;
+
+        $userKey = $cookies->get('userKey');
+
+        if (!$userKey || !$this->userRepository->userExists($userKey)) {
+            $flashes = $session->getFlashBag();
             $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
             return new RedirectResponse(
                 '/send-magic-link'
@@ -66,7 +62,7 @@ class HomeController
         $view = $template->render([
             'tracks' => $tracks,
             'userKey' => $userKey,
-            'flashes' => $this->app->getSession()->getFlashBag()->all(),
+            'flashes' => $session->getFlashBag()->all(),
             'csrf' => $csrf,
             'showLogout' => true,
         ]);
@@ -77,17 +73,15 @@ class HomeController
         );
     }
 
-    public function deleteTrack(string $userKey): Response
+    public function deleteTrack(string $userKey, Request $request, Session $session): Response
     {
-        $request = $this->app->getRequest();
-        $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
         $csrfToken = $request->request->get('_csrf');
         $trackId = $request->request->get('track_id');
-        $flashes = $this->app->getSession()->getFlashBag();
+        $flashes = $session->getFlashBag();
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid token'

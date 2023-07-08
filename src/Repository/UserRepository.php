@@ -43,11 +43,11 @@ class UserRepository
         return $newKey;
     }
 
-    public function findUserByEmail(string $email): ?string
+    public function findUserByLoginKey(string $loginKey): ?UserTransfer
     {
-        $sql = 'SELECT key FROM users WHERE email = :email';
+        $sql = 'SELECT * FROM users WHERE login_key = :login_key';
         $statement = $this->database->prepare($sql);
-        $statement->bindValue(':email', $email, SQLITE3_TEXT);
+        $statement->bindValue(':login_key', $loginKey, SQLITE3_TEXT);
         $result = $statement->execute();
 
         $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -55,7 +55,33 @@ class UserRepository
             return null;
         }
 
-        return $row['key'];
+        $userTransfer = new UserTransfer();
+        $userTransfer->setId($row['id']);
+        $userTransfer->setKey($row['key']);
+        $userTransfer->setEmail($row['email']);
+
+        return $userTransfer;
+    }
+
+    public function findUserByEmail(string $email): ?UserTransfer
+    {
+        $sql = 'SELECT * FROM users AS u WHERE u.email = :email';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':email', $email);
+        $result = $statement->execute();
+
+        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+
+        if ($databaseRow === false) {
+            return null;
+        }
+
+        $userTransfer = new UserTransfer();
+        $userTransfer->setId($databaseRow['id']);
+        $userTransfer->setKey($databaseRow['key']);
+        $userTransfer->setEmail($databaseRow['email']);
+
+        return $userTransfer;
     }
 
     public function createUserByEmail(string $email): string
@@ -84,11 +110,24 @@ class UserRepository
             return null;
         }
 
-        $trackTransfer = new UserTransfer();
-        $trackTransfer->setId($databaseRow['id']);
-        $trackTransfer->setKey($databaseRow['key']);
-        $trackTransfer->setEmail($databaseRow['id']);
+        $userTransfer = new UserTransfer();
+        $userTransfer->setId($databaseRow['id']);
+        $userTransfer->setKey($databaseRow['key']);
+        $userTransfer->setEmail($databaseRow['id']);
 
-        return $trackTransfer;
+        return $userTransfer;
+    }
+
+    public function regenerateLoginKey(string $email): string
+    {
+        $loginKey = Uuid::v4();
+
+        $sql = 'UPDATE users SET login_key = :newLoginKey WHERE email = :email';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':newLoginKey', $loginKey, SQLITE3_TEXT);
+        $statement->bindValue(':email', $email, SQLITE3_TEXT);
+        $statement->execute();
+
+        return $loginKey;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\App;
 use PixelTrack\Cache\Cache;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
@@ -10,12 +9,12 @@ use PixelTrack\Service\Config;
 use PixelTrack\Service\Mail;
 use PixelTrack\Service\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class MagicLinkController
 {
-    private App $app;
-
     public function __construct(
         private readonly Mail $mail,
         private readonly Config $configService,
@@ -23,18 +22,16 @@ class MagicLinkController
         private readonly UserRepository $userRepository,
         private readonly Cache $cache,
     ) {
-        $this->app = App::getInstance();
     }
 
-    public function requestMagicLink(): Response
+    public function requestMagicLink(Session $session): Response
     {
         $csrf = sha1(uniqid('', true));
-        $session = $this->app->getSession();
         $session->set('_csrf', $csrf);
 
         $template = $this->twig->getTwig()->load('Default/magic-link.twig');
         $view = $template->render([
-            'flashes' => $this->app->getSession()->getFlashBag()->all(),
+            'flashes' => $session->getFlashBag()->all(),
             'csrf' => $csrf,
         ]);
 
@@ -44,9 +41,8 @@ class MagicLinkController
         );
     }
 
-    public function sendMagicLink(): Response
+    public function sendMagicLink(Request $request, Session $session): Response
     {
-        $request = $this->app->getRequest();
         $rateLimiter = new RateLimiter([
             'refillPeriod' => $_ENV['RATE_LIMITER_REFILL_PERIOD'],
             'maxCapacity' => $_ENV['RATE_LIMITER_MAX_CAPACITY'],
@@ -61,12 +57,11 @@ class MagicLinkController
             );
         }
 
-        $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
         $csrfToken = $request->request->get('_csrf');
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid token'
@@ -77,7 +72,7 @@ class MagicLinkController
 
         $email = $request->request->get('email');
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid email'
@@ -86,10 +81,15 @@ class MagicLinkController
             return new RedirectResponse('/send-magic-link');
         }
 
-        $userKey = $this->generateUserKey($email);
+        $userTransfer = $this->userRepository->findUserByEmail($email);
+        if (!$userTransfer) {
+            $this->userRepository->createUserByEmail($email);
+        }
+        $loginKey = $this->userRepository->regenerateLoginKey($email);
+
 
         $template = $this->twig->getTwig()->load('Default/Mail/magic-link.twig');
-        $view = $template->render(['link' => $this->configService->getBaseUrl() . 'profile/' . $userKey]);
+        $view = $template->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
 
         $mailData = [
             'from' => [
@@ -109,28 +109,12 @@ class MagicLinkController
 
         $this->mail->send($mailData);
 
-        $flashes = $this->app->getSession()->getFlashBag();
+        $flashes = $session->getFlashBag();
         $flashes->add(
             'success',
             'Please verify your mailbox'
         );
 
         return new RedirectResponse('/send-magic-link');
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return string
-     */
-    private function generateUserKey(string $email): string
-    {
-        $userKey = $this->userRepository->findUserByEmail($email);
-
-        if ($userKey === null) {
-            return $this->userRepository->createUserByEmail($email);
-        }
-
-        return $this->userRepository->regenerateUserKey($userKey);
     }
 }

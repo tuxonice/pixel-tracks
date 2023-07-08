@@ -4,7 +4,7 @@ namespace Acceptance;
 
 use Tests\Support\AcceptanceTester;
 
-class FirstCest
+class HomePageCest
 {
     public function frontpageWorks(AcceptanceTester $I)
     {

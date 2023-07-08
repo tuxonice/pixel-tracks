@@ -10,13 +10,13 @@ use PixelTrack\Service\Config;
 use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class UploadController
 {
     private const VALID_FILE_TYPES = ['application/gpx+xml'];
-
-    private App $app;
 
     public function __construct(
         private readonly XmlValidator $xmlValidator,
@@ -24,19 +24,16 @@ class UploadController
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
     ) {
-        $this->app = App::getInstance();
     }
 
-    public function uploadTrack(string $userKey): Response
+    public function uploadTrack(string $userKey, Request $request, Session $session): Response
     {
-        $request = $this->app->getRequest();
-        $session = $this->app->getSession();
         $csrfFormToken = $session->get('_csrf');
         $csrfToken = $request->request->get('_csrf');
-        $flashes = $this->app->getSession()->getFlashBag();
+        $flashes = $session->getFlashBag();
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $this->app->getSession()->getFlashBag();
+            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid token'
