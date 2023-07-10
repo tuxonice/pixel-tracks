@@ -36,6 +36,6 @@
         "codeception/codeception": "5.0.10",
         "codeception/module-phpbrowser": "3.0.0",
         "codeception/module-asserts": "3.0.0",
-        "dg/bypass-finals": "^1.4"
+        "dg/bypass-finals": "1.4.1"
     }
 }
