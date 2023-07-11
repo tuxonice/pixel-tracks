@@ -81,7 +81,6 @@ class HomeController
         $flashes = $session->getFlashBag();
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid token'
