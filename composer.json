@@ -1,17 +1,24 @@
 {
     "name": "tuxonice/pixel-track",
+    "keywords": [
+        "PHP",
+        "gpx",
+        "framework"
+    ],
     "authors": [
         {
             "name": "Helder Correia",
             "email": "tuxboy@tlab.pt"
         }
     ],
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "PixelTrack\\": "src/"
         }
     },
     "require": {
+        "php": "^8.2",
         "sibyx/phpgpx": "1.2.1",
         "ext-json": "*",
         "vlucas/phpdotenv": "5.5.0",
@@ -37,5 +44,15 @@
         "codeception/module-phpbrowser": "3.0.0",
         "codeception/module-asserts": "3.0.0",
         "dg/bypass-finals": "1.4.1"
+    },
+    "scripts": {
+        "static-analysis": [
+            "phpcs",
+            "phpstan"
+        ],
+        "tests": [
+            "@static-analysis",
+            "codecept run"
+        ]
     }
 }
