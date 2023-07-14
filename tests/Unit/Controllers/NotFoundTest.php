@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Twig\TemplateWrapper;
 
-class NotFoundControllerTest extends TestCase
+class NotFoundTest extends TestCase
 {
     protected function setUp(): void
     {

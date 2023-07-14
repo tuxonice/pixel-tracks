@@ -8,6 +8,7 @@ use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Mail;
 use PixelTrack\Service\Twig;
+use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,17 +17,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class MagicLinkController
 {
     public function __construct(
-        private readonly Mail $mail,
-        private readonly Config $configService,
-        private readonly Twig $twig,
-        private readonly UserRepository $userRepository,
-        private readonly Cache $cache,
+        private Mail $mail,
+        private Config $configService,
+        private Twig $twig,
+        private UserRepository $userRepository,
+        private Cache $cache,
+        private Utility $utility,
     ) {
     }
 
     public function requestMagicLink(Session $session): Response
     {
-        $csrf = sha1(uniqid('', true));
+        $csrf = $this->utility->generateCsrfToken();
         $session->set('_csrf', $csrf);
 
         $template = $this->twig->getTwig()->load('Default/magic-link.twig');

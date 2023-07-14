@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\NotAllowed;
 use Symfony\Component\HttpFoundation\Response;
 
-class NotAllowedControllerTest extends TestCase
+class NotAllowedTest extends TestCase
 {
     public function testRequestNotAllowed(): void
     {
