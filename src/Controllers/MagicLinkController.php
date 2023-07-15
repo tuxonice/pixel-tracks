@@ -2,7 +2,6 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\Cache\Cache;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
@@ -21,7 +20,7 @@ class MagicLinkController
         private Config $configService,
         private Twig $twig,
         private UserRepository $userRepository,
-        private Cache $cache,
+        private RateLimiter $rateLimiter,
         private Utility $utility,
     ) {
     }
@@ -45,14 +44,8 @@ class MagicLinkController
 
     public function sendMagicLink(Request $request, Session $session): Response
     {
-        $rateLimiter = new RateLimiter([
-            'refillPeriod' => $_ENV['RATE_LIMITER_REFILL_PERIOD'],
-            'maxCapacity' => $_ENV['RATE_LIMITER_MAX_CAPACITY'],
-            'prefix' => 'magic-link-'
-        ], $this->cache);
-
         $ipAddress = $request->getClientIp();
-        if (!$rateLimiter->check($ipAddress)) {
+        if (!$this->rateLimiter->check($ipAddress)) {
             return new Response(
                 '<h1>429 Too many requests</h1>',
                 Response::HTTP_TOO_MANY_REQUESTS,
