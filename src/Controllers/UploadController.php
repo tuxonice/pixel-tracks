@@ -2,7 +2,6 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\App;
 use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
@@ -33,7 +32,6 @@ class UploadController
         $flashes = $session->getFlashBag();
 
         if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',
                 'Invalid token'
