@@ -52,7 +52,6 @@ class UploadControllerTest extends TestCase
             new RedirectResponse('/profile/'),
             $uploadController->uploadTrack('user-key', $request, $sessionMock)
         );
-
     }
 
     public function testUploadTrackWithInvalidFileType(): void
@@ -78,7 +77,7 @@ class UploadControllerTest extends TestCase
             ->willReturn($flashBagMock);
 
         $uploadedFile = new UploadedFile(
-            dirname(__DIR__, 2).'/Fixtures/sample.gpx',
+            dirname(__DIR__, 2) . '/Fixtures/sample.gpx',
             'track.gpx',
             'application/xml'
         );
