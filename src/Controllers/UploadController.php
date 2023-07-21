@@ -2,10 +2,11 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
+use PixelTrack\Service\FileUploaderService;
+use PixelTrack\Service\Utility;
 use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,6 +23,8 @@ class UploadController
         private readonly Config $configService,
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
+        private readonly FileUploaderService $fileUploaderService,
+        private readonly Utility $utility
     ) {
     }
 
@@ -55,8 +58,8 @@ class UploadController
 
         $userTransfer = $this->userRepository->getUserByKey($userKey);
 
-        $targetFileName = uniqid() . '.' . $file->getClientOriginalExtension();
-        if (!$this->uploadFile($userTransfer, $file, $targetFileName)) {
+        $targetFileName = $this->utility->generateRandomFileName($file);
+        if (!$this->fileUploaderService->uploadFile($userTransfer, $file, $targetFileName)) {
             $flashes->add('danger', 'Unable to upload the file');
 
             return new RedirectResponse(
@@ -64,7 +67,7 @@ class UploadController
             );
         }
 
-        if (!$this->updateDatabase($userKey, $trackName, $targetFileName)) {
+        if (!$this->trackRepository->insertTrack($userKey, $trackName, $targetFileName)) {
             $flashes->add('danger', 'Unable to save track');
 
             return new RedirectResponse(
@@ -79,24 +82,6 @@ class UploadController
         );
     }
 
-    private function uploadFile(UserTransfer $userTransfer, UploadedFile $file, string $targetFileName): bool
-    {
-        $userFolder = $this->configService->getDataPath() . sprintf('/profile-%03d', $userTransfer->getId());
-        $splFileInfo = $file->getFileInfo();
-        if (!file_exists($userFolder)) {
-            if (!mkdir($userFolder)) {
-                return false;
-            };
-        }
-
-
-        if (!move_uploaded_file($splFileInfo->getRealPath(), $userFolder . '/' . $targetFileName)) {
-            return false;
-        }
-
-        return true;
-    }
-
     private function isValidFileType(UploadedFile $file): bool
     {
         $clientMimeType = $file->getClientMimeType();
@@ -106,10 +91,5 @@ class UploadController
                 $file->getContent(),
                 file_get_contents($this->configService->getSchemaPath() . '/gpx.xsd')
             );
-    }
-
-    private function updateDatabase(string $userKey, string $trackName, string $targetFileName): bool
-    {
-        return $this->trackRepository->insertTrack($userKey, $trackName, $targetFileName);
     }
 }
