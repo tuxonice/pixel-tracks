@@ -33,7 +33,7 @@
         "php-di/php-di": "7.0.3",
         "symfony/cache": "6.3.2",
         "phpmailer/phpmailer": "6.8.0",
-        "illuminate/support": "10.17.0",
+        "illuminate/support": "10.17.1",
         "symfony/uid": "6.3.0"
     },
     "require-dev": {
