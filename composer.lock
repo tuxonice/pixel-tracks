@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5cb06391fa4a615fbaeccae5f0cd5e5",
+    "content-hash": "c860f14a8a95fbc7683c29e9f5525b63",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -427,16 +427,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "f23fe9d4e95255dacee1bf3525e0810d1a1b0f37"
+                "reference": "e5a3057a5591e1cfe8183034b0203921abe2c902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/f23fe9d4e95255dacee1bf3525e0810d1a1b0f37",
-                "reference": "f23fe9d4e95255dacee1bf3525e0810d1a1b0f37",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/e5a3057a5591e1cfe8183034b0203921abe2c902",
+                "reference": "e5a3057a5591e1cfe8183034b0203921abe2c902",
                 "shasum": ""
             },
             "require": {
@@ -483,7 +483,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2023-01-30T18:31:20+00:00"
+            "time": "2023-07-14T13:56:28+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -795,16 +795,16 @@
         },
         {
             "name": "php-di/php-di",
-            "version": "7.0.3",
+            "version": "7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-DI/PHP-DI.git",
-                "reference": "d5dad2500f409d8b78371823c8b382fe9b5d0917"
+                "reference": "8ed79468dfb163824bbf48de5e35d1729f9313b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/d5dad2500f409d8b78371823c8b382fe9b5d0917",
-                "reference": "d5dad2500f409d8b78371823c8b382fe9b5d0917",
+                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/8ed79468dfb163824bbf48de5e35d1729f9313b6",
+                "reference": "8ed79468dfb163824bbf48de5e35d1729f9313b6",
                 "shasum": ""
             },
             "require": {
@@ -852,7 +852,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-DI/PHP-DI/issues",
-                "source": "https://github.com/PHP-DI/PHP-DI/tree/7.0.3"
+                "source": "https://github.com/PHP-DI/PHP-DI/tree/7.0.4"
             },
             "funding": [
                 {
@@ -864,7 +864,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-17T10:21:14+00:00"
+            "time": "2023-08-08T15:59:16+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
