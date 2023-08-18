@@ -5,7 +5,7 @@ namespace PixelTrack\Controllers;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
-use PixelTrack\Service\Mail;
+use PixelTrack\Service\MailConnectorService;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,12 +16,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class MagicLinkController
 {
     public function __construct(
-        private Mail $mail,
         private Config $configService,
         private Twig $twig,
         private UserRepository $userRepository,
         private RateLimiter $rateLimiter,
         private Utility $utility,
+        private MailConnectorService $mailConnectorService,
     ) {
     }
 
@@ -86,23 +86,13 @@ class MagicLinkController
         $template = $this->twig->getTwig()->load('Default/Mail/magic-link.twig');
         $view = $template->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
 
-        $mailData = [
-            'from' => [
-                'email' => $_ENV['EMAIL_FROM'],
-                'name' => 'PixelTracks',
-            ],
-            'to' => [
-                [
-                    'email' => $email,
-                    'name' => $email,
-                ]
-            ],
-            'subject' => 'Here is your magic link',
-            'body' => $view,
+        $data = [
+                'to' => $email,
+                'subject' => 'Here is your magic link',
+                'body' => $view
         ];
 
-
-        $this->mail->send($mailData);
+        $this->mailConnectorService->sendRequest($data);
 
         $flashes = $session->getFlashBag();
         $flashes->add(
