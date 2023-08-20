@@ -28,7 +28,7 @@ $MAIN_PATH/bin/composer.phar install --no-dev
 npm install
 npx mix
 
-rm codeception.yml docker-compose.yml .env.dist .env.test .gitignore LICENSE .nvmrc phpcs.xml phpstan.neon README.md renovate.json
+rm codeception.yml deploy-prod.sh docker-compose.yml .env.dist .env.test .gitignore LICENSE .nvmrc phpcs.xml phpstan.neon README.md renovate.json
 rm -rf .github tests docker docker-bin var .git
 
 ln -s $MAIN_PATH/shared/.env .env

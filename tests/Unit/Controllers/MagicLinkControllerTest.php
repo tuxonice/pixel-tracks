@@ -250,6 +250,7 @@ class MagicLinkControllerTest extends TestCase
         $mailConnectorServiceMock->expects(self::once())
             ->method('sendRequest')
             ->with([
+                'from_name' => 'Pixel Tracks',
                 'to' => 'user@example.com',
                 'subject' => 'Here is your magic link',
                 'body' => '',
@@ -343,6 +344,7 @@ class MagicLinkControllerTest extends TestCase
         $mailConnectorServiceMock->expects(self::once())
             ->method('sendRequest')
             ->with([
+                'from_name' => 'Pixel Tracks',
                 'to' => 'user@example.com',
                 'subject' => 'Here is your magic link',
                 'body' => '',
