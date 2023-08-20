@@ -87,6 +87,7 @@ class MagicLinkController
         $view = $template->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
 
         $data = [
+                'from_name' => 'Pixel Tracks',
                 'to' => $email,
                 'subject' => 'Here is your magic link',
                 'body' => $view
