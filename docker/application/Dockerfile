@@ -1,7 +1,7 @@
 #
 # Application
 #
-FROM php:8.2.9-apache-bullseye
+FROM php:8.2.10-apache-bullseye
 
 RUN apt-get update && apt-get install -y \
     imagemagick \
