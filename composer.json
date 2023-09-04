@@ -32,7 +32,7 @@
         "ext-libxml": "*",
         "php-di/php-di": "7.0.5",
         "symfony/cache": "6.3.4",
-        "illuminate/support": "10.21.0",
+        "illuminate/support": "10.21.1",
         "symfony/uid": "6.3.0",
         "symfony/http-client": "6.3.2"
     },
