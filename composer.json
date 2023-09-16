@@ -43,7 +43,7 @@
         "codeception/codeception": "5.0.11",
         "codeception/module-phpbrowser": "3.0.0",
         "codeception/module-asserts": "3.0.0",
-        "dg/bypass-finals": "1.5.0"
+        "dg/bypass-finals": "1.5.1"
     },
     "scripts": {
         "static-analysis": [
