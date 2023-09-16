@@ -83,14 +83,25 @@ class MagicLinkController
         $loginKey = $this->userRepository->regenerateLoginKey($email);
 
 
-        $template = $this->twig->getTwig()->load('Default/Mail/magic-link.twig');
-        $view = $template->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
+        $templateHtml = $this->twig->getTwig()->load('Default/Mail/magic-link-html.twig');
+        $viewHtml = $templateHtml->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
+
+        $templateText = $this->twig->getTwig()->load('Default/Mail/magic-link-text.twig');
+        $viewText = $templateText->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
 
         $data = [
-                'from_name' => 'Pixel Tracks',
-                'to' => $email,
+                'from' => [
+                    'name' => 'Pixel Tracks',
+                ],
+                'to' => [
+                  'name' => $email,
+                  'email' => $email
+                ],
                 'subject' => 'Here is your magic link',
-                'body' => $view
+                'body' => [
+                    "text" => $viewText,
+                    "html" => $viewHtml,
+                ]
         ];
 
         $this->mailConnectorService->sendRequest($data);

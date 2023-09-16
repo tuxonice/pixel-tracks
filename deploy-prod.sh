@@ -7,6 +7,7 @@
 #     |-- v0.1.1
 #   |-- shared
 #     |-- var
+set -e
 
 MAIN_PATH=$(pwd)
 
@@ -24,7 +25,7 @@ cd "releases/$release_name" || exit
 git clone https://github.com/tuxonice/pixel-tracks.git .
 git checkout $release_name
 
-$MAIN_PATH/bin/composer.phar install --no-dev
+composer install --no-dev
 npm install
 npx mix
 

@@ -11,6 +11,7 @@
                     <h3 class="card-title">Tracks</h3>
                 </div>
                 <div class="card-body">
+                    {% if tracks %}
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -20,7 +21,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% if tracks %}
                             {% for track in tracks %}
                                 <tr>
                                     <td>
@@ -42,11 +42,12 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        {% else %}
-                            <div class="text-center">No tracks yet!</div>
-                        {% endif %}
+
                         </tbody>
                     </table>
+                    {% else %}
+                        <div class="text-center">No tracks yet!</div>
+                    {% endif %}
                 </div>
 
                 <div class="card-footer clearfix">

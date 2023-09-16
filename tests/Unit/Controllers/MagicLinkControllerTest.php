@@ -188,7 +188,7 @@ class MagicLinkControllerTest extends TestCase
 
         $_ENV['EMAIL_FROM'] = 'noreply@example.com';
 
-        $configMock->expects(self::once())
+        $configMock->expects(self::exactly(2))
             ->method('getBaseUrl')
             ->willReturn('http://example.com/');
 
@@ -230,30 +230,49 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
-        $templateWrapperMock = $this->createMock(TemplateWrapper::class);
-        $templateWrapperMock->expects(self::once())
+        $templateWrapperHtmlMock = $this->createMock(TemplateWrapper::class);
+        $templateWrapperHtmlMock->expects(self::once())
             ->method('render')
             ->with([
                 'link' => 'http://example.com/login/user-login-key',
-            ]);
+            ])
+            ->willReturn('html-link');
+
+        $templateWrapperTextMock = $this->createMock(TemplateWrapper::class);
+        $templateWrapperTextMock->expects(self::once())
+            ->method('render')
+            ->with([
+                'link' => 'http://example.com/login/user-login-key',
+            ])
+        ->willReturn('text-link');
 
         $environmentMock = $this->createMock(Environment::class);
-        $environmentMock->expects(self::once())
+        $environmentMock->expects(self::exactly(2))
             ->method('load')
-            ->with('Default/Mail/magic-link.twig')
-            ->willReturn($templateWrapperMock);
+            ->willReturnCallback(fn ($operation) => match ($operation) {
+                'Default/Mail/magic-link-html.twig' => $templateWrapperHtmlMock,
+                'Default/Mail/magic-link-text.twig' => $templateWrapperTextMock,
+            });
 
-        $twigMock->expects(self::once())
+        $twigMock->expects(self::exactly(2))
             ->method('getTwig')
             ->willReturn($environmentMock);
 
         $mailConnectorServiceMock->expects(self::once())
             ->method('sendRequest')
             ->with([
-                'from_name' => 'Pixel Tracks',
-                'to' => 'user@example.com',
+                'from' => [
+                    'name' => 'Pixel Tracks',
+                ],
+                'to' => [
+                    'name' => 'user@example.com',
+                    'email' => 'user@example.com',
+                ],
                 'subject' => 'Here is your magic link',
-                'body' => '',
+                'body' => [
+                    'html' => 'html-link',
+                    'text' => 'text-link',
+                ],
             ]);
 
         $magicLinkController = new MagicLinkController(
@@ -283,7 +302,7 @@ class MagicLinkControllerTest extends TestCase
 
         $_ENV['EMAIL_FROM'] = 'noreply@example.com';
 
-        $configMock->expects(self::once())
+        $configMock->expects(self::exactly(2))
             ->method('getBaseUrl')
             ->willReturn('http://example.com/');
 
@@ -324,30 +343,49 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
-        $templateWrapperMock = $this->createMock(TemplateWrapper::class);
-        $templateWrapperMock->expects(self::once())
+        $templateWrapperHtmlMock = $this->createMock(TemplateWrapper::class);
+        $templateWrapperHtmlMock->expects(self::once())
             ->method('render')
             ->with([
                 'link' => 'http://example.com/login/user-login-key',
-            ]);
+            ])
+            ->willReturn('html-link');
+
+        $templateWrapperTextMock = $this->createMock(TemplateWrapper::class);
+        $templateWrapperTextMock->expects(self::once())
+            ->method('render')
+            ->with([
+                'link' => 'http://example.com/login/user-login-key',
+            ])
+            ->willReturn('text-link');
 
         $environmentMock = $this->createMock(Environment::class);
-        $environmentMock->expects(self::once())
+        $environmentMock->expects(self::exactly(2))
             ->method('load')
-            ->with('Default/Mail/magic-link.twig')
-            ->willReturn($templateWrapperMock);
+            ->willReturnCallback(fn ($operation) => match ($operation) {
+                'Default/Mail/magic-link-html.twig' => $templateWrapperHtmlMock,
+                'Default/Mail/magic-link-text.twig' => $templateWrapperTextMock,
+            });
 
-        $twigMock->expects(self::once())
+        $twigMock->expects(self::exactly(2))
             ->method('getTwig')
             ->willReturn($environmentMock);
 
         $mailConnectorServiceMock->expects(self::once())
             ->method('sendRequest')
             ->with([
-                'from_name' => 'Pixel Tracks',
-                'to' => 'user@example.com',
+                'from' => [
+                    'name' => 'Pixel Tracks',
+                ],
+                'to' => [
+                    'name' => 'user@example.com',
+                    'email' => 'user@example.com',
+                ],
                 'subject' => 'Here is your magic link',
-                'body' => '',
+                'body' => [
+                    'html' => 'html-link',
+                    'text' => 'text-link',
+                ],
             ]);
 
         $magicLinkController = new MagicLinkController(
