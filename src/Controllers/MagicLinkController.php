@@ -52,10 +52,10 @@ class MagicLinkController
             );
         }
 
-        $csrfFormToken = $session->get('_csrf');
-        $csrfToken = $request->request->get('_csrf');
+        $csrfFormToken = (string)$session->get('_csrf');
+        $csrfToken = (string)$request->request->get('_csrf');
 
-        if (!hash_equals($csrfFormToken, $csrfToken)) {
+        if ($csrfFormToken === '' || $csrfToken === '' || !hash_equals($csrfFormToken, $csrfToken)) {
             $flashes = $session->getFlashBag();
             $flashes->add(
                 'danger',

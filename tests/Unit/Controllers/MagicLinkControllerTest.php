@@ -127,6 +127,101 @@ class MagicLinkControllerTest extends TestCase
         );
     }
 
+    public function testRequestMagicLinkWithNoCsrfToken(): void
+    {
+        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $configMock = $this->createMock(Config::class);
+        $twigMock = $this->createMock(Twig::class);
+        $userRepositoryMock = $this->createMock(UserRepository::class);
+        $utilityMock = $this->createMock(Utility::class);
+        $sessionMock = $this->createMock(Session::class);
+        $rateLimiterMock = $this->createMock(RateLimiter::class);
+
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '10.0.0.1');
+
+        $rateLimiterMock->expects(self::once())
+            ->method('check')
+            ->with('10.0.0.1')
+            ->willReturn(true);
+
+        $sessionMock->expects(self::once())
+            ->method('get')
+            ->with('_csrf')
+            ->willReturn('csrf-form-token');
+
+        $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $flashBagMock->expects(self::once())
+            ->method('add')
+            ->with('danger', 'Invalid token');
+
+        $sessionMock->expects(self::once())
+            ->method('getFlashBag')
+            ->willReturn($flashBagMock);
+
+        $magicLinkController = new MagicLinkController(
+            $configMock,
+            $twigMock,
+            $userRepositoryMock,
+            $rateLimiterMock,
+            $utilityMock,
+            $mailConnectorServiceMock,
+        );
+
+        $this->assertEquals(
+            new RedirectResponse('/send-magic-link'),
+            $magicLinkController->sendMagicLink($request, $sessionMock)
+        );
+    }
+
+    public function testRequestMagicLinkWithExpiredCsrfToken(): void
+    {
+        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $configMock = $this->createMock(Config::class);
+        $twigMock = $this->createMock(Twig::class);
+        $userRepositoryMock = $this->createMock(UserRepository::class);
+        $utilityMock = $this->createMock(Utility::class);
+        $sessionMock = $this->createMock(Session::class);
+        $rateLimiterMock = $this->createMock(RateLimiter::class);
+
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '10.0.0.1');
+        $request->request->set('_csrf', 'csrf-token');
+
+        $rateLimiterMock->expects(self::once())
+            ->method('check')
+            ->with('10.0.0.1')
+            ->willReturn(true);
+
+        $sessionMock->expects(self::once())
+            ->method('get')
+            ->with('_csrf')
+            ->willReturn(null);
+
+        $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $flashBagMock->expects(self::once())
+            ->method('add')
+            ->with('danger', 'Invalid token');
+
+        $sessionMock->expects(self::once())
+            ->method('getFlashBag')
+            ->willReturn($flashBagMock);
+
+        $magicLinkController = new MagicLinkController(
+            $configMock,
+            $twigMock,
+            $userRepositoryMock,
+            $rateLimiterMock,
+            $utilityMock,
+            $mailConnectorServiceMock,
+        );
+
+        $this->assertEquals(
+            new RedirectResponse('/send-magic-link'),
+            $magicLinkController->sendMagicLink($request, $sessionMock)
+        );
+    }
+
     public function testRequestMagicLinkWithInvalidEmail(): void
     {
         $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
