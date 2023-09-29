@@ -4,7 +4,7 @@ namespace Unit\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\LoginController;
-use PixelTrack\DataTransferObjects\UserTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -2,7 +2,7 @@
 
 namespace PixelTrack\Repository;
 
-use PixelTrack\DataTransferObjects\UserTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
 use Symfony\Component\Uid\Uuid;

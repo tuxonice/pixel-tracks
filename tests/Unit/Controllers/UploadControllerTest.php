@@ -4,7 +4,7 @@ namespace Unit\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\UploadController;
-use PixelTrack\DataTransferObjects\UserTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;

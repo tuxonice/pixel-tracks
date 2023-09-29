@@ -2,7 +2,7 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\DataTransferObjects\TrackTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;

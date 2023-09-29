@@ -2,7 +2,7 @@
 
 namespace PixelTrack\Repository;
 
-use PixelTrack\DataTransferObjects\TrackTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
 

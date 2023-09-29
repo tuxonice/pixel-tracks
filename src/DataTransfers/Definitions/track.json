@@ -5,23 +5,48 @@
       "properties": [
         {
           "name": "id",
-          "type": "int"
+          "type": "int",
+          "nullable": false
         },
         {
           "name": "userId",
-          "type": "int"
+          "type": "int",
+          "nullable": false
         },
         {
           "name": "name",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         },
         {
           "name": "key",
-          "type": "string"
+          "type": "string",
+          "nullable": false
         },
         {
           "name": "filename",
-          "type": "string"
+          "type": "string",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "properties": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "nullable": false
         }
       ]
     }

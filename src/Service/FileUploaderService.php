@@ -2,7 +2,7 @@
 
 namespace PixelTrack\Service;
 
-use PixelTrack\DataTransferObjects\UserTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploaderService

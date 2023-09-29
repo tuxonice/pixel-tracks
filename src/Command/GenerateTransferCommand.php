@@ -2,12 +2,10 @@
 
 namespace PixelTrack\Command;
 
-use PixelTrack\DataTransfers\DefinitionBuilder;
-use PixelTrack\DataTransfers\OutputBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use PixelTrack\DataTransfers\Generator\Generator;
+use Tlab\TransferObjects\DataTransferBuilder;
 
 class GenerateTransferCommand extends Command
 {
@@ -22,8 +20,14 @@ class GenerateTransferCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $generator = new Generator(new DefinitionBuilder(), new OutputBuilder());
-        $generator->generate();
+        $dataTransferDirectory = dirname(__DIR__) . '/DataTransfers/';
+        $dataTransferBuilder = new DataTransferBuilder(
+            $dataTransferDirectory . 'Definitions',
+            $dataTransferDirectory .  'DataTransferObjects',
+            'PixelTrack\\DataTransfers\\DataTransferObjects',
+        );
+        $dataTransferBuilder->build();
+
         return Command::SUCCESS;
     }
 }

@@ -5,7 +5,7 @@ namespace Unit\Controllers;
 use DG\BypassFinals;
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\MagicLinkController;
-use PixelTrack\DataTransferObjects\UserTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
