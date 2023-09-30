@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ab539590e0a705781c08ba88158762d",
+    "content-hash": "d268621f3f207ef092d9d2e4bd173ee3",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2887,11 +2887,11 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "dev-main",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "1f3a84e64516f3b04c98d36ee63e0151f12310dd"
+                "reference": "31090dab7dafd271c5ecee259f8df64eb0f4f439"
             },
             "require": {
                 "ext-json": "*",
@@ -2906,7 +2906,6 @@
                 "squizlabs/php_codesniffer": "^3.7",
                 "symfony/var-dumper": "^6.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2918,13 +2917,22 @@
                     "Tlab\\Tests\\": "tests/"
                 }
             },
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "Helder Correia",
-                    "email": "tuxboy@tlab.pt"
+                    "email": "tuxboy@tlab.pt",
+                    "role": "Developer"
                 }
             ],
-            "time": "2023-09-29T18:52:34+00:00"
+            "description": "Build data transfer objects from json definition",
+            "keywords": [
+                "data-transfer-objects",
+                "dto"
+            ],
+            "time": "2023-09-30T17:17:58+00:00"
         },
         {
             "name": "twig/twig",
@@ -6814,9 +6822,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tuxonice/transfer-objects": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
