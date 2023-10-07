@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5751ce381553dcd1515b3450b2acf011",
+    "content-hash": "f8db71cf94928cd4d4962b2b7f4e0c78",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2887,11 +2887,11 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "v0.1.0",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "31090dab7dafd271c5ecee259f8df64eb0f4f439"
+                "reference": "d801ddf3c5b57644a027e2a2ec167c30a0068216"
             },
             "require": {
                 "ext-json": "*",
@@ -2932,7 +2932,7 @@
                 "data-transfer-objects",
                 "dto"
             ],
-            "time": "2023-09-30T17:17:58+00:00"
+            "time": "2023-10-07T16:42:09+00:00"
         },
         {
             "name": "twig/twig",
