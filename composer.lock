@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3a4079d5d789c0c5f7cde9774c0a528",
+    "content-hash": "2085ee50a178297f1d97021731c28412",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -3077,24 +3077,24 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "v0.3.1",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "50c8958003f23ab0e83b42b73549aba1d1d2da67"
+                "reference": "f4dbd6e874fa870e19a609cb016b4cc575c8f3be"
             },
             "require": {
                 "ext-json": "*",
-                "opis/json-schema": "2.3.0",
+                "opis/json-schema": "^2.3",
                 "php": "^8.2",
-                "twig/twig": "3.7.1",
-                "webmozart/assert": "1.11.0"
+                "twig/twig": "^3.5",
+                "webmozart/assert": "^1.11"
             },
             "require-dev": {
-                "phpstan/phpstan": "1.10.41",
-                "phpunit/phpunit": "10.4.2",
-                "squizlabs/php_codesniffer": "3.7.2",
-                "symfony/var-dumper": "6.3.8"
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.1",
+                "squizlabs/php_codesniffer": "^3.7",
+                "symfony/var-dumper": "^6.2"
             },
             "type": "library",
             "autoload": {
@@ -3122,7 +3122,7 @@
                 "data-transfer-objects",
                 "dto"
             ],
-            "time": "2023-11-10T20:23:50+00:00"
+            "time": "2023-11-22T21:30:45+00:00"
         },
         {
             "name": "twig/twig",
