@@ -27,6 +27,9 @@ class MigrationProvider
         $this->runMigration($migrationsToRun);
     }
 
+    /**
+     * @return array<string,bool>
+     */
     public function status(): array
     {
         $migrationFiles = $this->getMigrationFiles();
@@ -52,6 +55,9 @@ class MigrationProvider
             );');
     }
 
+    /**
+     * @return array<int,string>
+     */
     private function getMigrationFiles(): array
     {
         $migrationsPath = $this->config->getMigrationsPath();
@@ -63,6 +69,9 @@ class MigrationProvider
         return $migrationFiles;
     }
 
+    /**
+     * @return array<int,string>
+     */
     private function getMigrationFromDatabase(): array
     {
         $sql = 'SELECT * FROM `migrations`';
@@ -81,7 +90,12 @@ class MigrationProvider
         return $migrations;
     }
 
-    private function runMigration(array $migrationsToRun)
+    /**
+     * @param array<int,string> $migrationsToRun
+     *
+     * @return void
+     */
+    private function runMigration(array $migrationsToRun): void
     {
         foreach ($migrationsToRun as $migration) {
             $object = require($this->config->getMigrationsPath() . '/' . $migration . '.php');

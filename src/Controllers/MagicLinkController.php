@@ -27,6 +27,7 @@ class MagicLinkController
 
     public function requestMagicLink(Session $session): Response
     {
+        $session->clear();
         $csrf = $this->utility->generateCsrfToken();
         $session->set('_csrf', $csrf);
 
@@ -81,6 +82,7 @@ class MagicLinkController
             $this->userRepository->createUserByEmail($email);
         }
         $loginKey = $this->userRepository->regenerateLoginKey($email);
+        $this->userRepository->regenerateUserKey($email);
 
 
         $templateHtml = $this->twig->getTwig()->load('Default/Mail/magic-link-html.twig');

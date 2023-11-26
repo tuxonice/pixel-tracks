@@ -30,14 +30,14 @@ class UserRepository
         return (bool)$result->fetchArray(SQLITE3_ASSOC)['userCount'];
     }
 
-    public function regenerateUserKey(string $oldKey): string
+    public function regenerateUserKey(string $email): string
     {
         $newKey = Uuid::v4();
 
-        $sql = 'UPDATE users SET key = :newKey WHERE key = :oldKey';
+        $sql = 'UPDATE users SET key = :newKey WHERE email = :email';
         $statement = $this->database->prepare($sql);
-        $statement->bindValue(':newKey', $newKey, SQLITE3_TEXT);
-        $statement->bindValue(':oldKey', $oldKey, SQLITE3_TEXT);
+        $statement->bindValue(':newKey', $newKey);
+        $statement->bindValue(':email', $email);
         $statement->execute();
 
         return $newKey;
@@ -113,7 +113,7 @@ class UserRepository
         $userTransfer = new UserTransfer();
         $userTransfer->setId($databaseRow['id']);
         $userTransfer->setKey($databaseRow['key']);
-        $userTransfer->setEmail($databaseRow['id']);
+        $userTransfer->setEmail($databaseRow['email']);
 
         return $userTransfer;
     }
@@ -129,5 +129,13 @@ class UserRepository
         $statement->execute();
 
         return $loginKey;
+    }
+
+    public function resetLoginKey(string $email): void
+    {
+        $sql = 'UPDATE users SET login_key = NULL WHERE email = :email';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':email', $email);
+        $statement->execute();
     }
 }

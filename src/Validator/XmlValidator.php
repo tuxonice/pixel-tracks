@@ -3,9 +3,13 @@
 namespace PixelTrack\Validator;
 
 use DOMDocument;
+use LibXMLError;
 
 class XmlValidator
 {
+    /**
+     * @var array<mixed>
+     */
     private array $errors = [];
 
     public function isValid(string $xmlDocument, string $schema): bool
@@ -25,12 +29,15 @@ class XmlValidator
         return $isValid;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getErrors(): array
     {
         return $this->errors;
     }
 
-    private function libxmlDisplayError($error): string
+    private function libxmlDisplayError(LibXMLError $error): string
     {
         $errorLine = '';
         switch ($error->level) {

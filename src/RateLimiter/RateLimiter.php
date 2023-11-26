@@ -20,6 +20,10 @@ class RateLimiter
 
     private CacheInterface $cache;
 
+    /**
+     * @param array<string,mixed> $options
+     * @param Cache $cache
+     */
     public function __construct(array $options, Cache $cache)
     {
         $this->prefix = $options['prefix'];

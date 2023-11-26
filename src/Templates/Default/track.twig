@@ -1,0 +1,61 @@
+{% extends "Default/base.twig" %}
+
+{% block title %}Track{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Track Info</h3>
+                </div>
+                <div class="card-body">
+                        <p class="lead">{{ trackName }}</p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody><tr>
+                                    <th style="width:50%">Points</th>
+                                    <td>{{ points }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Distance</th>
+                                    <td>{{ distance }} Km</td>
+                                </tr>
+                                <tr>
+                                    <th>Elevation</th>
+                                    <td>{{ elevation }} m</td>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <td>{{ createdAt }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <form action="/track/delete" method="post" onsubmit="return confirm('Are you sure?')">
+                                <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                                <input type="hidden" name="track_key" value="{{ trackKey }}"/>
+                                <a href="/profile" class="btn btn-default">
+                                    <i class="fas fa-list"></i> Back to List
+                                </a>
+                                <button type="submit" class="btn btn-danger float-right" style="margin-right: 5px;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+
+
+
+{% endblock %}

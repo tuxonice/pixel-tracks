@@ -22,6 +22,7 @@ class NotFoundTest extends TestCase
     {
         $twigMock = $this->createMock(Twig::class);
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperMock->expects(self::once())
             ->method('render')

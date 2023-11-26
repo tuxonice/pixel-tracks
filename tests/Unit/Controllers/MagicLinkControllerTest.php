@@ -46,6 +46,7 @@ class MagicLinkControllerTest extends TestCase
             ->method('generateCsrfToken')
             ->willReturn('test-csrf-token');
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperMock->expects(self::once())
             ->method('render')
@@ -325,6 +326,7 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperHtmlMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperHtmlMock->expects(self::once())
             ->method('render')
@@ -333,6 +335,7 @@ class MagicLinkControllerTest extends TestCase
             ])
             ->willReturn('html-link');
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperTextMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperTextMock->expects(self::once())
             ->method('render')
@@ -344,10 +347,12 @@ class MagicLinkControllerTest extends TestCase
         $environmentMock = $this->createMock(Environment::class);
         $environmentMock->expects(self::exactly(2))
             ->method('load')
-            ->willReturnCallback(fn ($operation) => match ($operation) {
-                'Default/Mail/magic-link-html.twig' => $templateWrapperHtmlMock,
-                'Default/Mail/magic-link-text.twig' => $templateWrapperTextMock,
-            });
+            ->willReturnMap(
+                [
+                    ['Default/Mail/magic-link-html.twig', $templateWrapperHtmlMock],
+                    ['Default/Mail/magic-link-text.twig', $templateWrapperTextMock],
+                ]
+            );
 
         $twigMock->expects(self::exactly(2))
             ->method('getTwig')
@@ -438,6 +443,7 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperHtmlMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperHtmlMock->expects(self::once())
             ->method('render')
@@ -446,6 +452,7 @@ class MagicLinkControllerTest extends TestCase
             ])
             ->willReturn('html-link');
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperTextMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperTextMock->expects(self::once())
             ->method('render')
@@ -457,10 +464,12 @@ class MagicLinkControllerTest extends TestCase
         $environmentMock = $this->createMock(Environment::class);
         $environmentMock->expects(self::exactly(2))
             ->method('load')
-            ->willReturnCallback(fn ($operation) => match ($operation) {
-                'Default/Mail/magic-link-html.twig' => $templateWrapperHtmlMock,
-                'Default/Mail/magic-link-text.twig' => $templateWrapperTextMock,
-            });
+            ->willReturnMap(
+                [
+                    ['Default/Mail/magic-link-html.twig', $templateWrapperHtmlMock],
+                    ['Default/Mail/magic-link-text.twig', $templateWrapperTextMock],
+                ]
+            );
 
         $twigMock->expects(self::exactly(2))
             ->method('getTwig')

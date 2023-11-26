@@ -5,28 +5,43 @@
       "properties": [
         {
           "name": "id",
-          "type": "int",
-          "nullable": false
+          "type": "int"
         },
         {
           "name": "userId",
-          "type": "int",
-          "nullable": false
+          "type": "int"
         },
         {
           "name": "name",
-          "type": "string",
-          "nullable": false
+          "type": "string"
         },
         {
           "name": "key",
-          "type": "string",
-          "nullable": false
+          "type": "string"
         },
         {
           "name": "filename",
-          "type": "string",
-          "nullable": false
+          "type": "string"
+        },
+        {
+          "name": "totalPoints",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "elevation",
+          "type": "float",
+          "nullable": true
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "nullable": true
+        },
+        {
+          "name": "createdAt",
+          "type": "DateTime",
+          "namespace": "DateTime"
         }
       ]
     },

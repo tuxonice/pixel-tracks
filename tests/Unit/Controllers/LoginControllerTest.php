@@ -38,7 +38,7 @@ class LoginControllerTest extends TestCase
             new RedirectResponse(
                 '/send-magic-link'
             ),
-            $loginController->login('test-login-key', $sessionMock)
+            $loginController->login($sessionMock, 'test-login-key')
         );
     }
 
@@ -48,29 +48,32 @@ class LoginControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
 
         $userTransfer = new UserTransfer();
-        $userTransfer->setKey('test-user-key');
+        $userTransfer
+            ->setKey('test-user-key')
+            ->setEmail('user@example.com');
 
         $userRepositoryMock->expects(self::once())
             ->method('findUserByLoginKey')
             ->with('test-login-key')
             ->willReturn($userTransfer);
 
+        $userRepositoryMock->expects(self::once())
+            ->method('resetLoginKey')
+            ->with('user@example.com');
+
         $sessionMock->expects(self::never())
             ->method('getFlashBag');
 
         $loginController = new LoginController($userRepositoryMock);
-        $cookie = new Cookie('userKey', 'test-user-key', '2037-01-01');
 
         $expectedResponse = new RedirectResponse(
             '/profile/',
-            302,
-            [$cookie]
+            302
         );
-        $expectedResponse->headers->setCookie($cookie);
 
         $this->assertEquals(
             $expectedResponse,
-            $loginController->login('test-login-key', $sessionMock)
+            $loginController->login($sessionMock, 'test-login-key')
         );
     }
 }

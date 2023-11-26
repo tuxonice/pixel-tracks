@@ -46,12 +46,6 @@
         "codeception/module-asserts": "3.0.0",
         "dg/bypass-finals": "1.5.1"
     },
-    "repositories": [
-        {
-            "url": "https://github.com/tuxonice/data-transfer-object.git",
-            "type": "git"
-        }
-    ],
     "scripts": {
         "static-analysis": [
             "phpcs",

@@ -2,21 +2,17 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
-use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController
 {
     public function __construct(
-        private readonly Config $configService,
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
@@ -24,11 +20,9 @@ class HomeController
     ) {
     }
 
-    public function index(Request $request): RedirectResponse
+    public function index(Session $session): RedirectResponse
     {
-        $cookies = $request->cookies;
-
-        $userKey = $cookies->get('userKey');
+        $userKey = $session->get('userKey');
 
         if (!$userKey || !$this->userRepository->userExists($userKey)) {
             return new RedirectResponse(
@@ -41,13 +35,11 @@ class HomeController
         );
     }
 
-    public function profile(Request $request, Session $session): Response
+    public function profile(Session $session): Response
     {
         $csrf = $this->utility->generateCsrfToken();
         $session->set('_csrf', $csrf);
-        $cookies = $request->cookies;
-
-        $userKey = $cookies->get('userKey');
+        $userKey = $session->get('userKey');
 
         if (!$userKey || !$this->userRepository->userExists($userKey)) {
             $flashes = $session->getFlashBag();
@@ -71,49 +63,5 @@ class HomeController
             $view,
             Response::HTTP_OK
         );
-    }
-
-    public function deleteTrack(string $userKey, Request $request, Session $session): Response
-    {
-        $csrfFormToken = $session->get('_csrf');
-        $csrfToken = $request->request->get('_csrf');
-        $trackId = $request->request->get('track_id');
-        $flashes = $session->getFlashBag();
-
-        if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes->add(
-                'danger',
-                'Invalid token'
-            );
-
-            return new RedirectResponse('/profile/');
-        }
-        $userTransfer = $this->userRepository->getUserByKey($userKey);
-
-        if ($this->trackRepository->isTrackFromUser($trackId, $userTransfer->getId())) {
-            $trackTransfer = $this->trackRepository->getTrackById($trackId);
-            $this->deleteTrackFile($trackTransfer);
-            $this->trackRepository->deleteTrack($trackId);
-        }
-
-        $flashes->add('success', 'Track deleted');
-
-        return new RedirectResponse(
-            '/profile/'
-        );
-    }
-
-    private function deleteTrackFile(TrackTransfer $trackTransfer): void
-    {
-        $filename = sprintf(
-            "%s/profile-%03d/%s",
-            $this->configService->getDataPath(),
-            $trackTransfer->getUserId(),
-            $trackTransfer->getFilename()
-        );
-
-        if (file_exists($filename)) {
-            unlink($filename);
-        }
     }
 }

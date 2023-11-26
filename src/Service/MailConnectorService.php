@@ -14,6 +14,11 @@ class MailConnectorService
         $this->httpClient = HttpClient::create();
     }
 
+    /**
+     * @param array<mixed> $data
+     *
+     * @return string
+     */
     public function sendRequest(array $data): string
     {
         $response = $this->httpClient->request(

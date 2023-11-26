@@ -2,7 +2,9 @@
 
 namespace PixelTrack\Service;
 
+use DateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Uid\Uuid;
 
 class Utility
 {
@@ -14,5 +16,15 @@ class Utility
     public function generateRandomFileName(UploadedFile $file): string
     {
         return uniqid() . '.' . $file->getClientOriginalExtension();
+    }
+
+    public function generateTrackKey(): string
+    {
+        return Uuid::v4();
+    }
+
+    public function currentDateTime(): DateTime
+    {
+        return new DateTime();
     }
 }

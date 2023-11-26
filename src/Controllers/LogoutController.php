@@ -2,18 +2,16 @@
 
 namespace PixelTrack\Controllers;
 
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class LogoutController
 {
-    public function index(): Response
+    public function index(Session $session): Response
     {
-        $cookie = new Cookie('userKey', '', '2000-01-01');
-        $redirectResponse = new RedirectResponse('/send-magic-link', 302, [$cookie]);
-        $redirectResponse->headers->setCookie($cookie);
+        $session->clear();
 
-        return $redirectResponse;
+        return new RedirectResponse('/send-magic-link', 302);
     }
 }

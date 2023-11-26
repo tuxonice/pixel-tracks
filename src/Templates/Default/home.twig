@@ -27,18 +27,14 @@
                                         {{ track.name }}
                                     </td>
                                     <td>
-                                        <a href="/profile/{{ userKey }}/map/{{ track.key }}" target="_blank" class="nav-link">
+                                        <a href="/map/{{ track.key }}" target="_blank" class="nav-link" title="Show on map">
                                             <i class="fas fa-solid fa-map"></i>
                                         </a>
                                     </td>
                                     <td>
-                                        <form action="/profile/{{userKey}}/delete-track" method="post" onsubmit="return confirm('Are you sure?')">
-                                            <input type="hidden" name="_csrf" value="{{ csrf }}"/>
-                                            <input type="hidden" name="track_id" value="{{ track.id }}"/>
-                                            <a href="#" class="nav-link" onclick="event.preventDefault(); this.closest('form').submit();">
-                                                <i class="fas fa-solid fa-trash"></i>
-                                            </a>
-                                        </form>
+                                        <a href="/track/info/{{track.key}}" class="nav-link" title="Show info">
+                                            <i class="fas fa-solid fa-info-circle"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -70,7 +66,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Upload Track</h3>
                 </div>
-                <form method="POST" enctype="multipart/form-data" action="/upload/{{ userKey }}/upload-track">
+                <form method="POST" enctype="multipart/form-data" action="/track/upload">
                     <input type="hidden" name="_csrf" value="{{ csrf }}"/>
                     <div class="card-body">
                         <div class="form-group">

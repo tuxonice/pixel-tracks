@@ -2,9 +2,12 @@
 
 namespace Unit\Controllers;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\UploadController;
+use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
+use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
@@ -29,11 +32,14 @@ class UploadControllerTest extends TestCase
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gpsTrackMock = $this->createMock(GpsTrack::class);
 
-        $sessionMock->expects(self::once())
+        $sessionMock->expects(self::exactly(2))
             ->method('get')
-            ->with('_csrf')
-            ->willReturn('csrf-form-token');
+            ->willReturnMap([
+                ['userKey', null, 'test-user-key'],
+                ['_csrf', null, 'csrf-form-token'],
+            ]);
 
         $flashBagMock->expects(self::once())
             ->method('add')
@@ -52,12 +58,13 @@ class UploadControllerTest extends TestCase
             $userRepositoryMock,
             $trackRepositoryMock,
             $fileUploaderServiceMock,
-            $utilityMock
+            $utilityMock,
+            $gpsTrackMock,
         );
 
         $this->assertEquals(
             new RedirectResponse('/profile/'),
-            $uploadController->uploadTrack('user-key', $request, $sessionMock)
+            $uploadController->uploadTrack($request, $sessionMock)
         );
     }
 
@@ -71,11 +78,14 @@ class UploadControllerTest extends TestCase
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gpsTrackMock = $this->createMock(GpsTrack::class);
 
-        $sessionMock->expects(self::once())
+        $sessionMock->expects(self::exactly(2))
             ->method('get')
-            ->with('_csrf')
-            ->willReturn('csrf-token');
+            ->willReturnMap([
+                ['userKey', null, 'test-user-key'],
+                ['_csrf', null, 'csrf-token'],
+            ]);
 
         $flashBagMock->expects(self::once())
             ->method('add')
@@ -101,12 +111,13 @@ class UploadControllerTest extends TestCase
             $userRepositoryMock,
             $trackRepositoryMock,
             $fileUploaderServiceMock,
-            $utilityMock
+            $utilityMock,
+            $gpsTrackMock,
         );
 
         $this->assertEquals(
             new RedirectResponse('/profile/'),
-            $uploadController->uploadTrack('user-key', $request, $sessionMock)
+            $uploadController->uploadTrack($request, $sessionMock)
         );
     }
 
@@ -120,11 +131,26 @@ class UploadControllerTest extends TestCase
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gpsTrackMock = $this->createMock(GpsTrack::class);
 
-        $sessionMock->expects(self::once())
+        $gpsTrackMock->expects(self::once())
+            ->method('process')
+            ->with('/track-file-name.gpx');
+
+        $gpsTrackMock->expects(self::once())
+            ->method('getInfo')
+            ->willReturn([
+                'points' => 1000,
+                'totalHeight' => 400.0,
+                'totalDistance' => 20000,
+            ]);
+
+        $sessionMock->expects(self::exactly(2))
             ->method('get')
-            ->with('_csrf')
-            ->willReturn('csrf-token');
+            ->willReturnMap([
+                ['userKey', null, 'user-key'],
+                ['_csrf', null, 'csrf-token'],
+            ]);
 
         $flashBagMock->expects(self::once())
             ->method('add')
@@ -154,9 +180,26 @@ class UploadControllerTest extends TestCase
             ->with($uploadedFile)
             ->willReturn('track-file-name.gpx');
 
+        $utilityMock->expects(self::once())
+            ->method('generateTrackKey')
+            ->willReturn('test-track-key');
+
+        $utilityMock->expects(self::once())
+            ->method('currentDateTime')
+            ->willReturn(new DateTime('2023-12-31T13:03:14'));
+
         $trackRepositoryMock->expects(self::once())
             ->method('insertTrack')
-            ->with('user-key', 'track-name', 'track-file-name.gpx')
+            ->with(TrackTransfer::fromArray([
+                'totalPoints' => 1000,
+                'elevation' => 400.0,
+                'distance' => 20000.0,
+                'userId' => 1,
+                'name' => 'track-name',
+                'key' => 'test-track-key',
+                'filename' => 'track-file-name.gpx',
+                'createdAt' => new DateTime('2023-12-31T13:03:14')
+            ]))
             ->willReturn(true);
 
         $userTransfer = (new UserTransfer())
@@ -178,6 +221,7 @@ class UploadControllerTest extends TestCase
         $request->request->set('_csrf', 'csrf-token');
         $request->request->set('trackName', 'track-name');
         $request->files->set('trackFile', $uploadedFile);
+        $request->cookies->set('userKey', 'user-key');
 
         $uploadController = new UploadController(
             $xmlValidatorMock,
@@ -185,12 +229,13 @@ class UploadControllerTest extends TestCase
             $userRepositoryMock,
             $trackRepositoryMock,
             $fileUploaderServiceMock,
-            $utilityMock
+            $utilityMock,
+            $gpsTrackMock,
         );
 
         $this->assertEquals(
             new RedirectResponse('/profile/'),
-            $uploadController->uploadTrack('user-key', $request, $sessionMock)
+            $uploadController->uploadTrack($request, $sessionMock)
         );
     }
 }

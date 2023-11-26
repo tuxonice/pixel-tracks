@@ -18,19 +18,23 @@ class MapController
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
         private readonly Config $config,
+        private readonly GpsTrack $gpsTrack,
     ) {
     }
 
-    public function index(string $userKey, string $trackKey, Session $session): Response
+    public function index(Session $session, string $trackKey): Response
     {
-        $trackTransfer = $this->trackRepository->getTrackFilename($userKey, $trackKey);
-        $userTransfer = $this->userRepository->getUserByKey($userKey);
-
+        $trackTransfer = $this->trackRepository->getTrackFilename($trackKey);
         if ($trackTransfer === null) {
+            $flashes = $session->getFlashBag();
+            $flashes->add('danger', 'Track file does not exist');
             return new RedirectResponse(
                 '/'
             );
         }
+
+        $userKey = $session->get('userKey');
+        $userTransfer = $this->userRepository->getUserByKey($userKey);
 
         $userProfileFolder = sprintf('profile-%03d', $userTransfer->getId());
         $trackFileName = $this->config->getDataPath() . '/' . $userProfileFolder . '/' . $trackTransfer->getFilename();
@@ -41,13 +45,14 @@ class MapController
                 '/profile/'
             );
         }
-        $track = new GpsTrack($trackFileName);
-        $trackInfo = $track->getInfo();
+
+        $this->gpsTrack->process($trackFileName);
+        $trackInfo = $this->gpsTrack->getInfo();
         $template = $this->twig->getTwig()->load('Default/map.twig');
         $view = $template->render(
             [
                 'title' => $trackTransfer->getName(),
-                'points' => $track->getJsonPoints(),
+                'points' => $this->gpsTrack->getJsonPoints(),
                 'info' => $trackInfo,
             ]
         );

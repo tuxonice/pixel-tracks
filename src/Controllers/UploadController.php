@@ -2,6 +2,8 @@
 
 namespace PixelTrack\Controllers;
 
+use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
+use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
@@ -24,12 +26,14 @@ class UploadController
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly FileUploaderService $fileUploaderService,
-        private readonly Utility $utility
+        private readonly Utility $utility,
+        private readonly GpsTrack $gpsTrack,
     ) {
     }
 
-    public function uploadTrack(string $userKey, Request $request, Session $session): Response
+    public function uploadTrack(Request $request, Session $session): Response
     {
+        $userKey = $session->get('userKey');
         $csrfFormToken = $session->get('_csrf');
         $csrfToken = $request->request->get('_csrf');
         $flashes = $session->getFlashBag();
@@ -45,7 +49,7 @@ class UploadController
 
         /** @var UploadedFile $file */
         $file = $request->files->get('trackFile');
-        $trackName = htmlentities($request->request->get('trackName'));
+        $trackName = htmlspecialchars($request->request->get('trackName'));
 
 
         if (!$this->isValidFileType($file)) {
@@ -67,7 +71,22 @@ class UploadController
             );
         }
 
-        if (!$this->trackRepository->insertTrack($userKey, $trackName, $targetFileName)) {
+        $trackFileName = $this->configService->getUserDataPath($userTransfer->getId()) . '/' . $targetFileName;
+        $this->gpsTrack->process($trackFileName);
+        $trackInfo = $this->gpsTrack->getInfo();
+
+        $trackTransfer = new TrackTransfer();
+        $trackTransfer
+            ->setName($trackName)
+            ->setFilename($targetFileName)
+            ->setCreatedAt($this->utility->currentDateTime())
+            ->setKey($this->utility->generateTrackKey())
+            ->setTotalPoints($trackInfo['points'])
+            ->setElevation($trackInfo['totalHeight'])
+            ->setDistance($trackInfo['totalDistance'])
+            ->setUserId($userTransfer->getId());
+
+        if (!$this->trackRepository->insertTrack($trackTransfer)) {
             $flashes->add('danger', 'Unable to save track');
 
             return new RedirectResponse(

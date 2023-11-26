@@ -9,6 +9,11 @@ class Config
         return dirname(__DIR__, 2) . '/var/data';
     }
 
+    public function getUserDataPath(int $userId): string
+    {
+        return sprintf("%s/profile-%03d", $this->getDataPath(), $userId);
+    }
+
     public function getSchemaPath(): string
     {
         return dirname(__DIR__) . '/Schemas';

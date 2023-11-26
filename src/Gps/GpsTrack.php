@@ -12,6 +12,9 @@ class GpsTrack
 
     private GpxFile $gpxFile;
 
+    /**
+     * @var array<string,mixed>
+     */
     private array $data;
 
     private float $totalDistance = 0.0;
@@ -19,13 +22,14 @@ class GpsTrack
     private float $vDistance = 0.0;
 
 
-    public function __construct(string $filename)
+    public function __construct()
     {
         $this->gpx = new phpGPX();
-        $this->gpxFile = $this->gpx->load($filename);
-        $this->process();
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getPoints(): array
     {
         return $this->data;
@@ -36,8 +40,10 @@ class GpsTrack
         return json_encode($this->data);
     }
 
-    private function process(): array
+    public function process(string $filename): void
     {
+        $this->gpxFile = $this->gpx->load($filename);
+
         $carryHDistance = 0.0;
         foreach ($this->gpxFile->tracks as $track) {
             foreach ($track->segments as $segment) {
@@ -56,11 +62,12 @@ class GpsTrack
         }
 
         $this->totalDistance = $carryHDistance;
-
-        return $this->data;
     }
 
-    private function parseDiffPoints(Point $start, Point $end, &$carryHDistance): array
+    /**
+     * @return array<string,mixed>
+     */
+    private function parseDiffPoints(Point $start, Point $end, float &$carryHDistance): array
     {
         $hDistance = $this->distance($start, $end);
 //        $time = $end->time->getTimestamp() - $start->time->getTimestamp();
@@ -98,6 +105,9 @@ class GpsTrack
         return $R * $c; // in metres
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getInfo(): array
     {
         return [

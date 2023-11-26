@@ -27,19 +27,23 @@ class HomeControllerTest extends TestCase
         BypassFinals::enable();
     }
 
-    public function testRedirectToMagicLinkWhenUserNotFound()
+    public function testRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $configMock = $this->createMock(Config::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
+        $sessionMock = $this->createMock(Session::class);
+
+        $sessionMock->expects(self::once())
+            ->method('get')
+            ->with('userKey')
+            ->willReturn(null);
 
         $userRepositoryMock->expects(self::never())
             ->method('userExists');
 
         $homeController = new HomeController(
-            $configMock,
             $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
@@ -48,28 +52,29 @@ class HomeControllerTest extends TestCase
 
         $this->assertEquals(
             new RedirectResponse('/send-magic-link'),
-            $homeController->index(new Request())
+            $homeController->index($sessionMock)
         );
     }
 
-    public function testRedirectToProfileWhenUserFound()
+    public function testRedirectToProfileWhenUserFound(): void
     {
-        $configMock = $this->createMock(Config::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
+        $sessionMock = $this->createMock(Session::class);
+
+        $sessionMock->expects(self::once())
+            ->method('get')
+            ->with('userKey')
+            ->willReturn('test-user-key');
 
         $userRepositoryMock->expects(self::once())
             ->method('userExists')
             ->with('test-user-key')
             ->willReturn(true);
 
-        $request = new Request();
-        $request->cookies->set('userKey', 'test-user-key');
-
         $homeController = new HomeController(
-            $configMock,
             $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
@@ -78,13 +83,12 @@ class HomeControllerTest extends TestCase
 
         $this->assertEquals(
             new RedirectResponse('/profile'),
-            $homeController->index($request)
+            $homeController->index($sessionMock)
         );
     }
 
-    public function testProfileRedirectToMagicLinkWhenUserNotFound()
+    public function testProfileRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $configMock = $this->createMock(Config::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
@@ -93,7 +97,6 @@ class HomeControllerTest extends TestCase
         $userRepositoryMock->expects(self::never())
             ->method('userExists');
 
-        $request = new Request();
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
 
@@ -109,7 +112,6 @@ class HomeControllerTest extends TestCase
             ->with('danger', 'Profile does not exists. Please request a new magic link');
 
         $homeController = new HomeController(
-            $configMock,
             $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
@@ -118,13 +120,12 @@ class HomeControllerTest extends TestCase
 
         $this->assertEquals(
             new RedirectResponse('/send-magic-link'),
-            $homeController->profile($request, $sessionMock)
+            $homeController->profile($sessionMock)
         );
     }
 
-    public function testProfileShowTrackListWhenUserExists()
+    public function testProfileShowTrackListWhenUserExists(): void
     {
-        $configMock = $this->createMock(Config::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
@@ -146,6 +147,7 @@ class HomeControllerTest extends TestCase
             ->method('generateCsrfToken')
             ->willReturn('test-csrf-token');
 
+        /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperMock->expects(self::once())
             ->method('render')
@@ -167,11 +169,13 @@ class HomeControllerTest extends TestCase
             ->method('getTwig')
             ->willReturn($environmentMock);
 
-        $request = new Request();
-        $request->cookies->set('userKey', 'test-user-key');
-
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+
+        $sessionMock->expects(self::once())
+            ->method('get')
+            ->with('userKey')
+            ->willReturn('test-user-key');
 
         $sessionMock->expects(self::once())
             ->method('getFlashBag')
@@ -184,129 +188,12 @@ class HomeControllerTest extends TestCase
             ->method('all');
 
         $homeController = new HomeController(
-            $configMock,
             $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
             $utilityMock,
         );
 
-        $homeController->profile($request, $sessionMock);
-    }
-
-    public function testDeleteTrackWithInvalidCsrfToken(): void
-    {
-        $configMock = $this->createMock(Config::class);
-        $userRepositoryMock = $this->createMock(UserRepository::class);
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
-        $twigMock = $this->createMock(Twig::class);
-        $utilityMock = $this->createMock(Utility::class);
-        $sessionMock = $this->createMock(Session::class);
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-
-        $trackRepositoryMock->expects(self::never())
-            ->method('isTrackFromUser');
-
-        $userRepositoryMock->expects(self::never())
-            ->method('getUserByKey');
-
-        $sessionMock->expects(self::once())
-            ->method('get')
-            ->with('_csrf')
-            ->willReturn('test-csrf-token-invalid');
-
-        $sessionMock->expects(self::once())
-            ->method('getFlashBag')
-            ->willReturn($flashBagMock);
-
-        $flashBagMock->expects(self::once())
-            ->method('add')
-            ->with('danger', 'Invalid token');
-
-        $request = new Request();
-        $request->request->set('_csrf', 'test-csrf-token');
-        $request->request->set('track_id', 1);
-
-        $homeController = new HomeController(
-            $configMock,
-            $userRepositoryMock,
-            $trackRepositoryMock,
-            $twigMock,
-            $utilityMock,
-        );
-
-        $this->assertEquals(
-            new RedirectResponse('/profile/'),
-            $homeController->deleteTrack('test-user-key', $request, $sessionMock)
-        );
-    }
-
-    public function testDeleteTrack(): void
-    {
-        $configMock = $this->createMock(Config::class);
-        $userRepositoryMock = $this->createMock(UserRepository::class);
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
-        $twigMock = $this->createMock(Twig::class);
-        $utilityMock = $this->createMock(Utility::class);
-        $sessionMock = $this->createMock(Session::class);
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
-
-        $trackRepositoryMock->expects(self::once())
-            ->method('isTrackFromUser')
-            ->with(1, 1)
-            ->willReturn(true);
-
-        $trackTransfer = new TrackTransfer();
-        $trackTransfer->setKey('track-key');
-        $trackTransfer->setUserid(1);
-        $trackTransfer->setFilename('track.gpx');
-
-        $trackRepositoryMock->expects(self::once())
-            ->method('getTrackById')
-            ->with(1)
-            ->willReturn($trackTransfer);
-
-        $trackRepositoryMock->expects(self::once())
-            ->method('deleteTrack')
-            ->with(1);
-
-        $userTransfer = new UserTransfer();
-        $userTransfer->setKey('test-user-key');
-        $userTransfer->setId(1);
-
-        $userRepositoryMock->expects(self::once())
-            ->method('getUserByKey')
-            ->with('test-user-key')
-            ->willReturn($userTransfer);
-
-        $sessionMock->expects(self::once())
-            ->method('get')
-            ->with('_csrf')
-            ->willReturn('test-csrf-token');
-
-        $sessionMock->expects(self::once())
-            ->method('getFlashBag')
-            ->willReturn($flashBagMock);
-
-        $flashBagMock->expects(self::once())
-            ->method('add')
-            ->with('success', 'Track deleted');
-
-        $request = new Request();
-        $request->request->set('_csrf', 'test-csrf-token');
-        $request->request->set('track_id', 1);
-
-        $homeController = new HomeController(
-            $configMock,
-            $userRepositoryMock,
-            $trackRepositoryMock,
-            $twigMock,
-            $utilityMock,
-        );
-
-        $this->assertEquals(
-            new RedirectResponse('/profile/'),
-            $homeController->deleteTrack('test-user-key', $request, $sessionMock)
-        );
+        $homeController->profile($sessionMock);
     }
 }
