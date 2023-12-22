@@ -32,7 +32,7 @@
         "ext-libxml": "*",
         "php-di/php-di": "7.0.6",
         "symfony/cache": "6.4.0",
-        "illuminate/support": "10.38.1",
+        "illuminate/support": "10.38.2",
         "symfony/uid": "6.4.0",
         "symfony/http-client": "6.4.0",
         "tuxonice/transfer-objects": "v0.3.3"
