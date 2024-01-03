@@ -11,6 +11,7 @@ use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
+use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,6 +38,7 @@ class TrackControllerTest extends TestCase
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $configMock = $this->createMock(Config::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $utilityMock->expects(self::once())
             ->method('generateCsrfToken')
@@ -51,11 +53,6 @@ class TrackControllerTest extends TestCase
             ->with('userKey')
             ->willReturn('test-user-key');
 
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(true);
-
         $trackRepositoryMock->expects(self::once())
             ->method('getTrackByKey')
             ->with('test-track-key')
@@ -68,6 +65,11 @@ class TrackControllerTest extends TestCase
                 'createdAt' => new DateTime('2023-12-31T19:42:17+00:00'),
 
             ]));
+
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(true);
 
         /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
@@ -101,6 +103,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -118,6 +121,7 @@ class TrackControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
         $configMock = $this->createMock(Config::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $utilityMock->expects(self::once())
             ->method('generateCsrfToken')
@@ -132,21 +136,13 @@ class TrackControllerTest extends TestCase
             ->with('userKey')
             ->willReturn('test-user-key');
 
-        $flashBagMock->expects(self::once())
-            ->method('add')
-            ->with('danger', 'Profile does not exists. Please request a new magic link');
-
-        $sessionMock->expects(self::once())
-            ->method('getFlashBag')
-            ->willReturn($flashBagMock);
-
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(false);
-
         $trackRepositoryMock->expects(self::never())
             ->method('getTrackByKey');
+
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(false);
 
         $trackController = new TrackController(
             $trackRepositoryMock,
@@ -154,6 +150,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -171,20 +168,17 @@ class TrackControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
         $configMock = $this->createMock(Config::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::once())
             ->method('get')
             ->with('userKey')
             ->willReturn(null);
 
-        $flashBagMock->expects(self::once())
-            ->method('add')
-            ->with('danger', 'Profile does not exists. Please request a new magic link');
-
-        $sessionMock->expects(self::once())
-            ->method('getFlashBag')
-            ->willReturn($flashBagMock);
-
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with(null)
+            ->willReturn(false);
 
         $request = new Request();
         $request->request->set('_csrf', 'test-csrf-token');
@@ -196,6 +190,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -213,6 +208,7 @@ class TrackControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
         $configMock = $this->createMock(Config::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::exactly(2))
             ->method('get')
@@ -223,11 +219,6 @@ class TrackControllerTest extends TestCase
 
         $trackRepositoryMock->expects(self::never())
             ->method('isTrackFromUser');
-
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(true);
 
         $userRepositoryMock->expects(self::never())
             ->method('getUserByKey');
@@ -240,6 +231,11 @@ class TrackControllerTest extends TestCase
             ->method('add')
             ->with('danger', 'Invalid token');
 
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(true);
+
         $request = new Request();
         $request->request->set('_csrf', 'test-csrf-token');
         $request->request->set('track_key', 'test-track-key');
@@ -250,6 +246,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -267,6 +264,7 @@ class TrackControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
         $configMock = $this->createMock(Config::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::exactly(2))
             ->method('get')
@@ -278,11 +276,6 @@ class TrackControllerTest extends TestCase
         $trackRepositoryMock->expects(self::once())
             ->method('isTrackFromUser')
             ->willReturn(false);
-
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(true);
 
         $userRepositoryMock->expects(self::once())
             ->method('getUserByKey')
@@ -297,6 +290,11 @@ class TrackControllerTest extends TestCase
             ->method('add')
             ->with('danger', 'Track does not exist!');
 
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(true);
+
         $request = new Request();
         $request->request->set('_csrf', 'test-csrf-token');
         $request->request->set('track_key', 'test-track-key');
@@ -307,6 +305,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -324,6 +323,7 @@ class TrackControllerTest extends TestCase
         $sessionMock = $this->createMock(Session::class);
         $flashBagMock = $this->createMock(FlashBagInterface::class);
         $configMock = $this->createMock(Config::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::exactly(2))
             ->method('get')
@@ -331,11 +331,6 @@ class TrackControllerTest extends TestCase
                 ['userKey', null, 'test-user-key'],
                 ['_csrf', null, 'test-csrf-token'],
             ]);
-
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(true);
 
         $trackRepositoryMock->expects(self::once())
             ->method('isTrackFromUser')
@@ -374,6 +369,11 @@ class TrackControllerTest extends TestCase
             ->method('add')
             ->with('success', 'Track deleted');
 
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(true);
+
         $request = new Request();
         $request->request->set('_csrf', 'test-csrf-token');
         $request->request->set('track_key', 'test-track-key');
@@ -384,6 +384,7 @@ class TrackControllerTest extends TestCase
             $configMock,
             $userRepositoryMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(

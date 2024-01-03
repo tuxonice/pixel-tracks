@@ -3,7 +3,7 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\Repository\TrackRepository;
-use PixelTrack\Repository\UserRepository;
+use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,18 +13,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class HomeController
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
         private readonly Utility $utility,
+        private readonly GateKeeper $gateKeeper,
     ) {
     }
 
     public function index(Session $session): RedirectResponse
     {
         $userKey = $session->get('userKey');
-
-        if (!$userKey || !$this->userRepository->userExists($userKey)) {
+        if (!$this->gateKeeper->gate($userKey)) {
             return new RedirectResponse(
                 '/send-magic-link'
             );
@@ -37,17 +36,14 @@ class HomeController
 
     public function profile(Session $session): Response
     {
-        $csrf = $this->utility->generateCsrfToken();
-        $session->set('_csrf', $csrf);
         $userKey = $session->get('userKey');
-
-        if (!$userKey || !$this->userRepository->userExists($userKey)) {
-            $flashes = $session->getFlashBag();
-            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
+        if (!$this->gateKeeper->gate($userKey)) {
             return new RedirectResponse(
                 '/send-magic-link'
             );
         }
+        $csrf = $this->utility->generateCsrfToken();
+        $session->set('_csrf', $csrf);
 
         $tracks = $this->trackRepository->getTracksFromUser($userKey);
         $template = $this->twig->getTwig()->load('Default/home.twig');

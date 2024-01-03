@@ -5,8 +5,9 @@ namespace PixelTrack\Controllers;
 use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
-use PixelTrack\Service\Config;
+use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
+use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -17,14 +18,22 @@ class MapController
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
-        private readonly Config $config,
+        private readonly Utility $utility,
         private readonly GpsTrack $gpsTrack,
+        private readonly GateKeeper $gateKeeper,
     ) {
     }
 
     public function index(Session $session, string $trackKey): Response
     {
-        $trackTransfer = $this->trackRepository->getTrackFilename($trackKey);
+        $userKey = $session->get('userKey');
+        if (!$this->gateKeeper->gate($userKey)) {
+            return new RedirectResponse(
+                '/send-magic-link'
+            );
+        }
+
+        $trackTransfer = $this->trackRepository->getTrackByKey($trackKey);
         if ($trackTransfer === null) {
             $flashes = $session->getFlashBag();
             $flashes->add('danger', 'Track file does not exist');
@@ -33,12 +42,9 @@ class MapController
             );
         }
 
-        $userKey = $session->get('userKey');
         $userTransfer = $this->userRepository->getUserByKey($userKey);
-
-        $userProfileFolder = sprintf('profile-%03d', $userTransfer->getId());
-        $trackFileName = $this->config->getDataPath() . '/' . $userProfileFolder . '/' . $trackTransfer->getFilename();
-        if (!file_exists($trackFileName)) {
+        $trackFileName = $this->utility->getTrackFileName($userTransfer->getId(), $trackTransfer->getFilename());
+        if (!$trackFileName) {
             $flashes = $session->getFlashBag();
             $flashes->add('danger', 'Track file does not exist');
             return new RedirectResponse(

@@ -35,4 +35,9 @@ class Config
     {
         return dirname(__DIR__, 2) . '/src/Database/Migrations';
     }
+
+    public function getLoginToleranceTime(): int
+    {
+        return (int)$_ENV['LOGIN_TOLERANCE_TIME'];
+    }
 }

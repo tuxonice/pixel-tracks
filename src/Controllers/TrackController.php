@@ -6,6 +6,7 @@ use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
+use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,6 +22,7 @@ class TrackController
         private readonly Config $configService,
         private readonly UserRepository $userRepository,
         private readonly Utility $utility,
+        private readonly GateKeeper $gateKeeper,
     ) {
     }
 
@@ -30,9 +32,7 @@ class TrackController
         $session->set('_csrf', $csrf);
         $userKey = $session->get('userKey');
 
-        if (!$userKey || !$this->userRepository->userExists($userKey)) {
-            $flashes = $session->getFlashBag();
-            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
+        if (!$this->gateKeeper->gate($userKey)) {
             return new RedirectResponse(
                 '/send-magic-link'
             );
@@ -63,9 +63,7 @@ class TrackController
         $userKey = $session->get('userKey');
         $trackKey = $request->request->get('track_key');
 
-        if (!$userKey || !$this->userRepository->userExists($userKey)) {
-            $flashes = $session->getFlashBag();
-            $flashes->add('danger', 'Profile does not exists. Please request a new magic link');
+        if (!$this->gateKeeper->gate($userKey)) {
             return new RedirectResponse(
                 '/send-magic-link'
             );

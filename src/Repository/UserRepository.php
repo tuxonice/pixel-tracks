@@ -2,6 +2,8 @@
 
 namespace PixelTrack\Repository;
 
+use DateInterval;
+use DateTime;
 use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
@@ -43,11 +45,11 @@ class UserRepository
         return $newKey;
     }
 
-    public function findUserByLoginKey(string $loginKey): ?UserTransfer
+    public function findUserByLoginKey(string $loginKey, int $toleranceInMinutes): ?UserTransfer
     {
-        $sql = 'SELECT * FROM users WHERE login_key = :login_key';
+        $sql = "SELECT * FROM users WHERE login_key = :login_key AND DATETIME() <= DATETIME(updated_at, '+" . $toleranceInMinutes . " minutes')";
         $statement = $this->database->prepare($sql);
-        $statement->bindValue(':login_key', $loginKey, SQLITE3_TEXT);
+        $statement->bindValue(':login_key', $loginKey);
         $result = $statement->execute();
 
         $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -122,9 +124,10 @@ class UserRepository
     {
         $loginKey = Uuid::v4();
 
-        $sql = 'UPDATE users SET login_key = :newLoginKey WHERE email = :email';
+        $sql = 'UPDATE users SET login_key = :newLoginKey, updated_at = :updated_at WHERE email = :email';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':newLoginKey', $loginKey, SQLITE3_TEXT);
+        $statement->bindValue(':updated_at', (new DateTime())->format('c'), SQLITE3_TEXT);
         $statement->bindValue(':email', $email, SQLITE3_TEXT);
         $statement->execute();
 

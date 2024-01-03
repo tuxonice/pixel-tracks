@@ -6,14 +6,11 @@ use DG\BypassFinals;
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\HomeController;
 use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
-use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
 use PixelTrack\Repository\TrackRepository;
-use PixelTrack\Repository\UserRepository;
-use PixelTrack\Service\Config;
+use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
@@ -29,25 +26,27 @@ class HomeControllerTest extends TestCase
 
     public function testRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::once())
             ->method('get')
             ->with('userKey')
             ->willReturn(null);
 
-        $userRepositoryMock->expects(self::never())
-            ->method('userExists');
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with(null)
+            ->willReturn(false);
 
         $homeController = new HomeController(
-            $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -58,27 +57,27 @@ class HomeControllerTest extends TestCase
 
     public function testRedirectToProfileWhenUserFound(): void
     {
-        $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $sessionMock->expects(self::once())
             ->method('get')
             ->with('userKey')
             ->willReturn('test-user-key');
 
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
             ->with('test-user-key')
             ->willReturn(true);
 
         $homeController = new HomeController(
-            $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
             $utilityMock,
+            $gateKeeperMock
         );
 
         $this->assertEquals(
@@ -89,33 +88,27 @@ class HomeControllerTest extends TestCase
 
     public function testProfileRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
-
-        $userRepositoryMock->expects(self::never())
-            ->method('userExists');
-
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
         $sessionMock = $this->createMock(Session::class);
-        $flashBagMock = $this->createMock(FlashBagInterface::class);
 
         $sessionMock->expects(self::once())
-            ->method('getFlashBag')
-            ->willReturn($flashBagMock);
+            ->method('get')
+            ->with('userKey')
+            ->willReturn(null);
 
-        $sessionMock->expects(self::once())
-            ->method('set');
-
-        $flashBagMock->expects(self::once())
-            ->method('add')
-            ->with('danger', 'Profile does not exists. Please request a new magic link');
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with(null)
+            ->willReturn(false);
 
         $homeController = new HomeController(
-            $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $this->assertEquals(
@@ -126,15 +119,10 @@ class HomeControllerTest extends TestCase
 
     public function testProfileShowTrackListWhenUserExists(): void
     {
-        $userRepositoryMock = $this->createMock(UserRepository::class);
         $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
-
-        $userRepositoryMock->expects(self::once())
-            ->method('userExists')
-            ->with('test-user-key')
-            ->willReturn(true);
+        $gateKeeperMock = $this->createMock(GateKeeper::class);
 
         $trackRepositoryMock->expects(self::once())
             ->method('getTracksFromUser')
@@ -146,6 +134,11 @@ class HomeControllerTest extends TestCase
         $utilityMock->expects(self::once())
             ->method('generateCsrfToken')
             ->willReturn('test-csrf-token');
+
+        $gateKeeperMock->expects(self::once())
+            ->method('gate')
+            ->with('test-user-key')
+            ->willReturn(true);
 
         /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
@@ -188,10 +181,10 @@ class HomeControllerTest extends TestCase
             ->method('all');
 
         $homeController = new HomeController(
-            $userRepositoryMock,
             $trackRepositoryMock,
             $twigMock,
             $utilityMock,
+            $gateKeeperMock,
         );
 
         $homeController->profile($sessionMock);
