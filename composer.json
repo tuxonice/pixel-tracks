@@ -35,7 +35,7 @@
         "illuminate/support": "10.39.0",
         "symfony/uid": "6.4.0",
         "symfony/http-client": "6.4.2",
-        "tuxonice/transfer-objects": "v0.3.3"
+        "tuxonice/transfer-objects": "v1.0.1"
     },
     "require-dev": {
         "symfony/var-dumper": "6.4.2",

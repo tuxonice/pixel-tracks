@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "183c4e2852b7d7fb48ae2d5b1d67c584",
+    "content-hash": "a56e93d6397b65b0de4003b6db1b0bef",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3152,18 +3152,23 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "v0.3.3",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "400d108cf8d6d4a8d799bd28942b7e4dcbf7e687"
+                "reference": "eb3b8f385ab8b751f80842d508188d73f3c247dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuxonice/data-transfer-object/zipball/eb3b8f385ab8b751f80842d508188d73f3c247dc",
+                "reference": "eb3b8f385ab8b751f80842d508188d73f3c247dc",
+                "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "opis/json-schema": "^2.3",
                 "php": "^8.2",
-                "twig/twig": "^3.5",
-                "webmozart/assert": "^1.11"
+                "twig/twig": "^3.5"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10",
@@ -3177,11 +3182,7 @@
                     "Tlab\\TransferObjects\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tlab\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3197,7 +3198,11 @@
                 "data-transfer-objects",
                 "dto"
             ],
-            "time": "2023-11-05T19:29:40+00:00"
+            "support": {
+                "issues": "https://github.com/tuxonice/data-transfer-object/issues",
+                "source": "https://github.com/tuxonice/data-transfer-object/tree/v1.0.1"
+            },
+            "time": "2024-01-07T09:28:13+00:00"
         },
         {
             "name": "twig/twig",
@@ -3428,64 +3433,6 @@
                 }
             ],
             "time": "2022-03-08T17:03:00+00:00"
-        },
-        {
-            "name": "webmozart/assert",
-            "version": "1.11.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/11cb2199493b2f8a3b53e7f19068fc6aac760991",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "conflict": {
-                "phpstan/phpstan": "<0.12.20",
-                "vimeo/psalm": "<4.6.1 || 4.6.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5.13"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.10-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmozart\\Assert\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
-            "keywords": [
-                "assert",
-                "check",
-                "validate"
-            ],
-            "support": {
-                "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.11.0"
-            },
-            "time": "2022-06-03T18:03:27+00:00"
         }
     ],
     "packages-dev": [
