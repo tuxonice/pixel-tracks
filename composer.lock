@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a5f6eb8ef11f9253fa246418827c8e9",
+    "content-hash": "998a75404cc7957832120e3b2773ba7b",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3152,16 +3152,16 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "eb3b8f385ab8b751f80842d508188d73f3c247dc"
+                "reference": "6667a96ec17284a77d20b7f744e363701dcdf701"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuxonice/data-transfer-object/zipball/eb3b8f385ab8b751f80842d508188d73f3c247dc",
-                "reference": "eb3b8f385ab8b751f80842d508188d73f3c247dc",
+                "url": "https://api.github.com/repos/tuxonice/data-transfer-object/zipball/6667a96ec17284a77d20b7f744e363701dcdf701",
+                "reference": "6667a96ec17284a77d20b7f744e363701dcdf701",
                 "shasum": ""
             },
             "require": {
@@ -3200,9 +3200,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tuxonice/data-transfer-object/issues",
-                "source": "https://github.com/tuxonice/data-transfer-object/tree/v1.0.1"
+                "source": "https://github.com/tuxonice/data-transfer-object/tree/v1.1.0"
             },
-            "time": "2024-01-07T09:28:13+00:00"
+            "time": "2024-01-12T13:17:37+00:00"
         },
         {
             "name": "twig/twig",
