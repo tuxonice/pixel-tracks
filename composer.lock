@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32836b7890bde0ec7bb6bddca691da5b",
+    "content-hash": "43e8a095256072bce05ef2948225488e",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3152,22 +3152,22 @@
         },
         {
             "name": "tuxonice/transfer-objects",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuxonice/data-transfer-object.git",
-                "reference": "6667a96ec17284a77d20b7f744e363701dcdf701"
+                "reference": "ce37a449856c1daafb4877386373137db8e9b410"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuxonice/data-transfer-object/zipball/6667a96ec17284a77d20b7f744e363701dcdf701",
-                "reference": "6667a96ec17284a77d20b7f744e363701dcdf701",
+                "url": "https://api.github.com/repos/tuxonice/data-transfer-object/zipball/ce37a449856c1daafb4877386373137db8e9b410",
+                "reference": "ce37a449856c1daafb4877386373137db8e9b410",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "opis/json-schema": "^2.3",
-                "php": "^8.2",
+                "php": "^8.0",
                 "twig/twig": "^3.5"
             },
             "require-dev": {
@@ -3200,9 +3200,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tuxonice/data-transfer-object/issues",
-                "source": "https://github.com/tuxonice/data-transfer-object/tree/v1.1.0"
+                "source": "https://github.com/tuxonice/data-transfer-object/tree/v1.1.1"
             },
-            "time": "2024-01-12T13:17:37+00:00"
+            "time": "2024-01-30T20:18:57+00:00"
         },
         {
             "name": "twig/twig",
