@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "afbb5c57a1161bf914d027c106bb47d7",
+    "content-hash": "16575a60359f3c8e1c2c936e630ac41c",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -230,16 +230,16 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v11.0.1",
+            "version": "v11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "c85100b2bd65633bdd7fc17ee1618d8db7050c0a"
+                "reference": "1a81a4ba053807ee5602e0dd27e9d8f5e779fc06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/c85100b2bd65633bdd7fc17ee1618d8db7050c0a",
-                "reference": "c85100b2bd65633bdd7fc17ee1618d8db7050c0a",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/1a81a4ba053807ee5602e0dd27e9d8f5e779fc06",
+                "reference": "1a81a4ba053807ee5602e0dd27e9d8f5e779fc06",
                 "shasum": ""
             },
             "require": {
@@ -281,11 +281,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-03-11T17:38:40+00:00"
+            "time": "2024-03-12T18:40:10+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.0.1",
+            "version": "v11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -331,7 +331,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.0.1",
+            "version": "v11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -379,7 +379,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.0.1",
+            "version": "v11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -425,7 +425,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v11.0.1",
+            "version": "v11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
