@@ -6,3 +6,4 @@
 !/public/index.php
 !/public/.htaccess
 mix-manifest.json
+/mockserver/vendor/

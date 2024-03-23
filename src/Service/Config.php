@@ -40,4 +40,10 @@ class Config
     {
         return (int)$_ENV['LOGIN_TOLERANCE_TIME'];
     }
+
+    public static function isProductionEnvironment(): bool
+    {
+        return isset($_ENV['APPLICATION_MODE']) &&
+            str_contains($_ENV['APPLICATION_MODE'], 'prod');
+    }
 }
