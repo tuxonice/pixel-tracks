@@ -23,7 +23,7 @@ class MigrationApplyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configService = new Config();
-        $database = new Database($configService);
+        $database = new Database();
         $migrationProvider = new MigrationProvider($database, $configService);
         $migrationProvider->migrate();
 

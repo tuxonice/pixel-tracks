@@ -3,6 +3,7 @@
 namespace PixelTrack\Service;
 
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 
 class Twig
 {
@@ -14,8 +15,12 @@ class Twig
             $this->twigLoader->getLoader(),
             [
                 'cache' => false,
+                'debug' => Config::isProductionEnvironment() === false,
             ]
         );
+        if (Config::isProductionEnvironment() === false) {
+            $this->twig->addExtension(new DebugExtension());
+        }
     }
 
     public function getTwig(): Environment

@@ -5,8 +5,9 @@ namespace Unit\Controllers;
 use DG\BypassFinals;
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\HomeController;
+use PixelTrack\DataTransfers\DataTransferObjects\PaginatedTrackTransfer;
 use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
-use PixelTrack\Repository\TrackRepository;
+use PixelTrack\Pagination\PaginatorQuery;
 use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
@@ -26,11 +27,11 @@ class HomeControllerTest extends TestCase
 
     public function testRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $gateKeeperMock = $this->createMock(GateKeeper::class);
+        $paginatorQueryMock = $this->createMock(PaginatorQuery::class);
 
         $sessionMock->expects(self::once())
             ->method('get')
@@ -43,10 +44,10 @@ class HomeControllerTest extends TestCase
             ->willReturn(false);
 
         $homeController = new HomeController(
-            $trackRepositoryMock,
             $twigMock,
             $utilityMock,
             $gateKeeperMock,
+            $paginatorQueryMock,
         );
 
         $this->assertEquals(
@@ -57,11 +58,11 @@ class HomeControllerTest extends TestCase
 
     public function testRedirectToProfileWhenUserFound(): void
     {
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $sessionMock = $this->createMock(Session::class);
         $gateKeeperMock = $this->createMock(GateKeeper::class);
+        $paginatorQueryMock = $this->createMock(PaginatorQuery::class);
 
         $sessionMock->expects(self::once())
             ->method('get')
@@ -74,10 +75,10 @@ class HomeControllerTest extends TestCase
             ->willReturn(true);
 
         $homeController = new HomeController(
-            $trackRepositoryMock,
             $twigMock,
             $utilityMock,
-            $gateKeeperMock
+            $gateKeeperMock,
+            $paginatorQueryMock,
         );
 
         $this->assertEquals(
@@ -88,7 +89,7 @@ class HomeControllerTest extends TestCase
 
     public function testProfileRedirectToMagicLinkWhenUserNotFound(): void
     {
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
+        $paginatorQueryMock = $this->createMock(PaginatorQuery::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $gateKeeperMock = $this->createMock(GateKeeper::class);
@@ -105,10 +106,10 @@ class HomeControllerTest extends TestCase
             ->willReturn(false);
 
         $homeController = new HomeController(
-            $trackRepositoryMock,
             $twigMock,
             $utilityMock,
             $gateKeeperMock,
+            $paginatorQueryMock,
         );
 
         $this->assertEquals(
@@ -119,17 +120,10 @@ class HomeControllerTest extends TestCase
 
     public function testProfileShowTrackListWhenUserExists(): void
     {
-        $trackRepositoryMock = $this->createMock(TrackRepository::class);
+        $paginatorQueryMock = $this->createMock(PaginatorQuery::class);
         $twigMock = $this->createMock(Twig::class);
         $utilityMock = $this->createMock(Utility::class);
         $gateKeeperMock = $this->createMock(GateKeeper::class);
-
-        $trackRepositoryMock->expects(self::once())
-            ->method('getTracksFromUser')
-            ->with('test-user-key')
-            ->willReturn(
-                [(new TrackTransfer())]
-            );
 
         $utilityMock->expects(self::once())
             ->method('generateCsrfToken')
@@ -140,12 +134,18 @@ class HomeControllerTest extends TestCase
             ->with('test-user-key')
             ->willReturn(true);
 
+        $paginatorQueryMock
+            ->expects(self::once())
+            ->method('getTracksFromUser')
+            ->with('test-user-key', 1, $_ENV['PAGINATION_IPP'])
+            ->willReturn(new PaginatedTrackTransfer());
+
         /** @phpstan-ignore-next-line */
         $templateWrapperMock = $this->createMock(TemplateWrapper::class);
         $templateWrapperMock->expects(self::once())
             ->method('render')
             ->with([
-                'tracks' => [new TrackTransfer()],
+                'paginatedTracks' => new PaginatedTrackTransfer(),
                 'userKey' => 'test-user-key',
                 'flashes' => [],
                 'csrf' => 'test-csrf-token',
@@ -181,10 +181,10 @@ class HomeControllerTest extends TestCase
             ->method('all');
 
         $homeController = new HomeController(
-            $trackRepositoryMock,
             $twigMock,
             $utilityMock,
             $gateKeeperMock,
+            $paginatorQueryMock
         );
 
         $homeController->profile($sessionMock);

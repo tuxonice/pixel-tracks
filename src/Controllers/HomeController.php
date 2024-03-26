@@ -2,7 +2,7 @@
 
 namespace PixelTrack\Controllers;
 
-use PixelTrack\Repository\TrackRepository;
+use PixelTrack\Pagination\PaginatorQuery;
 use PixelTrack\Service\GateKeeper;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class HomeController
 {
     public function __construct(
-        private readonly TrackRepository $trackRepository,
         private readonly Twig $twig,
         private readonly Utility $utility,
         private readonly GateKeeper $gateKeeper,
+        private readonly PaginatorQuery $paginatorQuery,
     ) {
     }
 
@@ -34,7 +34,7 @@ class HomeController
         );
     }
 
-    public function profile(Session $session): Response
+    public function profile(Session $session, int $page = 1): Response
     {
         $userKey = $session->get('userKey');
         if (!$this->gateKeeper->gate($userKey)) {
@@ -45,10 +45,10 @@ class HomeController
         $csrf = $this->utility->generateCsrfToken();
         $session->set('_csrf', $csrf);
 
-        $tracks = $this->trackRepository->getTracksFromUser($userKey);
+        $paginatedTrackTransfer = $this->paginatorQuery->getTracksFromUser($userKey, $page, $_ENV['PAGINATION_IPP']);
         $template = $this->twig->getTwig()->load('Default/home.twig');
         $view = $template->render([
-            'tracks' => $tracks,
+            'paginatedTracks' => $paginatedTrackTransfer,
             'userKey' => $userKey,
             'flashes' => $session->getFlashBag()->all(),
             'csrf' => $csrf,

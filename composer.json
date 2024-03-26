@@ -36,7 +36,8 @@
         "symfony/uid": "6.4.3",
         "symfony/http-client": "6.4.6",
         "tuxonice/transfer-objects": "v1.1.2",
-        "phpmailer/phpmailer": "6.9.1"
+        "phpmailer/phpmailer": "^6.9",
+        "doctrine/dbal": "^4.0"
     },
     "require-dev": {
         "symfony/var-dumper": "6.4.6",
@@ -45,7 +46,8 @@
         "codeception/codeception": "5.1.2",
         "codeception/module-phpbrowser": "3.0.1",
         "codeception/module-asserts": "3.0.0",
-        "dg/bypass-finals": "1.6.0"
+        "dg/bypass-finals": "1.6.0",
+        "codeception/module-db": "^3.1"
     },
     "scripts": {
         "static-analysis": [

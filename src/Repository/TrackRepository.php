@@ -3,67 +3,49 @@
 namespace PixelTrack\Repository;
 
 use DateTime;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Service\Database;
-use SQLite3;
 
 class TrackRepository
 {
-    private SQLite3 $database;
+    private Connection $database;
 
     public function __construct(private readonly Database $databaseService)
     {
-        $this->database = $this->databaseService->getDbInstance();
-    }
-
-    /**
-     * @param string $userKey
-     *
-     * @return array<TrackTransfer>
-     */
-    public function getTracksFromUser(string $userKey): array
-    {
-        $sql = 'SELECT t.* FROM users AS u, tracks AS t WHERE u.key = :userKey AND u.id = t.user_id';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':userKey', $userKey, SQLITE3_TEXT);
-        $result = $statement->execute();
-
-        if ($result === false) {
-            return [];
-        }
-
-        $tracks = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            $trackTransfer = new TrackTransfer();
-            $trackTransfer->setId($row['id'])
-                ->setUserid($row['user_id'])
-                ->setName($row['name'])
-                ->setKey($row['key'])
-                ->setFilename($row['filename'])
-                ->setTotalPoints($row['total_points'])
-                ->setElevation($row['elevation'])
-                ->setDistance($row['distance'])
-                ->setCreatedAt(new DateTime($row['created_at']));
-            $tracks[] = $trackTransfer;
-        }
-
-        return $tracks;
+        $this->database = $this->databaseService->getDbConnection();
     }
 
     public function insertTrack(TrackTransfer $trackTransfer): bool
     {
-        $sql = 'INSERT INTO tracks (user_id, name, key, filename, total_points, elevation, distance, created_at) VALUES (:user_id, :name, :track_key, :filename, :total_points, :elevation, :distance, :created_at)';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':user_id', $trackTransfer->getUserId());
-        $statement->bindValue(':track_key', $trackTransfer->getKey());
-        $statement->bindValue(':name', $trackTransfer->getName());
-        $statement->bindValue(':filename', $trackTransfer->getFilename());
-        $statement->bindValue(':total_points', $trackTransfer->getTotalPoints());
-        $statement->bindValue(':elevation', $trackTransfer->getElevation());
-        $statement->bindValue(':distance', $trackTransfer->getDistance());
-        $statement->bindValue(':created_at', $trackTransfer->getCreatedAt()->format('c'));
+        $queryBuilder = $this->database->createQueryBuilder();
+        $queryBuilder
+            ->insert('tracks')
+            ->values(
+                [
+                    'user_id' => '?',
+                    'name' => '?',
+                    'key' => '?',
+                    'filename' => '?',
+                    'total_points' => '?',
+                    'elevation' => '?',
+                    'distance' => '?',
+                    'created_at' => '?'
+                ]
+            )
+            ->setParameter(0, $trackTransfer->getUserId(), ParameterType::INTEGER)
+            ->setParameter(1, $trackTransfer->getName())
+            ->setParameter(2, $trackTransfer->getKey())
+            ->setParameter(3, $trackTransfer->getFilename())
+            ->setParameter(4, $trackTransfer->getTotalPoints(), ParameterType::INTEGER)
+            ->setParameter(5, $trackTransfer->getElevation())
+            ->setParameter(6, $trackTransfer->getDistance())
+            ->setParameter(7, $trackTransfer->getCreatedAt()->format('c'))
+        ;
+        $result = $queryBuilder->executeQuery();
 
-        return $statement->execute() !== false;
+        return (bool)$result->rowCount();
     }
 
     public function getTrackFilename(string $trackKey): ?TrackTransfer
@@ -71,9 +53,9 @@ class TrackRepository
         $sql = 'SELECT * FROM tracks WHERE key = :trackKey';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':trackKey', $trackKey);
-        $result = $statement->execute();
+        $result = $statement->executeQuery();
 
-        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+        $databaseRow = $result->fetchAssociative();
 
         if ($databaseRow === false) {
             return null;
@@ -93,13 +75,11 @@ class TrackRepository
     {
         $sql = 'SELECT count(*) AS `count` FROM tracks AS t WHERE t.key = :trackKey AND t.user_id = :userId';
         $statement = $this->database->prepare($sql);
-        $statement->bindValue(':userId', $userId, SQLITE3_INTEGER);
+        $statement->bindValue(':userId', $userId, ParameterType::INTEGER);
         $statement->bindValue(':trackKey', $trackKey);
-        $result = $statement->execute();
+        $result = $statement->executeQuery();
 
-        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
-
-        return (bool)$databaseRow['count'];
+        return (bool)$result->fetchOne();
     }
 
     public function deleteTrack(string $trackKey): bool
@@ -107,19 +87,19 @@ class TrackRepository
         $sql = 'DELETE FROM tracks WHERE key = :trackKey';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':trackKey', $trackKey);
-        $result = $statement->execute();
+        $result = $statement->executeQuery();
 
-        return (bool)$result;
+        return (bool)$result->rowCount();
     }
 
     public function getTrackById(int $trackId): ?TrackTransfer
     {
         $sql = 'SELECT * FROM tracks WHERE id = :trackId';
         $statement = $this->database->prepare($sql);
-        $statement->bindValue(':trackId', $trackId, SQLITE3_INTEGER);
-        $result = $statement->execute();
+        $statement->bindValue(':trackId', $trackId, ParameterType::INTEGER);
+        $result = $statement->executeQuery();
 
-        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+        $databaseRow = $result->fetchAssociative();
 
         if ($databaseRow === false) {
             return null;
@@ -144,9 +124,9 @@ class TrackRepository
         $sql = 'SELECT * FROM tracks WHERE key = :trackKey';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':trackKey', $trackKey);
-        $result = $statement->execute();
+        $result = $statement->executeQuery();
 
-        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+        $databaseRow = $result->fetchAssociative();
 
         if ($databaseRow === false) {
             return null;

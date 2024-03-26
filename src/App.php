@@ -4,9 +4,13 @@ namespace PixelTrack;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use PixelTrack\Routes\Web;
+use PixelTrack\Service\Config;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

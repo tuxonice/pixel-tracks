@@ -1,0 +1,11 @@
+<ul class="pagination pagination-sm m-0 float-right">
+    {% for page in pages %}
+         <li class="page-item {{ page.isCurrent == false ? '' : 'active' }}">
+             {% if(page.link) %}
+                <a class="page-link" href="{{ page.link }}">{{ page.caption }}</a>
+             {% else %}
+                <span class="page-link">{{ page.caption }}</span>
+             {% endif %}
+         </li>
+    {% endfor %}
+</ul>

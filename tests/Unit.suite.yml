@@ -6,4 +6,8 @@ actor: UnitTester
 modules:
     enabled:
         - Asserts
+        - Db:
+            dsn: 'sqlite:tests/_data/test-database.sqlite'
+            user: ''
+            password: ''
 step_decorators: ~

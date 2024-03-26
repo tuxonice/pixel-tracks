@@ -2,23 +2,24 @@
 
 namespace PixelTrack\Service;
 
-use SQLite3;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 
 class Database
 {
-    private SQLite3 $dbInstance;
+    private Connection $dbConnection;
 
-    public function __construct(private readonly Config $configService)
+    public function __construct()
     {
-        $this->dbInstance = new SQLite3(
-            $this->configService->getDatabaseFile(),
-            SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE
-        );
-        $this->dbInstance->enableExceptions(true);
+        $dsnParser = new DsnParser();
+        $connectionParams = $dsnParser
+            ->parse($_ENV['DATABASE_DSN']);
+        $this->dbConnection = DriverManager::getConnection($connectionParams);
     }
 
-    public function getDbInstance(): SQLite3
+    public function getDbConnection(): Connection
     {
-        return $this->dbInstance;
+        return $this->dbConnection;
     }
 }

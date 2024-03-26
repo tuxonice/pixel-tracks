@@ -2,19 +2,19 @@
 
 namespace PixelTrack\Database;
 
+use Doctrine\DBAL\Connection;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Database;
-use SQLite3;
 
 class MigrationProvider
 {
-    private SQLite3 $database;
+    private Connection $database;
 
     public function __construct(
         private readonly Database $databaseService,
         private readonly Config $config,
     ) {
-        $this->database = $this->databaseService->getDbInstance();
+        $this->database = $this->databaseService->getDbConnection();
         $this->createMigrationTable();
     }
 
@@ -50,7 +50,7 @@ class MigrationProvider
 
     private function createMigrationTable(): void
     {
-        $this->database->query('CREATE TABLE IF NOT EXISTS `migrations` (
+        $this->database->executeQuery('CREATE TABLE IF NOT EXISTS `migrations` (
                 "name" VARCHAR NOT NULL
             );');
     }
@@ -76,14 +76,11 @@ class MigrationProvider
     {
         $sql = 'SELECT * FROM `migrations`';
         $statement = $this->database->prepare($sql);
-        $result = $statement->execute();
-
-        if ($result === false) {
-            return [];
-        }
+        $result = $statement->executeQuery();
 
         $migrations = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $rows = $result->fetchAllAssociative();
+        foreach ($rows as $row) {
             $migrations[] = $row['name'];
         }
 
@@ -102,18 +99,17 @@ class MigrationProvider
             $sql = $object->up();
 
             $statement = $this->database->prepare($sql);
-            $result = $statement->execute();
+            $result = $statement->executeQuery();
 
             $this->updateMigrationTable($migration);
         }
     }
 
-    private function updateMigrationTable(mixed $migration): bool
+    private function updateMigrationTable(mixed $migration): void
     {
         $sql = 'INSERT INTO `migrations` (name) VALUES (:name)';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':name', $migration);
-
-        return $statement->execute() !== false;
+        $statement->executeQuery();
     }
 }

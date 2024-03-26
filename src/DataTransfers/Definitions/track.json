@@ -46,6 +46,32 @@
       ]
     },
     {
+      "name": "PaginatedTrack",
+      "properties": [
+        {
+          "name": "tracks",
+          "type": "TrackTransfer[]",
+          "singular": "track"
+        },
+        {
+          "name": "totalRecords",
+          "type": "int"
+        },
+        {
+          "name": "start",
+          "type": "int"
+        },
+        {
+          "name": "limit",
+          "type": "int"
+        },
+        {
+          "name": "template",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "User",
       "properties": [
         {
@@ -62,6 +88,17 @@
           "name": "email",
           "type": "string",
           "nullable": false
+        },
+        {
+          "name": "loginKey",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "updatedAt",
+          "type": "DateTime",
+          "namespace": "DateTime",
+          "nullable": true
         }
       ]
     }
