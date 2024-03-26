@@ -3,6 +3,7 @@
 namespace PixelTrack\Repository;
 
 use DateTime;
+use PixelTrack\DataTransfers\DataTransferObjects\TrackPaginationTransfer;
 use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
 use PixelTrack\Service\Database;
 use SQLite3;
@@ -19,20 +20,24 @@ class TrackRepository
     /**
      * @param string $userKey
      *
-     * @return array<TrackTransfer>
+     * @return TrackPaginationTransfer
      */
-    public function getTracksFromUser(string $userKey): array
+    public function getTracksFromUser(string $userKey, int $from = 0, int $limit = 10): TrackPaginationTransfer
     {
-        $sql = 'SELECT t.* FROM users AS u, tracks AS t WHERE u.key = :userKey AND u.id = t.user_id';
+        $countTracksFromUser = $this->getCountTracksFromUser($userKey);
+
+        $sql = 'SELECT t.* FROM users AS u, tracks AS t WHERE u.key = :userKey AND u.id = t.user_id LIMIT :from ,:limit';
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':userKey', $userKey, SQLITE3_TEXT);
+        $statement->bindValue(':from', $from, SQLITE3_INTEGER);
+        $statement->bindValue(':limit', $limit, SQLITE3_INTEGER);
         $result = $statement->execute();
 
+        $trackPaginationTransfer = new TrackPaginationTransfer();
         if ($result === false) {
-            return [];
+            return $trackPaginationTransfer;
         }
 
-        $tracks = [];
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             $trackTransfer = new TrackTransfer();
             $trackTransfer->setId($row['id'])
@@ -44,10 +49,26 @@ class TrackRepository
                 ->setElevation($row['elevation'])
                 ->setDistance($row['distance'])
                 ->setCreatedAt(new DateTime($row['created_at']));
-            $tracks[] = $trackTransfer;
+            $trackPaginationTransfer->addTrack($trackTransfer);
         }
+        $trackPaginationTransfer
+            ->setFrom($from)
+            ->setLimit($limit)
+            ->setTotalRecords($countTracksFromUser);
 
-        return $tracks;
+        return $trackPaginationTransfer;
+    }
+
+    public function getCountTracksFromUser(string $userKey): int
+    {
+        $sql = 'SELECT count(*) AS `count` FROM users AS u, tracks AS t WHERE u.key = :userKey AND u.id = t.user_id';
+        $statement = $this->database->prepare($sql);
+        $statement->bindValue(':userKey', $userKey, SQLITE3_TEXT);
+        $result = $statement->execute();
+
+        $databaseRow = $result->fetchArray(SQLITE3_ASSOC);
+
+        return $databaseRow['count'];
     }
 
     public function insertTrack(TrackTransfer $trackTransfer): bool

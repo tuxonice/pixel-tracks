@@ -45,10 +45,10 @@ class HomeController
         $csrf = $this->utility->generateCsrfToken();
         $session->set('_csrf', $csrf);
 
-        $tracks = $this->trackRepository->getTracksFromUser($userKey);
+        $trackPaginationTransfer = $this->trackRepository->getTracksFromUser($userKey);
         $template = $this->twig->getTwig()->load('Default/home.twig');
         $view = $template->render([
-            'tracks' => $tracks,
+            'tracks' => $trackPaginationTransfer->getTracks(),
             'userKey' => $userKey,
             'flashes' => $session->getFlashBag()->all(),
             'csrf' => $csrf,

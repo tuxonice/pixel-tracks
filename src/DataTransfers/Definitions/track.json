@@ -46,6 +46,32 @@
       ]
     },
     {
+      "name": "TrackPagination",
+      "properties": [
+        {
+          "name": "tracks",
+          "type": "TrackTransfer[]",
+          "singular": "Track"
+        },
+        {
+          "name": "from",
+          "type": "int"
+        },
+        {
+          "name": "limit",
+          "type": "int"
+        },
+        {
+          "name": "ipp",
+          "type": "int"
+        },
+        {
+          "name": "totalRecords",
+          "type": "int"
+        }
+      ]
+    },
+    {
       "name": "User",
       "properties": [
         {
