@@ -17,7 +17,7 @@ services:
       - '1025:1025'
       - '8025:8025'
   mockserver:
-    image: php:8.2-apache
+    image: php:8.3-apache
     ports:
       - 8000:80
     volumes:
