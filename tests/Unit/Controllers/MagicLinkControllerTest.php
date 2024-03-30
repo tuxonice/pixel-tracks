@@ -5,11 +5,13 @@ namespace Unit\Controllers;
 use DG\BypassFinals;
 use PHPUnit\Framework\TestCase;
 use PixelTrack\Controllers\MagicLinkController;
+use PixelTrack\DataTransfers\DataTransferObjects\MailMessageTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\MailRecipientTransfer;
 use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
+use PixelTrack\Mail\MailProviderInterface;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
-use PixelTrack\Service\MailConnectorService;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,7 +32,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLink(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -65,13 +67,16 @@ class MagicLinkControllerTest extends TestCase
             ->method('getTwig')
             ->willReturn($environmentMock);
 
+        $mailProviderMock->expects(self::never())
+            ->method('send');
+
         $magicLinkController = new MagicLinkController(
             $configMock,
             $twigMock,
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -82,7 +87,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkWithInvalidCsrfToken(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -113,13 +118,16 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        $mailProviderMock->expects(self::never())
+            ->method('send');
+
         $magicLinkController = new MagicLinkController(
             $configMock,
             $twigMock,
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -130,7 +138,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkWithNoCsrfToken(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -160,13 +168,16 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        $mailProviderMock->expects(self::never())
+            ->method('send');
+
         $magicLinkController = new MagicLinkController(
             $configMock,
             $twigMock,
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -177,7 +188,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkWithExpiredCsrfToken(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -208,13 +219,16 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        $mailProviderMock->expects(self::never())
+            ->method('send');
+
         $magicLinkController = new MagicLinkController(
             $configMock,
             $twigMock,
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -225,7 +239,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkWithInvalidEmail(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -257,13 +271,16 @@ class MagicLinkControllerTest extends TestCase
             ->method('getFlashBag')
             ->willReturn($flashBagMock);
 
+        $mailProviderMock->expects(self::never())
+            ->method('send');
+
         $magicLinkController = new MagicLinkController(
             $configMock,
             $twigMock,
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -274,7 +291,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkIsSentAndCreateNewUser(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -358,22 +375,25 @@ class MagicLinkControllerTest extends TestCase
             ->method('getTwig')
             ->willReturn($environmentMock);
 
-        $mailConnectorServiceMock->expects(self::once())
-            ->method('sendRequest')
-            ->with([
-                'from' => [
-                    'name' => 'Pixel Tracks',
-                ],
-                'to' => [
-                    'name' => 'user@example.com',
-                    'email' => 'user@example.com',
-                ],
-                'subject' => 'Here is your magic link',
-                'body' => [
-                    'html' => 'html-link',
-                    'text' => 'text-link',
-                ],
-            ]);
+        $mailProviderMock->expects(self::once())
+            ->method('send')
+            ->with(
+                (new MailMessageTransfer())
+                ->setFrom(
+                    (new MailRecipientTransfer())
+                    ->setEmail('noreply@example.com')
+                    ->setName('Pixel Tracks')
+                )
+                ->setTo(
+                    (new MailRecipientTransfer())
+                        ->setEmail('user@example.com')
+                        ->setName('user@example.com')
+                )
+                ->setSubject('Here is your magic link')
+                ->setHtmlBody('html-link')
+                ->setTextBody('text-link')
+            )
+            ->willReturn(true);
 
         $magicLinkController = new MagicLinkController(
             $configMock,
@@ -381,7 +401,7 @@ class MagicLinkControllerTest extends TestCase
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(
@@ -392,7 +412,7 @@ class MagicLinkControllerTest extends TestCase
 
     public function testRequestMagicLinkIsSentWithExistingUser(): void
     {
-        $mailConnectorServiceMock = $this->createMock(MailConnectorService::class);
+        $mailProviderMock = $this->createMock(MailProviderInterface::class);
         $configMock = $this->createMock(Config::class);
         $twigMock = $this->createMock(Twig::class);
         $userRepositoryMock = $this->createMock(UserRepository::class);
@@ -475,22 +495,25 @@ class MagicLinkControllerTest extends TestCase
             ->method('getTwig')
             ->willReturn($environmentMock);
 
-        $mailConnectorServiceMock->expects(self::once())
-            ->method('sendRequest')
-            ->with([
-                'from' => [
-                    'name' => 'Pixel Tracks',
-                ],
-                'to' => [
-                    'name' => 'user@example.com',
-                    'email' => 'user@example.com',
-                ],
-                'subject' => 'Here is your magic link',
-                'body' => [
-                    'html' => 'html-link',
-                    'text' => 'text-link',
-                ],
-            ]);
+        $mailProviderMock->expects(self::once())
+            ->method('send')
+            ->with(
+                (new MailMessageTransfer())
+                    ->setFrom(
+                        (new MailRecipientTransfer())
+                            ->setEmail('noreply@example.com')
+                            ->setName('Pixel Tracks')
+                    )
+                    ->setTo(
+                        (new MailRecipientTransfer())
+                            ->setEmail('user@example.com')
+                            ->setName('user@example.com')
+                    )
+                    ->setSubject('Here is your magic link')
+                    ->setHtmlBody('html-link')
+                    ->setTextBody('text-link')
+            )
+            ->willReturn(true);
 
         $magicLinkController = new MagicLinkController(
             $configMock,
@@ -498,7 +521,7 @@ class MagicLinkControllerTest extends TestCase
             $userRepositoryMock,
             $rateLimiterMock,
             $utilityMock,
-            $mailConnectorServiceMock,
+            $mailProviderMock,
         );
 
         $this->assertEquals(

@@ -2,10 +2,12 @@
 
 namespace PixelTrack\Controllers;
 
+use PixelTrack\DataTransfers\DataTransferObjects\MailMessageTransfer;
+use PixelTrack\DataTransfers\DataTransferObjects\MailRecipientTransfer;
+use PixelTrack\Mail\MailProviderInterface;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
-use PixelTrack\Service\MailConnectorService;
 use PixelTrack\Service\Twig;
 use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +23,7 @@ class MagicLinkController
         private UserRepository $userRepository,
         private RateLimiter $rateLimiter,
         private Utility $utility,
-        private MailConnectorService $mailConnectorService,
+        private MailProviderInterface $mailProvider,
     ) {
     }
 
@@ -91,22 +93,22 @@ class MagicLinkController
         $templateText = $this->twig->getTwig()->load('Default/Mail/magic-link-text.twig');
         $viewText = $templateText->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
 
-        $data = [
-                'from' => [
-                    'name' => 'Pixel Tracks',
-                ],
-                'to' => [
-                  'name' => $email,
-                  'email' => $email
-                ],
-                'subject' => 'Here is your magic link',
-                'body' => [
-                    "text" => $viewText,
-                    "html" => $viewHtml,
-                ]
-        ];
+        $mailMessageTransfer = new MailMessageTransfer();
+        $mailMessageTransfer->setFrom(
+            (new mailRecipientTransfer())
+                ->setName('Pixel Tracks')
+                ->setEmail($_ENV['EMAIL_FROM'])
+        )
+            ->setTo(
+                (new mailRecipientTransfer())
+                    ->setName($email)
+                    ->setEmail($email)
+            )
+            ->setSubject('Here is your magic link')
+            ->setHtmlBody($viewHtml)
+            ->setTextBody($viewText);
 
-        $this->mailConnectorService->sendRequest($data);
+        $this->mailProvider->send($mailMessageTransfer);
 
         $flashes = $session->getFlashBag();
         $flashes->add(

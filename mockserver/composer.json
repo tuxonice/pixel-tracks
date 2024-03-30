@@ -1,7 +1,0 @@
-{
-    "name": "root/mockserver",
-    "require": {
-        "phpmailer/phpmailer": "6.9.1",
-        "symfony/http-foundation": "7.0.4"
-    }
-}
