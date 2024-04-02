@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4527a40b27dcc327014a56e1fc7cf060",
+    "content-hash": "c069f6230b032ac7e38710a5ad39f5d5",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -230,7 +230,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v11.1.1",
+            "version": "v11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -285,7 +285,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.1.1",
+            "version": "v11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -331,7 +331,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.1.1",
+            "version": "v11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -379,7 +379,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.1.1",
+            "version": "v11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -425,16 +425,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v11.1.1",
+            "version": "v11.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "9fdd4fc622524787185264faeadfe14f2f0e356b"
+                "reference": "abedd71609c48606735754192c15e7eb7c9f1248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/9fdd4fc622524787185264faeadfe14f2f0e356b",
-                "reference": "9fdd4fc622524787185264faeadfe14f2f0e356b",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/abedd71609c48606735754192c15e7eb7c9f1248",
+                "reference": "abedd71609c48606735754192c15e7eb7c9f1248",
                 "shasum": ""
             },
             "require": {
@@ -495,7 +495,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-03-27T16:39:25+00:00"
+            "time": "2024-04-01T15:22:25+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -660,16 +660,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.2.2",
+            "version": "3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "2d69b6de67e2a3c0652d0c9dfcfda8b4563c4cee"
+                "reference": "4d599a6e2351d6b6bf21737accdfe1a4ce3fdbb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/2d69b6de67e2a3c0652d0c9dfcfda8b4563c4cee",
-                "reference": "2d69b6de67e2a3c0652d0c9dfcfda8b4563c4cee",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/4d599a6e2351d6b6bf21737accdfe1a4ce3fdbb1",
+                "reference": "4d599a6e2351d6b6bf21737accdfe1a4ce3fdbb1",
                 "shasum": ""
             },
             "require": {
@@ -762,7 +762,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T12:59:49+00:00"
+            "time": "2024-03-30T18:22:00+00:00"
         },
         {
             "name": "nikic/fast-route",
