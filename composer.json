@@ -35,7 +35,7 @@
         "illuminate/support": "11.2.0",
         "symfony/uid": "6.4.3",
         "symfony/http-client": "6.4.6",
-        "tuxonice/transfer-objects": "v1.1.1",
+        "tuxonice/transfer-objects": "v1.1.2",
         "phpmailer/phpmailer": "6.9.1"
     },
     "require-dev": {
