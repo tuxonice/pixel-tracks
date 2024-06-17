@@ -42,7 +42,7 @@
     "require-dev": {
         "symfony/var-dumper": "6.4.8",
         "squizlabs/php_codesniffer": "3.10.1",
-        "phpstan/phpstan": "1.11.4",
+        "phpstan/phpstan": "1.11.5",
         "codeception/codeception": "5.1.2",
         "codeception/module-phpbrowser": "3.0.1",
         "codeception/module-asserts": "3.0.0",
