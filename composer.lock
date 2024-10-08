@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5afb2aacf9ee15efcc36fd9488e1490",
+    "content-hash": "d44ccbf2349e28b1e599cb05b6dab3e5",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -385,7 +385,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v11.26.0",
+            "version": "v11.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -440,7 +440,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.26.0",
+            "version": "v11.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -486,7 +486,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.26.0",
+            "version": "v11.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -534,7 +534,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.26.0",
+            "version": "v11.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -580,16 +580,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v11.26.0",
+            "version": "v11.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "0431fbb96752bb8a13136a53e4be345fdc8484c2"
+                "reference": "9347918a7ca4f6d67a2cd73b40d72e04b9a3b95a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/0431fbb96752bb8a13136a53e4be345fdc8484c2",
-                "reference": "0431fbb96752bb8a13136a53e4be345fdc8484c2",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/9347918a7ca4f6d67a2cd73b40d72e04b9a3b95a",
+                "reference": "9347918a7ca4f6d67a2cd73b40d72e04b9a3b95a",
                 "shasum": ""
             },
             "require": {
@@ -652,7 +652,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-09-30T14:29:28+00:00"
+            "time": "2024-10-08T13:38:06+00:00"
         },
         {
             "name": "laravel/serializable-closure",
