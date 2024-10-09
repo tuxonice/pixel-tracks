@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a64dcac7768cedbeb8195a822f6656e6",
+    "content-hash": "4a718e075bdbdb30a5b7f5272c8c520e",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -385,7 +385,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v11.27.1",
+            "version": "v11.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -440,7 +440,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.27.1",
+            "version": "v11.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -486,7 +486,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.27.1",
+            "version": "v11.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -534,7 +534,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.27.1",
+            "version": "v11.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -580,7 +580,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v11.27.1",
+            "version": "v11.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
