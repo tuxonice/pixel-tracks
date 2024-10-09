@@ -36,7 +36,7 @@
         "symfony/uid": "6.4.12",
         "symfony/http-client": "6.4.12",
         "tuxonice/transfer-objects": "v1.1.2",
-        "phpmailer/phpmailer": "6.9.1",
+        "phpmailer/phpmailer": "6.9.2",
         "doctrine/dbal": "4.1.1"
     },
     "require-dev": {
