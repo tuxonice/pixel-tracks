@@ -15,7 +15,7 @@ class Paginator
     private int $mid_range;
 
     /**
-     * @var array<string,mixed>
+     * @var array<int|string,mixed>
      */
     private array $pageLinks;
 
@@ -81,7 +81,7 @@ class Paginator
 
     public function paginate(): void
     {
-        if (!is_numeric($this->itemsPerPage) || $this->itemsPerPage <= 0) {
+        if ($this->itemsPerPage <= 0) {
             $this->itemsPerPage = $this->default_ipp;
         }
         $this->num_pages = (int)ceil($this->items_total / $this->itemsPerPage);
