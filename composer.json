@@ -34,7 +34,7 @@
         "symfony/cache": "6.4.14",
         "illuminate/support": "11.31.0",
         "symfony/uid": "6.4.13",
-        "symfony/http-client": "6.4.14",
+        "symfony/http-client": "6.4.15",
         "tuxonice/transfer-objects": "v1.1.2",
         "phpmailer/phpmailer": "6.9.2",
         "doctrine/dbal": "4.2.1"
