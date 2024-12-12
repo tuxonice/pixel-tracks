@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af1f7cdef4aa49a8a85fdf38f9e8d097",
+    "content-hash": "4b6d48a395b659b4100370778ab01697",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -385,7 +385,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v11.35.0",
+            "version": "v11.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -441,7 +441,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.35.0",
+            "version": "v11.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -487,7 +487,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.35.0",
+            "version": "v11.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -535,7 +535,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.35.0",
+            "version": "v11.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -581,16 +581,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v11.35.0",
+            "version": "v11.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "7a21f50e61e24a2f625b5ee466aaa8cec3dfa8cb"
+                "reference": "bc363403d9ed3214754a0501e33c05d2afcfd474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/7a21f50e61e24a2f625b5ee466aaa8cec3dfa8cb",
-                "reference": "7a21f50e61e24a2f625b5ee466aaa8cec3dfa8cb",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/bc363403d9ed3214754a0501e33c05d2afcfd474",
+                "reference": "bc363403d9ed3214754a0501e33c05d2afcfd474",
                 "shasum": ""
             },
             "require": {
@@ -654,7 +654,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-12-10T15:52:30+00:00"
+            "time": "2024-12-11T23:23:18+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2251,16 +2251,16 @@
         },
         {
             "name": "symfony/http-client-contracts",
-            "version": "v3.5.1",
+            "version": "v3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "c2f3ad828596624ca39ea40f83617ef51ca8bbf9"
+                "reference": "ee8d807ab20fcb51267fdace50fbe3494c31e645"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/c2f3ad828596624ca39ea40f83617ef51ca8bbf9",
-                "reference": "c2f3ad828596624ca39ea40f83617ef51ca8bbf9",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/ee8d807ab20fcb51267fdace50fbe3494c31e645",
+                "reference": "ee8d807ab20fcb51267fdace50fbe3494c31e645",
                 "shasum": ""
             },
             "require": {
@@ -2309,7 +2309,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client-contracts/tree/v3.5.1"
+                "source": "https://github.com/symfony/http-client-contracts/tree/v3.5.2"
             },
             "funding": [
                 {
@@ -2325,7 +2325,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-25T12:02:18+00:00"
+            "time": "2024-12-07T08:49:48+00:00"
         },
         {
             "name": "symfony/http-foundation",
