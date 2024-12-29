@@ -4,13 +4,11 @@ namespace PixelTrack;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Tools\DsnParser;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use PixelTrack\Middleware\RestrictCountryMiddleware;
+use PixelTrack\Middleware\MiddlewarePipeline;
 use PixelTrack\Routes\Web;
-use PixelTrack\Service\Config;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -60,6 +58,10 @@ class App
         $uri = $request->getRequestUri();
         $httpMethod = $request->getMethod();
 
+        $pipeline = new MiddlewarePipeline();
+        $pipeline
+            ->add(RestrictCountryMiddleware::class);
+
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
@@ -70,7 +72,12 @@ class App
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $parameters = $routeInfo[2];
-                return $this->container->call($handler, $parameters);
+
+                $finalHandler = function () use ($handler, $parameters) {
+                    return $this->container->call($handler, $parameters);
+                };
+
+                return $pipeline->process($request, $finalHandler);
         }
 
         throw new \Exception('Dispatcher error');

@@ -37,4 +37,9 @@ class Cache implements CacheInterface
     {
         return $this->filesystemAdapter->deleteItem($key);
     }
+
+    public function has(string $key): bool
+    {
+        return $this->filesystemAdapter->hasItem($key);
+    }
 }

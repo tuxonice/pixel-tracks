@@ -3,6 +3,8 @@
 namespace PixelTrack\Mail;
 
 use Exception;
+use Monolog\Logger;
+use PixelTrack\App;
 use PixelTrack\DataTransfers\DataTransferObjects\MailMessageTransfer;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +14,12 @@ class CarobMailer implements MailProviderInterface
 {
     private HttpClientInterface $httpClient;
 
+    private Logger $logger;
+
     public function __construct()
     {
         $this->httpClient = HttpClient::create();
+        $this->logger = App::getInstance()->getContainer()->get(Logger::class);
     }
 
     public function send(MailMessageTransfer $mailMessageTransfer): bool
@@ -22,21 +27,27 @@ class CarobMailer implements MailProviderInterface
         [$endpoint, $token] = $this->parseDsn();
         $data = $this->setData($mailMessageTransfer);
 
-        $response = $this->httpClient->request(
-            'POST',
-            $endpoint,
-            [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token,
-                ],
-                'body' => json_encode($data),
+        try {
+            $response = $this->httpClient->request(
+                'POST',
+                $endpoint,
+                [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Bearer ' . $token,
+                    ],
+                    'body' => json_encode($data),
 
-            ]
-        );
+                ]
+            );
 
-        return $response->getStatusCode() === Response::HTTP_OK;
+            return $response->getStatusCode() === Response::HTTP_OK;
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+
+        return false;
     }
 
     /**

@@ -1,10 +1,14 @@
 <?php
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use PixelTrack\Cache\Cache;
 use PixelTrack\Mail\CarobMailer;
 use PixelTrack\Mail\MailProviderInterface;
 use PixelTrack\Mail\SmtpMailer;
 use PixelTrack\RateLimiter\RateLimiter;
+use PixelTrack\Service\Config;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -32,4 +36,12 @@ return [
             default => throw new Exception('No mail provider'),
         };
     },
+    Logger::class => function () {
+        $logger = new Logger('TRACKS');
+        $logger->pushHandler(
+            new StreamHandler(Config::getLogsFolder() . '/error.log', Level::Debug)
+        );
+
+        return $logger;
+    }
 ];

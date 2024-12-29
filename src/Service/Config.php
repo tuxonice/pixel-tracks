@@ -4,6 +4,11 @@ namespace PixelTrack\Service;
 
 class Config
 {
+    public static function getLogsFolder(): string
+    {
+        return dirname(__DIR__, 2) . '/var/logs';
+    }
+
     public function getDataPath(): string
     {
         return dirname(__DIR__, 2) . '/var/data';
@@ -39,6 +44,11 @@ class Config
     public function getLoginToleranceTime(): int
     {
         return (int)$_ENV['LOGIN_TOLERANCE_TIME'];
+    }
+
+    public static function getAllowCountryCode(): string
+    {
+        return $_ENV['ALLOW_COUNTRY_CODE'];
     }
 
     public static function isProductionEnvironment(): bool
