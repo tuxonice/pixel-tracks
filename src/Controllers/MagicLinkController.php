@@ -88,10 +88,10 @@ class MagicLinkController
 
 
         $templateHtml = $this->twig->getTwig()->load('Default/Mail/magic-link-html.twig');
-        $viewHtml = $templateHtml->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
+        $viewHtml = $templateHtml->render(['link' => $this->configService->getBaseUrl() . '/login/' . $loginKey]);
 
         $templateText = $this->twig->getTwig()->load('Default/Mail/magic-link-text.twig');
-        $viewText = $templateText->render(['link' => $this->configService->getBaseUrl() . 'login/' . $loginKey]);
+        $viewText = $templateText->render(['link' => $this->configService->getBaseUrl() . '/login/' . $loginKey]);
 
         $mailMessageTransfer = new MailMessageTransfer();
         $mailMessageTransfer->setFrom(

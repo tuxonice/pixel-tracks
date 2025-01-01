@@ -26,9 +26,7 @@ class Config
 
     public function getBaseUrl(): string
     {
-        $protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://';
-
-        return sprintf("%s%s", $protocol, $_SERVER['SERVER_NAME'] . '/');
+        return $_ENV['BASE_URL'];
     }
 
     public function getDatabaseFile(): string

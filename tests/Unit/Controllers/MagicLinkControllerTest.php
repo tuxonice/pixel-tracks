@@ -303,7 +303,7 @@ class MagicLinkControllerTest extends TestCase
 
         $configMock->expects(self::exactly(2))
             ->method('getBaseUrl')
-            ->willReturn('http://example.com/');
+            ->willReturn('http://example.com');
 
         $userRepositoryMock->expects(self::once())
             ->method('findUserByEmail')
@@ -424,7 +424,7 @@ class MagicLinkControllerTest extends TestCase
 
         $configMock->expects(self::exactly(2))
             ->method('getBaseUrl')
-            ->willReturn('http://example.com/');
+            ->willReturn('http://example.com');
 
         $userRepositoryMock->expects(self::once())
             ->method('findUserByEmail')
