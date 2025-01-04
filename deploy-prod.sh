@@ -45,7 +45,7 @@ echo -e "${GREEN}Install composer dependencies ${NC}"
 composer install --no-dev
 
 echo -e "${GREEN}Install node dependencies ${NC}"
-npm install --production
+npm install
 npx mix
 
 rm -rf node_modules
