@@ -54,7 +54,8 @@
         "post-install-cmd": [
             "chmod -R 755 vendor",
             "find vendor -type f -exec chmod 644 {} \\;",
-            "find vendor -type d -exec chmod 755 {} \\;"
+            "find vendor -type d -exec chmod 755 {} \\;",
+            "find vendor/bin -type f -exec chmod 755 {} \\;"
         ],
         "static-analysis": [
             "phpcs",

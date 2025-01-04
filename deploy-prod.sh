@@ -45,8 +45,10 @@ echo -e "${GREEN}Install composer dependencies ${NC}"
 composer install --no-dev
 
 echo -e "${GREEN}Install node dependencies ${NC}"
-npm install
+npm install --production
 npx mix
+
+rm -rf node_modules
 
 ln -s $MAIN_PATH/shared/.env .env
 ln -s $MAIN_PATH/shared/var var
