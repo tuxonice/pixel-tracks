@@ -38,7 +38,7 @@
         "symfony/http-client": "6.4.17",
         "tuxonice/transfer-objects": "v1.1.2",
         "phpmailer/phpmailer": "6.9.3",
-        "doctrine/dbal": "4.2.1"
+        "doctrine/dbal": "4.2.2"
     },
     "require-dev": {
         "symfony/var-dumper": "6.4.15",
