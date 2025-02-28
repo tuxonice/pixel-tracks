@@ -31,7 +31,7 @@
         "nikic/fast-route": "1.3.0",
         "ext-dom": "*",
         "ext-libxml": "*",
-        "php-di/php-di": "7.0.8",
+        "php-di/php-di": "7.0.9",
         "symfony/cache": "6.4.19",
         "illuminate/support": "12.0.1",
         "symfony/uid": "6.4.13",
