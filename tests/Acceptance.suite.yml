@@ -9,6 +9,17 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://localhost
+            headers:
+                APPLICATION_ENV: 'test'
+        - Db:
+            dsn: 'sqlite:tests/_data/test-database.sqlite'
+            user: ''
+            password: ''
+            populate: true # load dump before all tests
+            cleanup: false # load dump for each test
+            dump: 'tests/_data/dump.sqlite'
+            populator: 'cp tests/_data/dump.sqlite tests/_data/test-database.sqlite'
+
 # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion

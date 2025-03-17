@@ -1,5 +1,13 @@
 RewriteEngine On
 RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . index.php [QSA,L]
+
+# Allow direct access to existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Exclude favicon.ico from being rewritten
+RewriteCond %{REQUEST_URI} !=/favicon.ico
+
+# Redirect everything else to index.php
+RewriteRule ^ index.php [QSA,L]

@@ -20,19 +20,12 @@ class MapController
         private readonly Twig $twig,
         private readonly Utility $utility,
         private readonly GpsTrack $gpsTrack,
-        private readonly GateKeeper $gateKeeper,
     ) {
     }
 
     public function index(Session $session, string $trackKey): Response
     {
         $userKey = $session->get('userKey');
-        if (!$this->gateKeeper->gate($userKey)) {
-            return new RedirectResponse(
-                '/send-magic-link'
-            );
-        }
-
         $trackTransfer = $this->trackRepository->getTrackByKey($trackKey);
         if ($trackTransfer === null) {
             $flashes = $session->getFlashBag();

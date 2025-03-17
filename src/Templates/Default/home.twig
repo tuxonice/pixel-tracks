@@ -61,7 +61,7 @@
                     <h3 class="card-title">Upload Track</h3>
                 </div>
                 <form method="POST" enctype="multipart/form-data" action="/track/upload">
-                    <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                    <input type="hidden" name="_token" value="{{ _token }}"/>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="trackName">Track Name</label>

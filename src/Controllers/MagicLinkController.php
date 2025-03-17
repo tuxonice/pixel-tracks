@@ -9,7 +9,6 @@ use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\Twig;
-use PixelTrack\Service\Utility;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,21 +21,16 @@ class MagicLinkController
         private Twig $twig,
         private UserRepository $userRepository,
         private RateLimiter $rateLimiter,
-        private Utility $utility,
         private MailProviderInterface $mailProvider,
     ) {
     }
 
     public function requestMagicLink(Session $session): Response
     {
-        $session->clear();
-        $csrf = $this->utility->generateCsrfToken();
-        $session->set('_csrf', $csrf);
-
         $template = $this->twig->getTwig()->load('Default/magic-link.twig');
         $view = $template->render([
             'flashes' => $session->getFlashBag()->all(),
-            'csrf' => $csrf,
+            '_token' => $session->get('_csrf_token'),
         ]);
 
         return new Response(
@@ -53,19 +47,6 @@ class MagicLinkController
                 '<h1>429 Too many requests</h1>',
                 Response::HTTP_TOO_MANY_REQUESTS,
             );
-        }
-
-        $csrfFormToken = (string)$session->get('_csrf');
-        $csrfToken = (string)$request->request->get('_csrf');
-
-        if ($csrfFormToken === '' || $csrfToken === '' || !hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes = $session->getFlashBag();
-            $flashes->add(
-                'danger',
-                'Invalid token'
-            );
-
-            return new RedirectResponse('/send-magic-link');
         }
 
         $email = $request->request->get('email');

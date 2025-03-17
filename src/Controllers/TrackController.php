@@ -21,23 +21,11 @@ class TrackController
         private readonly Twig $twig,
         private readonly Config $configService,
         private readonly UserRepository $userRepository,
-        private readonly Utility $utility,
-        private readonly GateKeeper $gateKeeper,
     ) {
     }
 
     public function index(Session $session, string $trackKey): Response
     {
-        $csrf = $this->utility->generateCsrfToken();
-        $session->set('_csrf', $csrf);
-        $userKey = $session->get('userKey');
-
-        if (!$this->gateKeeper->gate($userKey)) {
-            return new RedirectResponse(
-                '/send-magic-link'
-            );
-        }
-
         $trackTransfer = $this->trackRepository->getTrackByKey($trackKey);
 
         $template = $this->twig->getTwig()->load('Default/track.twig');
@@ -48,7 +36,7 @@ class TrackController
             'distance' => $trackTransfer->getDistance(),
             'elevation' => $trackTransfer->getElevation(),
             'createdAt' => $trackTransfer->getCreatedAt()->format('c'),
-            'csrf' => $csrf,
+            'csrf' => $session->get('_csrf_token'),
             'showLogout' => true,
         ]);
 
@@ -62,13 +50,6 @@ class TrackController
     {
         $userKey = $session->get('userKey');
         $trackKey = $request->request->get('track_key');
-
-        if (!$this->gateKeeper->gate($userKey)) {
-            return new RedirectResponse(
-                '/send-magic-link'
-            );
-        }
-
         $csrfFormToken = $session->get('_csrf');
         $csrfToken = $request->request->get('_csrf');
         $flashes = $session->getFlashBag();

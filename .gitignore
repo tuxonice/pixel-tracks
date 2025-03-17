@@ -8,3 +8,4 @@
 mix-manifest.json
 /mockserver/vendor/
 /Makefile
+tests/_data/test-database.sqlite

@@ -13,7 +13,7 @@
                     <form class="needs-validation" method="POST" action="/send-magic-link">
                         <div class="row g-3">
                             <div class="col-12">
-                                <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                                <input type="hidden" name="_token" value="{{ _token }}"/>
                                 <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com" required="required"/>
                                 <div class="invalid-feedback">
                                     Please enter a valid email address.
