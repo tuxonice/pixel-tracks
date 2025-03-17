@@ -7,9 +7,9 @@ on:
       - 'pt-**'
   pull_request:
     branches: [ main ]
+
 jobs:
   Tests:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.dist', '.env');"
+      - name: Set up database DSN
+        run: sed -i "s|DATABASE_DSN=.*|DATABASE_DSN=\"sqlite3:///$(pwd)/tests/_data/test-database.sqlite\"|" .env.test
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Generate Transfer Objects
@@ -27,7 +29,15 @@ jobs:
         run: vendor/bin/phpcs
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse
+      - name: Update configuration file
+        run: yq e -i '.modules.enabled[0].PhpBrowser.url = "http://localhost:8000"' tests/Acceptance.suite.yml
+      - name: cat Acceptance.suite.yml
+        run: cat tests/Acceptance.suite.yml
       - name: Execute Unit tests
         run: vendor/bin/codecept run tests/Unit
-#      - name: Execute Acceptance tests
-#        run: vendor/bin/codecept run tests/Acceptance
+      - name: Start PHP Web Server
+        run: php -S localhost:8000 -t public &
+      - name: Wait for Server to Start
+        run: sleep 5
+      - name: Execute Acceptance tests
+        run: vendor/bin/codecept run tests/Acceptance

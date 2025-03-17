@@ -54,6 +54,7 @@ class PaginatorQuery
             ->where(
                 $queryBuilder->expr()->eq('u.key', '?')
             )
+            ->orderBy('t.created_at', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->setParameter(0, $userKey);

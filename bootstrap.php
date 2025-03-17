@@ -8,7 +8,11 @@ ini_set('error_log', __DIR__ . '/var/logs/error.log');
 
 require(__DIR__ . '/vendor/autoload.php');
 
-$dotenv = Dotenv::createImmutable(__DIR__);
+if (isset($_SERVER['HTTP_APPLICATION_ENV']) && $_SERVER['HTTP_APPLICATION_ENV'] === 'test') {
+    $dotenv = Dotenv::createImmutable(__DIR__, '.env.test');
+} else {
+    $dotenv = Dotenv::createImmutable(__DIR__);
+}
 $dotenv->load();
 
 if (

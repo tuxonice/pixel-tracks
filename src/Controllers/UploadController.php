@@ -3,11 +3,13 @@
 namespace PixelTrack\Controllers;
 
 use PixelTrack\DataTransfers\DataTransferObjects\TrackTransfer;
+use PixelTrack\Exception\GpxValidationException;
 use PixelTrack\Gps\GpsTrack;
 use PixelTrack\Repository\TrackRepository;
 use PixelTrack\Repository\UserRepository;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\FileUploaderService;
+use PixelTrack\Service\GpxValidator;
 use PixelTrack\Service\Utility;
 use PixelTrack\Validator\XmlValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -18,10 +20,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class UploadController
 {
-    private const VALID_FILE_TYPES = ['application/gpx+xml'];
-
     public function __construct(
         private readonly XmlValidator $xmlValidator,
+        private readonly GpxValidator $gpxValidator,
         private readonly Config $configService,
         private readonly UserRepository $userRepository,
         private readonly TrackRepository $trackRepository,
@@ -34,30 +35,26 @@ class UploadController
     public function uploadTrack(Request $request, Session $session): Response
     {
         $userKey = $session->get('userKey');
-        $csrfFormToken = $session->get('_csrf');
-        $csrfToken = $request->request->get('_csrf');
         $flashes = $session->getFlashBag();
-
-        if (!hash_equals($csrfFormToken, $csrfToken)) {
-            $flashes->add(
-                'danger',
-                'Invalid token'
-            );
-
-            return new RedirectResponse('/profile/');
-        }
 
         /** @var UploadedFile $file */
         $file = $request->files->get('trackFile');
-        $trackName = htmlspecialchars($request->request->get('trackName'));
+        if (!$file) {
+            $flashes->add('danger', 'No file was uploaded');
+            return new RedirectResponse('/profile/');
+        }
 
+        $trackName = trim(htmlspecialchars($request->request->get('trackName', '')));
+        if (empty($trackName)) {
+            $flashes->add('danger', 'Track name is required');
+            return new RedirectResponse('/profile/');
+        }
 
-        if (!$this->isValidFileType($file)) {
-            $flashes->add('danger', 'GPX file has an invalid format');
-
-            return new RedirectResponse(
-                '/profile/'
-            );
+        try {
+            $this->isValidFileType($file);
+        } catch (GpxValidationException $e) {
+            $flashes->add('danger', $e->getMessage());
+            return new RedirectResponse('/profile/');
         }
 
         $userTransfer = $this->userRepository->getUserByKey($userKey);
@@ -103,12 +100,25 @@ class UploadController
 
     private function isValidFileType(UploadedFile $file): bool
     {
-        $clientMimeType = $file->getClientMimeType();
-
-        return in_array($clientMimeType, self::VALID_FILE_TYPES, true) &&
-            $this->xmlValidator->isValid(
+        try {
+            // First validate against XSD schema
+            $isValidXml = $this->xmlValidator->isValid(
                 $file->getContent(),
                 file_get_contents($this->configService->getSchemaPath() . '/gpx.xsd')
             );
+
+            if (!$isValidXml) {
+                throw new GpxValidationException('Invalid GPX file format');
+            }
+
+            // Then perform comprehensive GPX validation
+            $this->gpxValidator->validate($file);
+
+            return true;
+        } catch (GpxValidationException $e) {
+            throw $e; // Re-throw to be caught by the ExceptionHandlerMiddleware
+        } catch (\Throwable $e) {
+            throw new GpxValidationException('Error validating GPX file: ' . $e->getMessage());
+        }
     }
 }

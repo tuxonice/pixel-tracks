@@ -36,7 +36,7 @@
                     <div class="row no-print">
                         <div class="col-12">
                             <form action="/track/delete" method="post" onsubmit="return confirm('Are you sure?')">
-                                <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                                <input type="hidden" name="_token" value="{{ _token }}"/>
                                 <input type="hidden" name="track_key" value="{{ trackKey }}"/>
                                 <a href="/profile" class="btn btn-default">
                                     <i class="fas fa-list"></i> Back to List
@@ -68,7 +68,7 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <form action="/track/delete" method="post">
-                        <input type="hidden" name="_csrf" value="{{ csrf }}"/>
+                        <input type="hidden" name="_token" value="{{ _token }}"/>
                         <input type="hidden" name="track_key" value="{{ trackKey }}"/>
                         <button type="submit" class="btn btn-danger float-right" style="margin-right: 5px;">
                             <i class="fas fa-trash"></i> Delete

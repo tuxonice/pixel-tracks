@@ -13,8 +13,9 @@ class GateKeeper
     ) {
     }
 
-    public function gate(?string $userKey): bool
+    public function isAuthenticated(): bool
     {
+        $userKey = $this->session->get('userKey');
         if (!$userKey || !$this->userRepository->userExists($userKey)) {
             $flashes = $this->session->getFlashBag();
             $flashes->add('danger', 'Profile does not exists. Please request a new magic link');

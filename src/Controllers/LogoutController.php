@@ -12,6 +12,6 @@ class LogoutController
     {
         $session->clear();
 
-        return new RedirectResponse('/send-magic-link', 302);
+        return new RedirectResponse('/send-magic-link', Response::HTTP_FOUND);
     }
 }
