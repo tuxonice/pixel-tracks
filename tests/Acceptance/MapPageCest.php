@@ -6,5 +6,4 @@ use Tests\Support\AcceptanceTester;
 
 class MapPageCest
 {
-
 }
