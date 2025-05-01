@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30a40af13d01311520842c6f40035a32",
+    "content-hash": "bc1446ac2206377339825db75e3f1839",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -577,16 +577,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v12.11.1",
+            "version": "v12.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "42ce3ea7614b9d16d72fabcb90e2eaf523be05a4"
+                "reference": "586b1ccf141724d7cd87ee759e6e8baae9c6d507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/42ce3ea7614b9d16d72fabcb90e2eaf523be05a4",
-                "reference": "42ce3ea7614b9d16d72fabcb90e2eaf523be05a4",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/586b1ccf141724d7cd87ee759e6e8baae9c6d507",
+                "reference": "586b1ccf141724d7cd87ee759e6e8baae9c6d507",
                 "shasum": ""
             },
             "require": {
@@ -650,7 +650,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-04-29T20:11:04+00:00"
+            "time": "2025-04-30T14:33:58+00:00"
         },
         {
             "name": "laravel/serializable-closure",
