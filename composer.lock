@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce7441a7472e1bf5ee8126e5b9c50cda",
+    "content-hash": "a27f2bade1007049bc29e027715f2e1a",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3978,16 +3978,16 @@
         },
         {
             "name": "codeception/codeception",
-            "version": "5.3.1",
+            "version": "5.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "4ac6b4fb10db02c5a43b4afbeb665a0e33fbcfde"
+                "reference": "582112d7a603d575e41638df1e96900b10ae91b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/4ac6b4fb10db02c5a43b4afbeb665a0e33fbcfde",
-                "reference": "4ac6b4fb10db02c5a43b4afbeb665a0e33fbcfde",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/582112d7a603d575e41638df1e96900b10ae91b8",
+                "reference": "582112d7a603d575e41638df1e96900b10ae91b8",
                 "shasum": ""
             },
             "require": {
@@ -4093,7 +4093,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Codeception/Codeception/issues",
-                "source": "https://github.com/Codeception/Codeception/tree/5.3.1"
+                "source": "https://github.com/Codeception/Codeception/tree/5.3.2"
             },
             "funding": [
                 {
@@ -4101,7 +4101,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-05-13T23:20:11+00:00"
+            "time": "2025-05-26T07:47:39+00:00"
         },
         {
             "name": "codeception/lib-asserts",
