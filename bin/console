@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-require dirname(__DIR__).'/vendor/autoload.php';
-require dirname(__DIR__).'/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/bootstrap.php';
 
 use PixelTrack\Command\GenerateTransferCommand;
 use PixelTrack\Command\Migration\MigrationMakeCommand;
