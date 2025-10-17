@@ -35,7 +35,7 @@ class CarobMailer implements MailProviderInterface
                     'headers' => [
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Bearer ' . $token,
+                        'X-Carob-Token' => $token,
                     ],
                     'body' => json_encode($data),
 
