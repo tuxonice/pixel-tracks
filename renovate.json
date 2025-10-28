@@ -7,7 +7,7 @@
   "baseBranches": ["main"],
   "packageRules": [
     {
-      "updateTypes": ["patch", "pin", "digest"],
+      "updateTypes": ["patch", "pin", "digest", "minor"],
       "automerge": true
     },
     {
