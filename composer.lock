@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "caa386dbbe4ef96f602fe1a3e85001c7",
+    "content-hash": "240d3c6367f2d27ee7d4e319fcfcd801",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -580,7 +580,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v12.38.0",
+            "version": "v12.38.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
