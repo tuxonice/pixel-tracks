@@ -16,7 +16,7 @@ jobs:
       - uses: shivammathur/setup-php@4eb1b49da14d099ececb6701444674d140d84344
         with:
           php-version: '8.3'
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.dist', '.env');"
       - name: Set up database DSN
