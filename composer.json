@@ -46,7 +46,7 @@
         "symfony/var-dumper": "6.4.26",
         "squizlabs/php_codesniffer": "4.0.1",
         "phpstan/phpstan": "2.1.33",
-        "codeception/codeception": "5.3.3",
+        "codeception/codeception": "5.3.4",
         "codeception/module-phpbrowser": "3.0.2",
         "codeception/module-asserts": "3.2.1",
         "dg/bypass-finals": "1.9.0",
