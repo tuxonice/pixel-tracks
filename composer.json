@@ -59,6 +59,9 @@
             "find vendor -type d -exec chmod 755 {} \\;",
             "find vendor/bin -type f -exec chmod 755 {} \\;"
         ],
+        "copy-assets": [
+            "php bin/copy-assets.php"
+        ],
         "static-analysis": [
             "phpcs",
             "phpstan"

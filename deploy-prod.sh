@@ -44,11 +44,8 @@ chmod +x bin/console
 echo -e "${GREEN}Install composer dependencies ${NC}"
 composer install --no-dev
 
-echo -e "${GREEN}Install node dependencies ${NC}"
-npm install
-npx mix
-
-rm -rf node_modules
+echo -e "${GREEN}Copy static assets ${NC}"
+composer copy-assets
 
 ln -s $MAIN_PATH/shared/.env .env
 ln -s $MAIN_PATH/shared/var var
