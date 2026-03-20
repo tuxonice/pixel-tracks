@@ -38,7 +38,7 @@
         "symfony/http-client": "6.4.34",
         "tuxonice/transfer-objects": "v1.1.2",
         "phpmailer/phpmailer": "7.0.2",
-        "doctrine/dbal": "4.4.2",
+        "doctrine/dbal": "4.4.3",
         "ext-simplexml": "*",
         "symfony/mime": "6.4.35"
     },
