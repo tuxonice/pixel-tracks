@@ -32,7 +32,7 @@
         "ext-dom": "*",
         "ext-libxml": "*",
         "php-di/php-di": "7.1.1",
-        "symfony/cache": "6.4.38",
+        "symfony/cache": "6.4.40",
         "illuminate/support": "13.11.1",
         "symfony/uid": "6.4.32",
         "symfony/http-client": "6.4.37",
@@ -40,7 +40,7 @@
         "phpmailer/phpmailer": "7.1.1",
         "doctrine/dbal": "4.4.3",
         "ext-simplexml": "*",
-        "symfony/mime": "6.4.37"
+        "symfony/mime": "6.4.40"
     },
     "require-dev": {
         "symfony/var-dumper": "6.4.36",
