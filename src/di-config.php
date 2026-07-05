@@ -26,7 +26,7 @@ return [
     Session::class => function () {
         $storage = new NativeSessionStorage(
             [
-                'cookie_secure' => true,
+                'cookie_secure' => Config::isProductionEnvironment(),
                 'cookie_httponly' => true,
                 'cookie_samesite' => 'Lax',
                 'use_strict_mode' => true
