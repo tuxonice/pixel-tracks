@@ -16,6 +16,19 @@ fi
 
 set -e
 
+# Match Apache user to the host user so the bind-mounted project is writable
+# inside the container (e.g. SQLite test database, var/cache, var/logs).
+HOST_UID=$(stat -c %u /var/www/html)
+HOST_GID=$(stat -c %g /var/www/html)
+WWW_DATA_UID=$(id -u www-data)
+WWW_DATA_GID=$(id -g www-data)
+
+if [ "$HOST_UID" != "$WWW_DATA_UID" ] || [ "$HOST_GID" != "$WWW_DATA_GID" ]; then
+    usermod -u "$HOST_UID" www-data
+    groupmod -g "$HOST_GID" www-data
+    chown -R www-data:www-data /var/www/html/var /var/www/html/tests/_data
+fi
+
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- apache2-foreground "$@"
