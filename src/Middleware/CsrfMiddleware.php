@@ -24,15 +24,25 @@ class CsrfMiddleware implements MiddlewareInterface
 
     public function handle(Request $request, callable|\Closure $next): Response
     {
-        $x = $request->getRequestUri();
-        if ($this->shouldVerifyToken($request)) {
+        $requiresVerification = $this->shouldVerifyToken($request);
+
+        if ($requiresVerification) {
             if (!$this->isValidToken($request)) {
                 throw new CsrfTokenException('Invalid CSRF token');
             }
+        } else {
+            if (!$this->session->has(self::TOKEN_KEY)) {
+                $this->session->set(self::TOKEN_KEY, bin2hex(random_bytes(32)));
+            }
         }
 
-        $this->session->set(self::TOKEN_KEY, bin2hex(random_bytes(32)));
-        return $next($request);
+        $response = $next($request);
+
+        if ($requiresVerification) {
+            $this->session->set(self::TOKEN_KEY, bin2hex(random_bytes(32)));
+        }
+
+        return $response;
     }
 
     private function shouldVerifyToken(Request $request): bool
