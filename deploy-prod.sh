@@ -33,7 +33,7 @@ git clone https://github.com/tuxonice/pixel-tracks.git .
 git checkout $release_name
 
 echo -e "${GREEN}Remove not needed files ${NC}"
-rm codeception.yml deploy-prod.sh docker-compose.yml .env.dist .env.test .gitignore LICENSE .nvmrc phpcs.xml phpstan.neon README.md renovate.json
+rm Makefile CLAUDE.md codeception.yml deploy-prod.sh docker-compose.yml .env.dist .env.test .gitignore LICENSE .nvmrc phpcs.xml phpstan.neon README.md renovate.json
 rm -rf .github tests docker docker-bin var .git
 
 echo -e "${GREEN}Setup permissions ${NC}"
