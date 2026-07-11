@@ -2,6 +2,7 @@
 
 namespace PixelTrack\Controllers;
 
+use PixelTrack\Cache\Cache;
 use PixelTrack\DataTransfers\DataTransferObjects\MailMessageTransfer;
 use PixelTrack\DataTransfers\DataTransferObjects\MailRecipientTransfer;
 use PixelTrack\Mail\MailProviderInterface;
@@ -16,13 +17,21 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class MagicLinkController
 {
+    private RateLimiter $emailRateLimiter;
+
     public function __construct(
         private Config $configService,
         private Twig $twig,
         private UserRepository $userRepository,
         private RateLimiter $rateLimiter,
         private MailProviderInterface $mailProvider,
+        private Cache $cache,
     ) {
+        $this->emailRateLimiter = new RateLimiter([
+            'refillPeriod' => $_ENV['RATE_LIMITER_REFILL_PERIOD'],
+            'maxCapacity' => $_ENV['RATE_LIMITER_MAX_CAPACITY'],
+            'prefix' => 'magic-link-email-',
+        ], $cache);
     }
 
     public function requestMagicLink(Session $session): Response
@@ -50,6 +59,12 @@ class MagicLinkController
         }
 
         $email = $request->request->get('email');
+        if (!$this->emailRateLimiter->check(sha1($email))) {
+            return new Response(
+                '<h1>429 Too many requests</h1>',
+                Response::HTTP_TOO_MANY_REQUESTS,
+            );
+        }
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $flashes = $session->getFlashBag();
             $flashes->add(
@@ -65,7 +80,6 @@ class MagicLinkController
             $this->userRepository->createUserByEmail($email);
         }
         $loginKey = $this->userRepository->regenerateLoginKey($email);
-        $this->userRepository->regenerateUserKey($email);
 
 
         $templateHtml = $this->twig->getTwig()->load('Default/Mail/magic-link-html.twig');

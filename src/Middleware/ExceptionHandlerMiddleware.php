@@ -57,8 +57,13 @@ class ExceptionHandlerMiddleware implements MiddlewareInterface
                 'request_uri' => $request->getRequestUri()
             ]);
 
+            $this->logger->critical('Unhandled exception details', [
+                'message' => $e->getMessage(),
+                'database_dsn' => $_ENV['DATABASE_DSN'],
+            ]);
+
             return new Response(
-                $this->twig->getTwig()->render('Error/500.twig', ['message' => 'An unexpected error occurred:' . $e->getMessage() . ' - ' .  $_ENV['DATABASE_DSN']]),
+                $this->twig->getTwig()->render('Error/500.twig', ['message' => 'An unexpected error occurred. Please try again later.']),
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

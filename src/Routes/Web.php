@@ -19,6 +19,5 @@ class Web implements RouteInterface
         $r->addRoute('POST', '/track/upload', ['PixelTrack\Controllers\UploadController','uploadTrack']);
         $r->addRoute('GET', '/track/info/{trackKey}', ['PixelTrack\Controllers\TrackController','index']);
         $r->addRoute('POST', '/track/delete', ['PixelTrack\Controllers\TrackController','deleteTrack']);
-        $r->addRoute('POST', '/share/map/{shareKey}', ['PixelTrack\Controllers\ShareController','share']);
     }
 }

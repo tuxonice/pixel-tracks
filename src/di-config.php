@@ -11,6 +11,7 @@ use PixelTrack\Mail\SmtpMailer;
 use PixelTrack\Middleware\AuthenticationMiddleware;
 use PixelTrack\Middleware\CsrfMiddleware;
 use PixelTrack\Middleware\ExceptionHandlerMiddleware;
+use PixelTrack\Middleware\SecurityHeadersMiddleware;
 use PixelTrack\RateLimiter\RateLimiter;
 use PixelTrack\Service\Config;
 use PixelTrack\Service\GpxValidator;
@@ -51,6 +52,9 @@ return [
 
     CsrfMiddleware::class => function () {
         return new CsrfMiddleware();
+    },
+    SecurityHeadersMiddleware::class => function () {
+        return new SecurityHeadersMiddleware();
     },
     RateLimiter::class => function () {
         return new RateLimiter([

@@ -30,7 +30,7 @@ cd "releases/$release_name" || exit
 
 echo -e "${GREEN}Cloning the repo ${NC}"
 git clone https://github.com/tuxonice/pixel-tracks.git .
-git checkout $release_name
+git checkout "$release_name"
 
 echo -e "${GREEN}Remove not needed files ${NC}"
 rm Makefile CLAUDE.md codeception.yml deploy-prod.sh docker-compose.yml .env.dist .env.test .gitignore LICENSE .nvmrc phpcs.xml phpstan.neon README.md renovate.json
@@ -47,16 +47,16 @@ composer install --no-dev
 echo -e "${GREEN}Copy static assets ${NC}"
 composer copy-assets
 
-ln -s $MAIN_PATH/shared/.env .env
-ln -s $MAIN_PATH/shared/var var
+ln -s "$MAIN_PATH/shared/.env" .env
+ln -s "$MAIN_PATH/shared/var" var
 
 echo -e "${GREEN}Transfer generate ${NC}"
 ./bin/console t:g
 
-cd $MAIN_PATH || exit
+cd "$MAIN_PATH" || exit
 
 echo -e "${GREEN}Link document root ${NC}"
-rm current
+rm -f current
 ln -s "releases/$release_name/public/" current
 
 echo -e "${GREEN}Done!${NC}"

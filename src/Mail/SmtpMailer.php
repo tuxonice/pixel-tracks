@@ -15,6 +15,8 @@ class SmtpMailer implements MailProviderInterface
         $mailer = new PHPMailer(true);
         $mailer->SMTPDebug = 0;
         $mailer->isSMTP();
+        $mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mailer->SMTPAutoTLS = true;
         $mailer->Host = $host;
         $mailer->Username = $user;
         $mailer->Password = $pass;

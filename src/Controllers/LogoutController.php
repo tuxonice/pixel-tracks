@@ -10,7 +10,7 @@ class LogoutController
 {
     public function index(Session $session): Response
     {
-        $session->clear();
+        $session->invalidate();
 
         return new RedirectResponse('/send-magic-link', Response::HTTP_FOUND);
     }

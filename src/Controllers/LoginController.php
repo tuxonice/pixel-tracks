@@ -29,6 +29,7 @@ class LoginController
         }
 
         $session->set('userKey', $userTransfer->getKey());
+        $session->migrate(true);
         $this->userRepository->resetLoginKey($userTransfer->getEmail());
 
         return new RedirectResponse('/profile/', 302);

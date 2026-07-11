@@ -13,14 +13,9 @@ class Utility
     ) {
     }
 
-    public function generateCsrfToken(): string
-    {
-        return sha1(uniqid('', true));
-    }
-
     public function generateRandomFileName(UploadedFile $file): string
     {
-        return uniqid() . '.' . $file->getClientOriginalExtension();
+        return uniqid() . '.gpx';
     }
 
     public function generateTrackKey(): string

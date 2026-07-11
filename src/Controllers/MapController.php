@@ -36,6 +36,13 @@ class MapController
         }
 
         $userTransfer = $this->userRepository->getUserByKey($userKey);
+        if (!$userTransfer || !$this->trackRepository->isTrackFromUser($trackKey, $userTransfer->getId())) {
+            $flashes = $session->getFlashBag();
+            $flashes->add('danger', 'Track does not exist');
+
+            return new RedirectResponse('/profile/');
+        }
+
         $trackFileName = $this->utility->getTrackFileName($userTransfer->getId(), $trackTransfer->getFilename());
         if (!$trackFileName) {
             $flashes = $session->getFlashBag();

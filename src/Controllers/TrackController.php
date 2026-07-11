@@ -24,6 +24,15 @@ class TrackController
 
     public function index(Session $session, string $trackKey): Response
     {
+        $userKey = $session->get('userKey');
+        $userTransfer = $this->userRepository->getUserByKey($userKey);
+        if (!$userTransfer || !$this->trackRepository->isTrackFromUser($trackKey, $userTransfer->getId())) {
+            $flashes = $session->getFlashBag();
+            $flashes->add('danger', 'Track does not exist');
+
+            return new RedirectResponse('/profile/');
+        }
+
         $trackTransfer = $this->trackRepository->getTrackByKey($trackKey);
 
         $template = $this->twig->getTwig()->load('Default/track.twig');

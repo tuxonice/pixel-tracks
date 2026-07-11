@@ -49,9 +49,11 @@ class UserRepository
 
     public function findUserByLoginKey(string $loginKey, int $toleranceInMinutes): ?UserTransfer
     {
-        $sql = "SELECT * FROM users WHERE login_key = :login_key AND DATETIME() <= DATETIME(updated_at, '+" . $toleranceInMinutes . " minutes')";
+        $threshold = (new DateTime())->modify(sprintf('-%d minutes', $toleranceInMinutes))->format('c');
+        $sql = "SELECT * FROM users WHERE login_key = :login_key AND DATETIME(updated_at) >= DATETIME(:threshold)";
         $statement = $this->database->prepare($sql);
         $statement->bindValue(':login_key', $loginKey);
+        $statement->bindValue(':threshold', $threshold);
         $result = $statement->executeQuery();
 
         $row = $result->fetchAssociative();

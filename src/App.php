@@ -11,6 +11,7 @@ use PixelTrack\Middleware\AuthenticationMiddleware;
 use PixelTrack\Middleware\CsrfMiddleware;
 use PixelTrack\Middleware\ExceptionHandlerMiddleware;
 use PixelTrack\Middleware\RestrictCountryMiddleware;
+use PixelTrack\Middleware\SecurityHeadersMiddleware;
 use PixelTrack\Middleware\MiddlewarePipeline;
 use PixelTrack\Routes\Web;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +69,8 @@ class App
             ->add(RestrictCountryMiddleware::class)
             ->add(ExceptionHandlerMiddleware::class)
             ->add(AuthenticationMiddleware::class)
-            ->add(CsrfMiddleware::class);
+            ->add(CsrfMiddleware::class)
+            ->add(SecurityHeadersMiddleware::class);
 
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
 

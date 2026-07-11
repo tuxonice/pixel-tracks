@@ -44,7 +44,7 @@
         crossorigin="anonymous">
 </script>
 <script>
-    let jsonData = JSON.parse('{{ points | raw }}');
+    let jsonData = JSON.parse({{ points|json_encode|raw }});
     let latlngs = jsonData.map((point) =>[point.latitude, point.longitude]);
 
     let mymap = L.map('mapid').setView([37.0146, -7.9331], 13);
