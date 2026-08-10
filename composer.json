@@ -36,7 +36,7 @@
         "illuminate/support": "13.24.0",
         "symfony/uid": "6.4.32",
         "symfony/http-client": "6.4.43",
-        "tuxonice/transfer-objects": "v1.1.2",
+        "tuxonice/transfer-objects": "v1.2.0",
         "phpmailer/phpmailer": "7.1.1",
         "doctrine/dbal": "4.4.4",
         "ext-simplexml": "*",
