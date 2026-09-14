@@ -35,7 +35,8 @@ RUN pecl install xdebug
 ENTRYPOINT ["entrypoint"]
 
 RUN echo "ServerName $(/sbin/ip route|awk '/default/ { print $3 }')" >> /etc/apache2/apache2.conf
-RUN echo 'alias ll="ls -la"' >> /root/.bashrc
+RUN echo 'alias ll="ls -la"' >> /root/.bashrc \
+    && echo 'alias ll="ls -la"' >> /var/www/.bashrc
 
 COPY docker/application/disable-xdebug.sh /disable-xdebug.sh
 COPY docker/application/enable-xdebug.sh /enable-xdebug.sh

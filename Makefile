@@ -1,4 +1,4 @@
-.PHONY: help build rebuild start stop clean cli xdebug-enable xdebug-disable
+.PHONY: help build rebuild start stop clean cli cli-root xdebug-enable xdebug-disable
 
 help:
 	@echo "Available targets:"
@@ -7,7 +7,8 @@ help:
 	@echo "  start           - Start Docker containers in detached mode"
 	@echo "  stop            - Stop Docker containers"
 	@echo "  clean           - Stop and remove Docker containers"
-	@echo "  cli             - Open a bash shell in the app container"
+	@echo "  cli             - Open a bash shell in the app container (as www-data)"
+	@echo "  cli-root        - Open a root bash shell in the app container"
 	@echo "  xdebug-enable   - Enable Xdebug in the app container"
 	@echo "  xdebug-disable  - Disable Xdebug in the app container"
 
@@ -28,6 +29,9 @@ clean:
 	docker compose down --remove-orphans
 
 cli:
+	docker compose exec -u www-data app bash
+
+cli-root:
 	docker compose exec app bash
 
 xdebug-enable:

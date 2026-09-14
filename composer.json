@@ -53,12 +53,6 @@
         "codeception/module-db": "3.2.2"
     },
     "scripts": {
-        "post-install-cmd": [
-            "chmod -R 755 vendor",
-            "find vendor -type f -exec chmod 644 {} \\;",
-            "find vendor -type d -exec chmod 755 {} \\;",
-            "find vendor/bin -type f -exec chmod 755 {} \\;"
-        ],
         "copy-assets": [
             "php bin/copy-assets.php"
         ],
