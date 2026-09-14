@@ -15,7 +15,7 @@
  
  ## Requirements
  
- - PHP (project targets `^8.3`)
+ - PHP (project targets `^8.4`)
  - Composer
  - Node.js / npm (only needed to build static assets)
  - SQLite extension (`ext-sqlite3`)

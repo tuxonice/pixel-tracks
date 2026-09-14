@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-pixel-tracks: a small self-hosted PHP app for uploading and browsing GPX tracks (stats, map view, share links). Auth is passwordless via email "magic links". PHP `^8.3`, SQLite storage.
+pixel-tracks: a small self-hosted PHP app for uploading and browsing GPX tracks (stats, map view, share links). Auth is passwordless via email "magic links". PHP 8.4, SQLite storage.
 
 ## Setup
 
