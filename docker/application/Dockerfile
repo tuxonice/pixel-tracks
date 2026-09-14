@@ -1,7 +1,7 @@
 #
 # Application
 #
-FROM php:8.4-apache-bookworm
+FROM php:8.5-apache-bookworm
 
 RUN apt-get update && apt-get install -y \
     imagemagick \
