@@ -1,160 +1,23 @@
 <?php
 
-namespace PixelTrack\Repository;
+namespace App\Repository;
 
-use DateInterval;
-use DateTime;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
-use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
-use PixelTrack\Service\Database;
-use SQLite3;
-use Symfony\Component\Uid\Uuid;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-class UserRepository
+/**
+ * @extends ServiceEntityRepository<User>
+ */
+class UserRepository extends ServiceEntityRepository
 {
-    private Connection $database;
-
-    public function __construct(private readonly Database $databaseService)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->database = $this->databaseService->getDbConnection();
+        parent::__construct($registry, User::class);
     }
 
-    public function userExists(string $userKey): bool
+    public function findOneByEmail(string $email): ?User
     {
-        $sql = 'SELECT count(*) AS userCount FROM users AS u WHERE u.key = :userKey';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':userKey', $userKey);
-        $result = $statement->executeQuery();
-
-        return (bool)$result->fetchOne();
-    }
-
-    public function regenerateUserKey(string $email): ?string
-    {
-        $newKey = Uuid::v4();
-
-        $sql = 'UPDATE users SET key = :newKey WHERE email = :email';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':newKey', $newKey);
-        $statement->bindValue(':email', $email);
-        $result = $statement->executeQuery();
-
-        if (!$result->rowCount()) {
-            return null;
-        }
-
-        return $newKey;
-    }
-
-    public function findUserByLoginKey(string $loginKey, int $toleranceInMinutes): ?UserTransfer
-    {
-        $threshold = (new DateTime())->modify(sprintf('-%d minutes', $toleranceInMinutes))->format('c');
-        $sql = "SELECT * FROM users WHERE login_key = :login_key AND DATETIME(updated_at) >= DATETIME(:threshold)";
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':login_key', $loginKey);
-        $statement->bindValue(':threshold', $threshold);
-        $result = $statement->executeQuery();
-
-        $row = $result->fetchAssociative();
-        if ($row === false) {
-            return null;
-        }
-
-        $userTransfer = new UserTransfer();
-        $userTransfer->setId($row['id']);
-        $userTransfer->setKey($row['key']);
-        $userTransfer->setEmail($row['email']);
-        $userTransfer->setLoginKey($row['login_key']);
-        $userTransfer->setUpdatedAt(new DateTime($row['updated_at']));
-
-        return $userTransfer;
-    }
-
-    public function findUserByEmail(string $email): ?UserTransfer
-    {
-        $sql = 'SELECT * FROM users AS u WHERE u.email = :email';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':email', $email);
-        $result = $statement->executeQuery();
-
-        $databaseRow = $result->fetchAssociative();
-
-        if ($databaseRow === false) {
-            return null;
-        }
-
-        $userTransfer = new UserTransfer();
-        $userTransfer->setId($databaseRow['id']);
-        $userTransfer->setKey($databaseRow['key']);
-        $userTransfer->setEmail($databaseRow['email']);
-        $userTransfer->setLoginKey($databaseRow['login_key']);
-        if ($databaseRow['updated_at'] !== null) {
-            $userTransfer->setUpdatedAt(new DateTime($databaseRow['updated_at']));
-        }
-
-
-        return $userTransfer;
-    }
-
-    //TODO: replace return type by a UserTransfer
-    public function createUserByEmail(string $email): string
-    {
-        $userKey = Uuid::v4();
-
-        $sql = 'INSERT INTO users (key, email) VALUES (:user_key, :email)';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':user_key', $userKey);
-        $statement->bindValue(':email', $email);
-        $statement->executeQuery();
-
-        return $userKey;
-    }
-
-    public function getUserByKey(string $key): ?UserTransfer
-    {
-        $sql = 'SELECT * FROM users AS u WHERE u.key = :userKey';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':userKey', $key);
-        $result = $statement->executeQuery();
-
-        $databaseRow = $result->fetchAssociative();
-
-        if ($databaseRow === false) {
-            return null;
-        }
-
-        $userTransfer = new UserTransfer();
-        $userTransfer->setId($databaseRow['id']);
-        $userTransfer->setKey($databaseRow['key']);
-        $userTransfer->setEmail($databaseRow['email']);
-        $userTransfer->setLoginKey($databaseRow['login_key']);
-        if ($databaseRow['updated_at'] !== null) {
-            $userTransfer->setUpdatedAt(new DateTime($databaseRow['updated_at']));
-        }
-
-        return $userTransfer;
-    }
-
-    public function regenerateLoginKey(string $email): string
-    {
-        $loginKey = Uuid::v4();
-
-        $sql = 'UPDATE users SET login_key = :newLoginKey, updated_at = :updated_at WHERE email = :email';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':newLoginKey', $loginKey);
-        $statement->bindValue(':updated_at', (new DateTime())->format('c'));
-        $statement->bindValue(':email', $email);
-        $statement->executeQuery();
-
-        return $loginKey;
-    }
-
-    public function resetLoginKey(string $email): void
-    {
-        $sql = 'UPDATE users SET login_key = NULL WHERE email = :email';
-        $statement = $this->database->prepare($sql);
-        $statement->bindValue(':email', $email);
-        $statement->executeQuery();
+        return $this->findOneBy(['email' => $email]);
     }
 }

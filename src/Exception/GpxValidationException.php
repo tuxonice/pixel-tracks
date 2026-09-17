@@ -1,7 +1,7 @@
 <?php
 
-namespace PixelTrack\Exception;
+namespace App\Exception;
 
-class GpxValidationException extends PixelTrackException
+class GpxValidationException extends \RuntimeException
 {
 }

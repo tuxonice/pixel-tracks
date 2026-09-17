@@ -1,66 +1,51 @@
 <?php
 
-namespace PixelTrack\Service;
+namespace App\Service;
 
-use Exception;
-use Monolog\Logger;
-use PixelTrack\App;
-use PixelTrack\Cache\Cache;
-use Symfony\Component\HttpClient\HttpClient;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class IpApiService
 {
     private const API_URL = 'http://ip-api.com/json/';
 
-    private HttpClientInterface $httpClient;
-
-    private Cache $cache;
-
-    private Logger $logger;
-
-    public function __construct()
-    {
-        $container = App::getInstance()->getContainer();
-        $this->logger = $container->get(Logger::class);
-        $this->cache = $container->get(Cache::class);
-        $this->httpClient = HttpClient::create();
+    public function __construct(
+        private readonly HttpClientInterface $httpClient,
+        #[Autowire(service: 'cache.app')]
+        private readonly CacheItemPoolInterface $cache,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
-    /**
-     * Get the country of an IP address.
-     *
-     * @param string $ipAddress The IP address to query.
-     * @return string|null The country name if found, otherwise null.
-     */
     public function getCountryByIp(string $ipAddress): ?string
     {
-        // Check if the result is already cached
-        $cacheKey = 'ip_country_code_' . $ipAddress;
-        if ($this->cache->has($cacheKey)) {
+        $cacheItem = $this->cache->getItem('ip_country_code_' . str_replace(['.', ':'], '_', $ipAddress));
+        if ($cacheItem->isHit()) {
             $this->logger->info('cached: ' . $ipAddress);
-            return $this->cache->get($cacheKey);
+
+            return $cacheItem->get();
         }
 
         try {
-            $response = $this->httpClient->request(
-                'POST',
-                self::API_URL . $ipAddress,
-            );
-
+            $response = $this->httpClient->request('POST', self::API_URL . $ipAddress);
             $data = json_decode($response->getContent(), true);
 
             if (isset($data['status']) && $data['status'] === 'success' && isset($data['countryCode'])) {
-                $this->cache->put($cacheKey, $data['countryCode'], 86400);
+                $cacheItem->set($data['countryCode'])->expiresAfter(86400);
+                $this->cache->save($cacheItem);
                 $this->logger->info('Get country code: ' . $ipAddress . ' - ' . $data['countryCode']);
 
                 return $data['countryCode'];
             }
-            $this->logger->warning('Could not get country code: ' . $ipAddress . ' - ' . $data['message']);
-            $this->cache->put($cacheKey, null, 432000);
+
+            $this->logger->warning('Could not get country code: ' . $ipAddress . ' - ' . ($data['message'] ?? 'unknown'));
+            $cacheItem->set(null)->expiresAfter(432000);
+            $this->cache->save($cacheItem);
 
             return null;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
 
             return null;

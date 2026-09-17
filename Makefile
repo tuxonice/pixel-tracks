@@ -1,4 +1,4 @@
-.PHONY: help build rebuild start stop clean cli cli-root xdebug-enable xdebug-disable
+.PHONY: help build rebuild start stop clean cli cli-root xdebug-enable xdebug-disable phpstan phpcs phpcbf
 
 help:
 	@echo "Available targets:"
@@ -11,6 +11,9 @@ help:
 	@echo "  cli-root        - Open a root bash shell in the app container"
 	@echo "  xdebug-enable   - Enable Xdebug in the app container"
 	@echo "  xdebug-disable  - Disable Xdebug in the app container"
+	@echo "  phpstan         - Run PHPStan static analysis"
+	@echo "  phpcs           - Run PHP_CodeSniffer code style checks"
+	@echo "  phpcbf          - Auto-fix PHP_CodeSniffer violations where possible"
 
 build:
 	docker compose build
@@ -39,3 +42,12 @@ xdebug-enable:
 
 xdebug-disable:
 	docker compose exec app sh -c "/disable-xdebug.sh && service apache2 reload"
+
+phpstan:
+	docker compose exec -u www-data app vendor/bin/phpstan analyse
+
+phpcs:
+	docker compose exec -u www-data app vendor/bin/phpcs
+
+phpcbf:
+	docker compose exec -u www-data app vendor/bin/phpcbf

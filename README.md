@@ -1,6 +1,6 @@
 # pixel-tracks
  
- Small PHP website to manage GPX tracks.
+ Small PHP website to manage GPX tracks, built on Symfony 7.4 with Doctrine ORM over SQLite.
  
  ## Goal
  
@@ -9,7 +9,7 @@
  - browse your uploaded tracks
  - view basic track stats (distance, elevation, total points)
  - view tracks on a map
- - share a map view via a share link
+ - delete tracks you no longer want
  
  Authentication is handled via email “magic links”.
  
@@ -17,7 +17,6 @@
  
  - PHP (project targets `^8.4`)
  - Composer
- - Node.js / npm (only needed to build static assets)
  - SQLite extension (`ext-sqlite3`)
  
  Alternatively, use the provided `docker compose` setup.
@@ -27,12 +26,20 @@
  Environment variables are loaded from `.env` (see `.env.dist` for a template).
  
  Key variables:
- - `BASE_URL` (used when generating magic links)
- - `APPLICATION_MODE` (`development|production|test`)
- - `MAIL_PROVIDER` / `MAIL_PROVIDER_DSN` (default SMTP points to the included Mailpit container)
+ - `APP_ENV` (`dev|prod|test`) — **set this to `prod` for any real deployment**, otherwise
+   Symfony serves full debug stack traces instead of the app's own error pages
+ - `APP_SECRET` — HMAC key for magic-link signatures; generate your own
+   (`php -r "echo bin2hex(random_bytes(16));"`) and never reuse the committed sample value
+ - `SYMFONY_TRUSTED_HOSTS` — regex of `Host` headers the app accepts; anything else gets a
+   `400`. This is what stops magic-link URLs from being Host-header spoofed
+ - `SYMFONY_TRUSTED_PROXIES` — set to your reverse proxy's IP/CIDR (or `REMOTE_ADDR`) when
+   running behind one, so `X-Forwarded-*` headers are trusted; leave empty if there is none
+ - `DATABASE_URL` (SQLite file used by Doctrine)
+ - `MAILER_DSN` (Symfony Mailer DSN; the default points at the included Mailpit container)
  - `EMAIL_FROM`
- - `LOGIN_TOLERANCE_TIME`
- - `PAGINATION_IPP`
+ - `LOGIN_TOLERANCE_TIME` (magic-link lifetime, in seconds)
+ - `PAGINATION_IPP` (tracks per page on the profile list)
+ - `ALLOW_COUNTRY_CODE` (restrict access to a single country code; empty disables the check)
  
  ## Quickstart (Docker)
 
@@ -54,7 +61,11 @@
 
    `composer copy-assets`
 
-5. Open the app:
+5. Create/update the database:
+
+   `bin/console doctrine:migrations:migrate --no-interaction`
+
+6. Open the app:
 
    `http://localhost/`
 
@@ -76,13 +87,19 @@ Mailpit UI (for catching magic-link emails in dev):
  
  3. Ensure writable folders exist:
  
-    `var/logs/`
+    `var/cache/`
+ 
+    `var/log/`
  
     `var/data/`
  
     `var/database/`
  
- 4. Point your web server document root to `public/`.
+ 4. Create/update the database:
+ 
+    `bin/console doctrine:migrations:migrate --no-interaction`
+ 
+ 5. Point your web server document root to `public/`.
  
  ## Development
 
@@ -106,13 +123,20 @@ Mailpit UI (for catching magic-link emails in dev):
  
  ## CLI
  
- The project includes a small console entrypoint at `bin/console` with migration and transfer-generation commands.
+ `bin/console` is the standard Symfony console. Useful commands:
+ 
+ - `bin/console doctrine:migrations:migrate --no-interaction` - apply pending migrations
+ - `bin/console doctrine:migrations:status` - show migration state
+ - `bin/console debug:router` - list all routes
+ - `bin/console cache:clear` - rebuild the cache (run after config changes, and on deploy)
+ - `composer copy-assets` - copy `src/Resources/{css,js,plugins,images}` into `public/`
+ 
+ In the Docker flow, prefix these with `docker compose exec -u www-data app`, or run them
+ from inside `make cli`.
  
  ## Tests
  
- Run static analysis + tests:
- 
- `composer tests`
+ There is currently no automated test suite for the Symfony codebase.
  
  ## License
  

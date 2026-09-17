@@ -1,0 +1,33 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Only Host headers matching one of these regexes are accepted; anything else gets a 400.
+    # This is what keeps generated absolute URLs (magic links!) from being Host-header spoofed.
+    trusted_hosts: '%env(SYMFONY_TRUSTED_HOSTS)%'
+
+    # Empty resolves to null via the `default::` processor, i.e. "trust no proxies".
+    # Set SYMFONY_TRUSTED_PROXIES when running behind a reverse proxy.
+    trusted_proxies: '%env(default::SYMFONY_TRUSTED_PROXIES)%'
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    #esi: true
+    #fragments: true
+
+    rate_limiter:
+        magic_link_by_ip:
+            policy: 'token_bucket'
+            limit: '%env(int:RATE_LIMITER_MAX_CAPACITY)%'
+            rate: { interval: '%app.rate_limiter_interval%', amount: '%env(int:RATE_LIMITER_MAX_CAPACITY)%' }
+        magic_link_by_email:
+            policy: 'token_bucket'
+            limit: '%env(int:RATE_LIMITER_MAX_CAPACITY)%'
+            rate: { interval: '%app.rate_limiter_interval%', amount: '%env(int:RATE_LIMITER_MAX_CAPACITY)%' }
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

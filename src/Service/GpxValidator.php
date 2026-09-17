@@ -1,13 +1,13 @@
 <?php
 
-namespace PixelTrack\Service;
+namespace App\Service;
 
-use PixelTrack\Exception\GpxValidationException;
+use App\Exception\GpxValidationException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class GpxValidator
 {
-    private const MAX_FILE_SIZE = 10485760; // 10MB
+    private const MAX_FILE_SIZE = 10485760;
     private const ALLOWED_MIME_TYPES = ['application/gpx+xml', 'application/xml', 'text/xml'];
     private const GPX_NAMESPACE = 'http://www.topografix.com/GPX/1/1';
 
@@ -63,6 +63,7 @@ class GpxValidator
     private function isValidGpxNamespace(\DOMDocument $dom): bool
     {
         $root = $dom->documentElement;
+
         return $root && $root->namespaceURI === self::GPX_NAMESPACE;
     }
 
@@ -71,14 +72,13 @@ class GpxValidator
         $xpath = new \DOMXPath($dom);
         $xpath->registerNamespace('gpx', self::GPX_NAMESPACE);
 
-        // Check for tracks (trk) or routes (rte)
         $tracks = $xpath->query('//gpx:trk | //gpx:rte');
         if ($tracks->length === 0) {
             return false;
         }
 
-        // Ensure there are track points or route points
         $points = $xpath->query('//gpx:trkpt | //gpx:rtept');
+
         return $points->length > 0;
     }
 }
