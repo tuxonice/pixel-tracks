@@ -1,9 +1,9 @@
 <?php
 
-use PixelTrack\App;
-use Symfony\Component\HttpFoundation\Request;
+use App\Kernel;
 
-require('../bootstrap.php');
-$app = App::getInstance();
-$response = $app->route(Request::createFromGlobals());
-$response->send();
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
+
+return static function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};

@@ -1,0 +1,16 @@
+{# app.flashes empties the flash bag on read, so it must only be called once #}
+{% set flashes = app.flashes %}
+{% if flashes|length %}
+<section class="py-2 text-center container">
+{% for label, messages in flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endfor %}
+</section>
+{% endif %}

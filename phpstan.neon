@@ -1,6 +1,8 @@
+includes:
+	- vendor/phpstan/phpstan-doctrine/extension.neon
+
 parameters:
 	level: 6
 	paths:
 		- src
-		- tests/Unit
 	treatPhpDocTypesAsCertain: false

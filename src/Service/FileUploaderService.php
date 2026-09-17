@@ -1,29 +1,33 @@
 <?php
 
-namespace PixelTrack\Service;
+namespace App\Service;
 
-use PixelTrack\DataTransfers\DataTransferObjects\UserTransfer;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploaderService
 {
     public function __construct(
-        private readonly Config $configService
+        private readonly string $dataPath,
     ) {
     }
 
-    public function uploadFile(UserTransfer $userTransfer, UploadedFile $file, string $targetFileName): bool
+    public function getUserDataPath(User $user): string
     {
-        $userFolder = $this->configService->getDataPath() . sprintf('/profile-%03d', $userTransfer->getId());
-        $splFileInfo = $file->getFileInfo();
-        if (!file_exists($userFolder)) {
-            if (!mkdir($userFolder)) {
-                return false;
-            };
+        return sprintf('%s/profile-%03d', $this->dataPath, (int) $user->getId());
+    }
+
+    public function uploadFile(User $user, UploadedFile $file, string $targetFileName): bool
+    {
+        $userFolder = $this->getUserDataPath($user);
+
+        if (!is_dir($userFolder) && !mkdir($userFolder, 0775, true) && !is_dir($userFolder)) {
+            return false;
         }
 
-
-        if (!move_uploaded_file($splFileInfo->getRealPath(), $userFolder . '/' . $targetFileName)) {
+        try {
+            $file->move($userFolder, $targetFileName);
+        } catch (\Throwable) {
             return false;
         }
 

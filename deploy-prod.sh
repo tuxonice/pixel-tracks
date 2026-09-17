@@ -50,8 +50,11 @@ composer copy-assets
 ln -s "$MAIN_PATH/shared/.env" .env
 ln -s "$MAIN_PATH/shared/var" var
 
-echo -e "${GREEN}Transfer generate ${NC}"
-./bin/console t:g
+echo -e "${GREEN}Run database migrations ${NC}"
+./bin/console doctrine:migrations:migrate --no-interaction
+
+echo -e "${GREEN}Warm up the cache ${NC}"
+./bin/console cache:clear
 
 cd "$MAIN_PATH" || exit
 
