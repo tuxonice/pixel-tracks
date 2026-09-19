@@ -12,32 +12,24 @@ jobs:
   Tests:
     runs-on: ubuntu-latest
 
+    env:
+      SYMFONY_PHPUNIT_VERSION: '11.4'
+
     steps:
+      - uses: actions/checkout@v7.0.1
       - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
         with:
           php-version: '8.4'
-      - uses: actions/checkout@v7.0.1
+          extensions: dom, simplexml, sqlite3, xml, json, libxml
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.dist', '.env');"
-      - name: Set up database DSN
-        run: sed -i "s|DATABASE_DSN=.*|DATABASE_DSN=\"sqlite3:///$(pwd)/tests/_data/test-database.sqlite\"|" .env.test
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      - name: Generate Transfer Objects
-        run: bin/console t:g
       - name: Run Code style
         run: vendor/bin/phpcs
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse
-      - name: Update configuration file
-        run: yq e -i '.modules.enabled[0].PhpBrowser.url = "http://localhost:8000"' tests/Acceptance.suite.yml
-      - name: cat Acceptance.suite.yml
-        run: cat tests/Acceptance.suite.yml
-      - name: Execute Unit tests
-        run: vendor/bin/codecept run tests/Unit
-      - name: Start PHP Web Server
-        run: php -S localhost:8000 -t public &
-      - name: Wait for Server to Start
-        run: sleep 5
-      - name: Execute Acceptance tests
-        run: vendor/bin/codecept run tests/Acceptance
+      - name: Migrate test database
+        run: bin/console doctrine:migrations:migrate --env=test --no-interaction
+      - name: Run tests
+        run: vendor/bin/simple-phpunit
