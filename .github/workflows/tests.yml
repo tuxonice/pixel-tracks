@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 'pt-**'
   pull_request:
     branches: [ main ]
 
