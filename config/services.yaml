@@ -8,6 +8,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.rate_limiter_interval: '%env(RATE_LIMITER_REFILL_PERIOD)% seconds'
+    # A subdirectory (relative to the project root) rather than a full path so .env.test can
+    # point it at var/data_test instead, keeping functional tests off real uploaded data.
+    app.data_path: '%kernel.project_dir%/%env(UPLOAD_DATA_SUBDIR)%'
 
 services:
     # default configuration for services in *this* file
@@ -18,7 +21,7 @@ services:
             string $emailFrom: '%env(EMAIL_FROM)%'
             int $paginationIpp: '%env(int:PAGINATION_IPP)%'
             string $gpxSchemaPath: '%kernel.project_dir%/src/Schemas/gpx.xsd'
-            string $dataPath: '%kernel.project_dir%/var/data'
+            string $dataPath: '%app.data_path%'
             string $allowCountryCode: '%env(ALLOW_COUNTRY_CODE)%'
 
     # makes classes in src/ available to be used as services
