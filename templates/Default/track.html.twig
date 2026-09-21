@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-            <div class="card card-primary">
+            <div class="card border-0 shadow-sm">
                 <div class="card-header">
                     <h3 class="card-title">Track Info</h3>
                 </div>
@@ -33,16 +33,16 @@
                                 </tbody>
                             </table>
                         </div>
-                    <div class="row no-print">
+                    <div class="row d-print-none">
                         <div class="col-12">
                             <form action="/track/delete" method="post" onsubmit="return confirm('Are you sure?')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('track-delete') }}"/>
                                 <input type="hidden" name="track_key" value="{{ track.key }}"/>
-                                <a href="/profile" class="btn btn-default">
-                                    <i class="fas fa-list"></i> Back to List
+                                <a href="/profile" class="btn btn-secondary">
+                                    <i class="bi bi-list"></i> Back to List
                                 </a>
-                                <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#modal-default">
-                                    <i class="fas fa-trash"></i> Delete
+                                <button type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#modal-default">
+                                    <i class="bi bi-trash"></i> Delete
                                 </button>
                             </form>
                         </div>
@@ -58,20 +58,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Track</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure do you want to delete <b>{{ track.name }}</b> track?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <form action="/track/delete" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token('track-delete') }}"/>
                         <input type="hidden" name="track_key" value="{{ track.key }}"/>
-                        <button type="submit" class="btn btn-danger float-right" style="margin-right: 5px;">
-                            <i class="fas fa-trash"></i> Delete
+                        <button type="submit" class="btn btn-danger float-end" style="margin-right: 5px;">
+                            <i class="bi bi-trash"></i> Delete
                         </button>
                     </form>
                 </div>

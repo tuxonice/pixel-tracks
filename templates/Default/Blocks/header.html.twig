@@ -1,26 +1,27 @@
-<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+<nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark">
     <div class="container">
-        <span href="#" class="navbar-brand">
-            <img src="/img/logo.png" alt="PixelTracks Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">PixelTracks</span>
-        </span>
-        <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-            <ul class="navbar-nav">
+        <a href="/" class="navbar-brand fw-semibold">
+            <img src="/img/logo.png" alt="PixelTracks Logo" class="rounded-circle" width="30" height="30" style="opacity: .85">
+            PixelTracks
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a href="/profile" class="nav-link">Profile</a>
+                    <a href="/profile" class="nav-link"><i class="bi bi-person-circle me-1"></i>Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">About</a>
+                    <a href="#" class="nav-link"><i class="bi bi-info-circle me-1"></i>About</a>
                 </li>
                 {% if app.user %}
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link">Logout</a>
+                        <a href="/logout" class="nav-link"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
                     </li>
-                {% endif  %}
+                {% endif %}
             </ul>
         </div>
-{#        {% if showLogout %}#}
-{#            {{ include('Default/Blocks/notifications.twig') }}#}
-{#        {% endif  %}#}
     </div>
 </nav>

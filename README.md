@@ -129,7 +129,7 @@ Mailpit UI (for catching magic-link emails in dev):
  - `bin/console doctrine:migrations:status` - show migration state
  - `bin/console debug:router` - list all routes
  - `bin/console cache:clear` - rebuild the cache (run after config changes, and on deploy)
- - `composer copy-assets` - copy `src/Resources/{css,js,plugins,images}` into `public/`
+ - `composer copy-assets` - copy `src/Resources/{css,js,images}` into `public/`
  
  In the Docker flow, prefix these with `docker compose exec -u www-data app`, or run them
  from inside `make cli`.
