@@ -15,7 +15,7 @@ composer copy-assets      # copies src/Resources/{css,js,plugins,images} -> publ
 bin/console doctrine:migrations:migrate --no-interaction   # creates/updates var/database/database.sqlite
 ```
 
-Docker (preferred dev flow): `make start`, then `make cli` to get a shell in the app container (as `www-data`), then run the commands above inside it — or run any of them directly from the host as `docker compose exec -u www-data app <command>`. `make help` lists all targets. Mailpit (catches magic-link emails in dev) is at `http://localhost:8025/`.
+Docker (preferred dev flow): `make start`, then `make cli` to get a shell in the app container (as `www-data`), then run the commands above inside it — or run any of them directly from the host as `docker compose exec -u www-data app <command>`. `make help` lists all targets. Mailpit (catches magic-link emails in dev) is at `http://localhost:8125/`.
 
 Writable folders needed outside Docker: `var/cache/`, `var/log/`, `var/data/` (per-user uploaded GPX files), `var/database/` (SQLite file). Web server document root is `public/`.
 

@@ -71,7 +71,7 @@
 
 Mailpit UI (for catching magic-link emails in dev):
 
-`http://localhost:8025/`
+`http://localhost:8125/`
  
  ## Running without Docker
  
