@@ -11,7 +11,7 @@ pixel-tracks: a small self-hosted PHP app for uploading and browsing GPX tracks 
 ```
 cp .env.dist .env
 composer install
-composer copy-assets      # copies src/Resources/{css,js,plugins,images} -> public/
+composer copy-assets      # copies src/Resources/{css,js,images} -> public/
 bin/console doctrine:migrations:migrate --no-interaction   # creates/updates var/database/database.sqlite
 ```
 
@@ -25,7 +25,7 @@ Writable folders needed outside Docker: `var/cache/`, `var/log/`, `var/data/` (p
 - `bin/console doctrine:migrations:migrate` — applies pending migrations (use `--no-interaction` to skip the confirmation prompt)
 - `bin/console doctrine:migrations:status` / `doctrine:migrations:diff` / `doctrine:migrations:generate` — inspect pending migrations / generate a new one from entity-mapping changes / scaffold an empty one
 - `bin/console debug:router` — list all registered routes
-- `composer copy-assets` — copies `src/Resources/{css,js,plugins,images}` into `public/`; re-run after changing anything under `src/Resources/`
+- `composer copy-assets` — copies `src/Resources/{css,js,images}` into `public/`; re-run after changing anything under `src/Resources/`
 
 There is no test suite and no test runner installed in this project at present. `tests/` is empty and `codeception.yml` is gone — the legacy Codeception suites (Acceptance/Unit, referencing the deleted `PixelTrack\` namespace) were removed along with the `codeception/*` composer dev dependencies (removing them also dropped `phpunit/phpunit`, which had only ever been a transitive dependency of Codeception, taking `bin/phpunit`/`phpunit.dist.xml`/`.env.test` with it via Flex's recipe uninstall). Tests will be added the Symfony way later — that means requiring `symfony/phpunit-bridge` fresh when the time comes, not reviving anything currently in the repo. `phpstan`/`phpcs` remain dev dependencies in `composer.json`, and `phpcs.xml`/`phpstan.neon` still exist but target the old codebase (e.g. `src/DataTransfers/DataTransferObjects`) and the now-nonexistent `tests/` suites — expect to revisit these when the new test suite is added. A CI workflow does exist at `.github/workflows/tests.yml` (runs on push to `main`/`pt-**` and on PRs into `main`), but it is currently broken/stale: it still runs the legacy pipeline (`bin/console t:g` — a Transfer-Objects-generation command that no longer exists — followed by `phpcs`/`phpstan`/`codecept run`), left over from before the rewrite.
 

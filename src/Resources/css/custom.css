@@ -1,0 +1,13 @@
+/* Navbar contrast: Bootstrap's dark-theme navbar sets .nav-link to
+   rgba(255,255,255,.55) by default, which falls short of WCAG AA's 4.5:1
+   ratio on the bg-primary (#0d6efd) background used here. Force full white. */
+.navbar.bg-primary .nav-link,
+.navbar.bg-primary .navbar-brand {
+    color: #fff;
+}
+
+.navbar.bg-primary .nav-link:hover,
+.navbar.bg-primary .nav-link:focus {
+    color: #fff;
+    text-decoration: underline;
+}

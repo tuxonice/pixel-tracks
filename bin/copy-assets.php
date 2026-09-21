@@ -37,7 +37,6 @@ $publicDir = $baseDir . '/public';
 echo "Copying static assets...\n";
 
 $copies = [
-    ['src' => $resourcesDir . '/plugins', 'dest' => $publicDir . '/plugins'],
     ['src' => $resourcesDir . '/css', 'dest' => $publicDir . '/css'],
     ['src' => $resourcesDir . '/js', 'dest' => $publicDir . '/js'],
     ['src' => $resourcesDir . '/images', 'dest' => $publicDir . '/img'],
