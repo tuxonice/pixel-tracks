@@ -16,7 +16,7 @@ class MapControllerTest extends WebTestCase
         $this->writeTrackFile($user, $track, file_get_contents(self::FIXTURES . 'valid-track.gpx'));
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/map/' . $track->getKey());
+        $this->client->request('GET', '/en/map/' . $track->getKey());
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('title', 'Morning Run');
@@ -29,7 +29,7 @@ class MapControllerTest extends WebTestCase
         $user = $this->persistUser();
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/map/does-not-exist');
+        $this->client->request('GET', '/en/map/does-not-exist');
 
         self::assertResponseRedirects('/');
     }
@@ -43,9 +43,9 @@ class MapControllerTest extends WebTestCase
         $visitor = $this->persistUser('visitor@example.com');
         $this->client->loginUser($visitor);
 
-        $this->client->request('GET', '/map/' . $track->getKey());
+        $this->client->request('GET', '/en/map/' . $track->getKey());
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Track does not exist');
     }
@@ -56,9 +56,9 @@ class MapControllerTest extends WebTestCase
         $track = $this->persistTrack($user, 'Morning Run');
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/map/' . $track->getKey());
+        $this->client->request('GET', '/en/map/' . $track->getKey());
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Track file does not exist');
     }

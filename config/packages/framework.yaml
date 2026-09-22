@@ -1,6 +1,8 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
+    enabled_locales: ['en', 'pt']
+    set_locale_from_accept_language: true
 
     # Only Host headers matching one of these regexes are accepted; anything else gets a 400.
     # This is what keeps generated absolute URLs (magic links!) from being Host-header spoofed.

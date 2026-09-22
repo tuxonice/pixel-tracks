@@ -8,26 +8,26 @@
         <div class="col-md-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Track Info</h3>
+                    <h3 class="card-title">{{ 'track.info_title'|trans }}</h3>
                 </div>
                 <div class="card-body">
                         <p class="lead">{{ track.name }}</p>
                         <div class="table-responsive">
                             <table class="table">
                                 <tbody><tr>
-                                    <th style="width:50%">Points</th>
+                                    <th style="width:50%">{{ 'track.points'|trans }}</th>
                                     <td>{{ track.totalPoints }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Distance</th>
+                                    <th>{{ 'track.distance'|trans }}</th>
                                     <td>{{ track.distance }} Km</td>
                                 </tr>
                                 <tr>
-                                    <th>Elevation</th>
+                                    <th>{{ 'track.elevation'|trans }}</th>
                                     <td>{{ track.elevation }} m</td>
                                 </tr>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>{{ 'track.date'|trans }}</th>
                                     <td>{{ track.createdAt|date('c') }}</td>
                                 </tr>
                                 </tbody>
@@ -35,14 +35,14 @@
                         </div>
                     <div class="row d-print-none">
                         <div class="col-12">
-                            <form action="/track/delete" method="post" onsubmit="return confirm('Are you sure?')">
+                            <form action="{{ path('app_track_delete') }}" method="post" onsubmit="return confirm('{{ 'track.delete_confirm_js'|trans|e('js') }}')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('track-delete') }}"/>
                                 <input type="hidden" name="track_key" value="{{ track.key }}"/>
-                                <a href="/profile" class="btn btn-secondary">
-                                    <i class="bi bi-list"></i> Back to List
+                                <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                                    <i class="bi bi-list"></i> {{ 'track.back_to_list'|trans }}
                                 </a>
                                 <button type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#modal-default">
-                                    <i class="bi bi-trash"></i> Delete
+                                    <i class="bi bi-trash"></i> {{ 'track.delete'|trans }}
                                 </button>
                             </form>
                         </div>
@@ -57,19 +57,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Track</h4>
+                    <h4 class="modal-title">{{ 'track.delete_title'|trans }}</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure do you want to delete <b>{{ track.name }}</b> track?</p>
+                    <p>{{ 'track.delete_confirm_body'|trans({'%name%': track.name})|raw }}</p>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="/track/delete" method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'track.cancel'|trans }}</button>
+                    <form action="{{ path('app_track_delete') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token('track-delete') }}"/>
                         <input type="hidden" name="track_key" value="{{ track.key }}"/>
                         <button type="submit" class="btn btn-danger float-end" style="margin-right: 5px;">
-                            <i class="bi bi-trash"></i> Delete
+                            <i class="bi bi-trash"></i> {{ 'track.delete'|trans }}
                         </button>
                     </form>
                 </div>

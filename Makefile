@@ -1,4 +1,4 @@
-.PHONY: help build rebuild start stop clean cli cli-root xdebug-enable xdebug-disable phpstan phpcs phpcbf
+.PHONY: help build rebuild start stop clean cli cli-root xdebug-enable xdebug-disable phpstan phpcs phpcbf tests
 
 help:
 	@echo "Available targets:"
@@ -14,6 +14,7 @@ help:
 	@echo "  phpstan         - Run PHPStan static analysis"
 	@echo "  phpcs           - Run PHP_CodeSniffer code style checks"
 	@echo "  phpcbf          - Auto-fix PHP_CodeSniffer violations where possible"
+	@echo "  tests           - Run the PHPUnit test suite"
 
 build:
 	docker compose build
@@ -51,3 +52,6 @@ phpcs:
 
 phpcbf:
 	docker compose exec -u www-data app vendor/bin/phpcbf
+
+tests:
+	docker compose exec -u www-data app vendor/bin/simple-phpunit

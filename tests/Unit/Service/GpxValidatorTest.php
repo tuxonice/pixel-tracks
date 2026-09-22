@@ -26,7 +26,7 @@ class GpxValidatorTest extends TestCase
         $file->method('getSize')->willReturn(10485760 + 1);
 
         $this->expectException(GpxValidationException::class);
-        $this->expectExceptionMessage('File size exceeds maximum allowed size of 10MB');
+        $this->expectExceptionMessage('gpx_validation.file_too_large');
 
         (new GpxValidator())->validate($file);
     }
@@ -36,7 +36,7 @@ class GpxValidatorTest extends TestCase
         $file = new UploadedFile(self::FIXTURES . 'not-xml.txt', 'not-xml.txt', null, null, true);
 
         $this->expectException(GpxValidationException::class);
-        $this->expectExceptionMessage('Invalid file type. Only GPX files are allowed.');
+        $this->expectExceptionMessage('gpx_validation.invalid_file_type');
 
         (new GpxValidator())->validate($file);
     }
@@ -46,7 +46,7 @@ class GpxValidatorTest extends TestCase
         $file = new UploadedFile(self::FIXTURES . 'no-namespace.gpx', 'no-namespace.gpx', null, null, true);
 
         $this->expectException(GpxValidationException::class);
-        $this->expectExceptionMessage('Invalid GPX namespace');
+        $this->expectExceptionMessage('gpx_validation.invalid_namespace');
 
         (new GpxValidator())->validate($file);
     }
@@ -56,7 +56,7 @@ class GpxValidatorTest extends TestCase
         $file = new UploadedFile(self::FIXTURES . 'no-track-points.gpx', 'no-track-points.gpx', null, null, true);
 
         $this->expectException(GpxValidationException::class);
-        $this->expectExceptionMessage('No valid track data found in GPX file');
+        $this->expectExceptionMessage('gpx_validation.no_track_data');
 
         (new GpxValidator())->validate($file);
     }
@@ -66,7 +66,7 @@ class GpxValidatorTest extends TestCase
         $file = new UploadedFile(self::FIXTURES . 'malformed.xml', 'malformed.xml', null, null, true);
 
         $this->expectException(GpxValidationException::class);
-        $this->expectExceptionMessageMatches('/Invalid XML structure/');
+        $this->expectExceptionMessage('gpx_validation.invalid_xml_structure');
 
         (new GpxValidator())->validate($file);
     }

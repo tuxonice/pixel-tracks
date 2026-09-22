@@ -16,6 +16,9 @@ class Paginator
     private int $default_ipp;
     private string $url;
 
+    private string $previousLabel = 'Previous';
+    private string $nextLabel = 'Next';
+
     /** @var array<string,mixed> */
     private array $params;
 
@@ -51,6 +54,14 @@ class Paginator
         return $this;
     }
 
+    public function setLabels(string $previousLabel, string $nextLabel): self
+    {
+        $this->previousLabel = $previousLabel;
+        $this->nextLabel = $nextLabel;
+
+        return $this;
+    }
+
     public function paginate(): void
     {
         if ($this->itemsPerPage <= 0) {
@@ -78,9 +89,9 @@ class Paginator
         $next_page = $this->current_page + 1;
 
         if ($this->current_page != 1 && $this->items_total >= 10) {
-            $this->pageLinks[0] = ['caption' => '« Previous', 'link' => $this->url . '?' . $this->makeParams($prev_page), 'isCurrent' => false];
+            $this->pageLinks[0] = ['caption' => '« ' . $this->previousLabel, 'link' => $this->url . '?' . $this->makeParams($prev_page), 'isCurrent' => false];
         } else {
-            $this->pageLinks[0] = ['caption' => 'Previous', 'link' => '', 'isCurrent' => false];
+            $this->pageLinks[0] = ['caption' => $this->previousLabel, 'link' => '', 'isCurrent' => false];
         }
 
         for ($i = 1; $i <= $this->num_pages; $i++) {
@@ -92,9 +103,9 @@ class Paginator
         }
 
         if ($this->current_page != $this->num_pages && $this->items_total >= 10) {
-            $this->pageLinks[] = ['caption' => 'Next »', 'link' => $this->url . '?' . $this->makeParams($next_page), 'isCurrent' => false];
+            $this->pageLinks[] = ['caption' => $this->nextLabel . ' »', 'link' => $this->url . '?' . $this->makeParams($next_page), 'isCurrent' => false];
         } else {
-            $this->pageLinks[] = ['caption' => 'Next', 'link' => '', 'isCurrent' => false];
+            $this->pageLinks[] = ['caption' => $this->nextLabel, 'link' => '', 'isCurrent' => false];
         }
     }
 
@@ -104,9 +115,9 @@ class Paginator
         $next_page = $this->current_page + 1;
 
         if ($this->current_page != 1 && $this->items_total >= 10) {
-            $this->pageLinks[0] = ['caption' => '« Previous', 'link' => $this->url . '?' . $this->makeParams($prev_page), 'isCurrent' => false];
+            $this->pageLinks[0] = ['caption' => '« ' . $this->previousLabel, 'link' => $this->url . '?' . $this->makeParams($prev_page), 'isCurrent' => false];
         } else {
-            $this->pageLinks[0] = ['caption' => '« Previous', 'link' => '', 'isCurrent' => false];
+            $this->pageLinks[0] = ['caption' => '« ' . $this->previousLabel, 'link' => '', 'isCurrent' => false];
         }
 
         $start_range = $this->current_page - floor($this->mid_range / 2);
@@ -141,9 +152,9 @@ class Paginator
         }
 
         if ($this->current_page != $this->num_pages && $this->items_total >= 10) {
-            $this->pageLinks[] = ['caption' => 'Next »', 'link' => $this->url . '?' . $this->makeParams($next_page), 'isCurrent' => false];
+            $this->pageLinks[] = ['caption' => $this->nextLabel . ' »', 'link' => $this->url . '?' . $this->makeParams($next_page), 'isCurrent' => false];
         } else {
-            $this->pageLinks[] = ['caption' => 'Next »', 'link' => '', 'isCurrent' => false];
+            $this->pageLinks[] = ['caption' => $this->nextLabel . ' »', 'link' => '', 'isCurrent' => false];
         }
     }
 

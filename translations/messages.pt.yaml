@@ -1,0 +1,69 @@
+nav:
+    profile: Perfil
+    about: Sobre
+    logout: Sair
+
+flash:
+    invalid_or_expired_link: 'Link mágico inválido ou expirado. Por favor peça um novo link mágico'
+    no_file_uploaded: Nenhum ficheiro foi enviado
+    track_name_required: O nome do percurso é obrigatório
+    upload_failed: Não foi possível enviar o ficheiro
+    upload_success: Novo ficheiro enviado
+    track_not_found: O percurso não existe
+    track_file_not_found: O ficheiro do percurso não existe
+    track_deleted: Percurso eliminado
+    invalid_email: Email inválido
+    please_verify_mailbox: Por favor verifique o seu email
+
+error:
+    invalid_security_token: Token de segurança inválido
+    not_found_title: 404 Página não encontrada
+    not_found_body: A página que procura não existe...
+    home_page: Página inicial
+    server_error: Ocorreu um erro inesperado. Por favor tente novamente mais tarde.
+
+home:
+    tracks_title: Percursos
+    table_name: Nome
+    no_tracks: Ainda não há percursos!
+    upload_title: Enviar Percurso
+    track_name_label: Nome do Percurso
+    track_name_placeholder: Indique o nome do percurso
+    track_file_label: Ficheiro do Percurso (Apenas ficheiros GPX)
+    submit: Enviar
+    pagination_previous: Anterior
+    pagination_next: Seguinte
+
+gpx_validation:
+    file_too_large: O tamanho do ficheiro excede o máximo permitido de 10MB
+    invalid_file_type: 'Tipo de ficheiro inválido. Apenas são permitidos ficheiros GPX.'
+    invalid_xml_structure: 'Estrutura XML inválida: %details%'
+    invalid_namespace: Namespace GPX inválido
+    no_track_data: Não foram encontrados dados de percurso válidos no ficheiro GPX
+    invalid_gpx_format: Formato de ficheiro GPX inválido
+    validation_error: 'Erro ao validar o ficheiro GPX: %details%'
+
+track:
+    info_title: Informação do Percurso
+    points: Pontos
+    distance: Distância
+    elevation: Elevação
+    date: Data
+    back_to_list: Voltar à Lista
+    delete: Eliminar
+    delete_title: Eliminar Percurso
+    delete_confirm_body: 'Tem a certeza que deseja eliminar o percurso <b>%name%</b>?'
+    delete_confirm_js: Tem a certeza?
+    cancel: Cancelar
+
+magic_link:
+    title: Enviar-me um Link Mágico
+    intro: Indique o seu email para aceder ao seu perfil
+    email_invalid_feedback: Por favor indique um endereço de email válido.
+    send: Enviar
+
+mail:
+    magic_link_subject: Aqui está o seu link mágico
+    magic_link_body: Aqui está um link mágico para aceder ao seu perfil.
+    magic_link_button: O Meu Perfil
+    magic_link_footer_prefix: 'Enviado com <3 por'

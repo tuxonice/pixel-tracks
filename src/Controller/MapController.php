@@ -8,6 +8,7 @@ use App\Service\FileUploaderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MapController extends AbstractController
 {
@@ -15,28 +16,29 @@ class MapController extends AbstractController
         private readonly TrackRepository $trackRepository,
         private readonly FileUploaderService $fileUploaderService,
         private readonly GpsTrack $gpsTrack,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
-    #[Route('/map/{trackKey}', name: 'app_track_map', methods: ['GET'])]
+    #[Route(path: ['en' => '/en/map/{trackKey}', 'pt' => '/pt/mapa/{trackKey}'], name: 'app_track_map', methods: ['GET'])]
     public function index(string $trackKey): Response
     {
         $track = $this->trackRepository->findOneByKey($trackKey);
         if (!$track) {
-            $this->addFlash('danger', 'Track file does not exist');
+            $this->addFlash('danger', $this->translator->trans('flash.track_file_not_found'));
 
             return $this->redirectToRoute('app_home');
         }
 
         if ($track->getUser() !== $this->getUser()) {
-            $this->addFlash('danger', 'Track does not exist');
+            $this->addFlash('danger', $this->translator->trans('flash.track_not_found'));
 
             return $this->redirectToRoute('app_profile');
         }
 
         $trackFilePath = $this->fileUploaderService->getUserDataPath($track->getUser()) . '/' . $track->getFilename();
         if (!file_exists($trackFilePath)) {
-            $this->addFlash('danger', 'Track file does not exist');
+            $this->addFlash('danger', $this->translator->trans('flash.track_file_not_found'));
 
             return $this->redirectToRoute('app_profile');
         }

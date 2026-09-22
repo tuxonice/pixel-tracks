@@ -13,7 +13,7 @@ class AuthenticationFlowTest extends WebTestCase
 
         $this->client->request('GET', $loginLink->getUrl());
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertResponseIsSuccessful();
     }
@@ -25,7 +25,7 @@ class AuthenticationFlowTest extends WebTestCase
 
         $this->client->request('GET', $loginLink->getUrl() . 'tampered');
 
-        self::assertResponseRedirects('/send-magic-link');
+        self::assertResponseRedirects('/en/send-magic-link');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Invalid or expired magic link');
     }
@@ -36,10 +36,10 @@ class AuthenticationFlowTest extends WebTestCase
         $loginLink = $this->loginLinkHandler()->createLoginLink($user);
 
         $this->client->request('GET', $loginLink->getUrl());
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
 
         $this->client->request('GET', $loginLink->getUrl());
-        self::assertResponseRedirects('/send-magic-link');
+        self::assertResponseRedirects('/en/send-magic-link');
     }
 
     public function testLogoutEndsTheSessionAndProtectedRoutesRedirectAgain(): void
@@ -47,14 +47,14 @@ class AuthenticationFlowTest extends WebTestCase
         $user = $this->persistUser('logout@example.com');
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/profile/');
+        $this->client->request('GET', '/en/profile/');
         self::assertResponseIsSuccessful();
 
         $this->client->request('GET', '/logout');
         self::assertResponseRedirects();
 
-        $this->client->request('GET', '/profile/');
-        self::assertResponseRedirects('/send-magic-link');
+        $this->client->request('GET', '/en/profile/');
+        self::assertResponseRedirects('/en/send-magic-link');
     }
 
     /**

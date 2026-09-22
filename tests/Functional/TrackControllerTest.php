@@ -13,7 +13,7 @@ class TrackControllerTest extends WebTestCase
         $track = $this->persistTrack($user, 'Morning Run');
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/track/info/' . $track->getKey());
+        $this->client->request('GET', '/en/track/info/' . $track->getKey());
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', 'Morning Run');
@@ -27,9 +27,9 @@ class TrackControllerTest extends WebTestCase
         $visitor = $this->persistUser('visitor@example.com');
         $this->client->loginUser($visitor);
 
-        $this->client->request('GET', '/track/info/' . $track->getKey());
+        $this->client->request('GET', '/en/track/info/' . $track->getKey());
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Track does not exist');
     }
@@ -39,9 +39,9 @@ class TrackControllerTest extends WebTestCase
         $user = $this->persistUser();
         $this->client->loginUser($user);
 
-        $this->client->request('GET', '/track/info/does-not-exist');
+        $this->client->request('GET', '/en/track/info/does-not-exist');
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
     }
 
     public function testDeletingOwnTrackRemovesItAndItsFile(): void
@@ -58,7 +58,7 @@ class TrackControllerTest extends WebTestCase
             '_token' => $token,
         ]);
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-success', 'Track deleted');
 
@@ -86,7 +86,7 @@ class TrackControllerTest extends WebTestCase
             '_token' => $token,
         ]);
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Track does not exist');
 
@@ -138,7 +138,7 @@ class TrackControllerTest extends WebTestCase
      */
     private function deleteTokenFrom(Track $viewableTrack): string
     {
-        $crawler = $this->client->request('GET', '/track/info/' . $viewableTrack->getKey());
+        $crawler = $this->client->request('GET', '/en/track/info/' . $viewableTrack->getKey());
 
         return (string) $crawler->filter('form[action="/track/delete"] input[name="_token"]')->first()->attr('value');
     }

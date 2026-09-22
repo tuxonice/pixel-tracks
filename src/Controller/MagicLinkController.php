@@ -13,7 +13,9 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MagicLinkController extends AbstractController
 {
@@ -22,6 +24,7 @@ class MagicLinkController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly LoginLinkHandlerInterface $loginLinkHandler,
         private readonly MailerInterface $mailer,
+        private readonly TranslatorInterface $translator,
         #[Autowire(service: 'limiter.magic_link_by_ip')]
         private readonly RateLimiterFactory $magicLinkByIpLimiterFactory,
         #[Autowire(service: 'limiter.magic_link_by_email')]
@@ -30,13 +33,15 @@ class MagicLinkController extends AbstractController
     ) {
     }
 
-    #[Route('/send-magic-link', name: 'app_magic_link_request', methods: ['GET'])]
+    #[Route(path: ['en' => '/en/send-magic-link', 'pt' => '/pt/link-magico'], name: 'app_magic_link_request', methods: ['GET'])]
+    #[IsGranted('PUBLIC_ACCESS')]
     public function requestMagicLink(): Response
     {
         return $this->render('Default/magic-link.html.twig');
     }
 
-    #[Route('/send-magic-link', name: 'app_magic_link_send', methods: ['POST'])]
+    #[Route(path: ['en' => '/en/send-magic-link', 'pt' => '/pt/link-magico'], name: 'app_magic_link_send', methods: ['POST'])]
+    #[IsGranted('PUBLIC_ACCESS')]
     public function sendMagicLink(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('magic-link', (string) $request->request->get('_token'))) {
@@ -54,7 +59,7 @@ class MagicLinkController extends AbstractController
         }
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addFlash('danger', 'Invalid email');
+            $this->addFlash('danger', $this->translator->trans('flash.invalid_email'));
 
             return $this->redirectToRoute('app_magic_link_request');
         }
@@ -63,21 +68,22 @@ class MagicLinkController extends AbstractController
         if (!$user) {
             $user = new User($email);
             $this->entityManager->persist($user);
-            $this->entityManager->flush();
         }
+        $user->setLocale($request->getLocale());
+        $this->entityManager->flush();
 
         $loginLinkDetails = $this->loginLinkHandler->createLoginLink($user);
 
         $mail = (new Email())
             ->from($this->emailFrom)
             ->to($email)
-            ->subject('Here is your magic link')
+            ->subject($this->translator->trans('mail.magic_link_subject'))
             ->html($this->renderView('Default/Mail/magic-link-html.html.twig', ['link' => $loginLinkDetails->getUrl()]))
             ->text($this->renderView('Default/Mail/magic-link-text.txt.twig', ['link' => $loginLinkDetails->getUrl()]));
 
         $this->mailer->send($mail);
 
-        $this->addFlash('success', 'Please verify your mailbox');
+        $this->addFlash('success', $this->translator->trans('flash.please_verify_mailbox'));
 
         return $this->redirectToRoute('app_magic_link_request');
     }
