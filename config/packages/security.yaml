@@ -12,19 +12,12 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            login_link:
-                check_route: app_login_check
-                signature_properties: ['email']
-                lifetime: '%env(int:LOGIN_TOLERANCE_TIME)%'
-                max_uses: 1
-                used_link_cache: cache.app
-                success_handler: App\Security\LoginSuccessHandler
-                failure_handler: App\Security\LoginFailureHandler
-            entry_point: App\Security\MagicLinkEntryPoint
+            custom_authenticators:
+                - App\Security\LoginCodeAuthenticator
+            entry_point: App\Security\LoginEntryPoint
             logout:
                 path: app_logout
 
     access_control:
-        - { path: ^/(en/send-magic-link|pt/link-magico), roles: PUBLIC_ACCESS }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/(en/login(/verify)?|pt/entrar(/verificar)?)$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

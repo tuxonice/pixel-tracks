@@ -26,10 +26,9 @@ abstract class WebTestCase extends BaseWebTestCase
         $schemaTool->createSchema($metadata);
 
         // cache.app (and cache.rate_limiter, which just extends it) is filesystem-backed and
-        // persists across kernel reboots, i.e. across test methods, unless cleared. Two
-        // things in this app rely on it: the magic-link rate limiters, and the login link
-        // authenticator's used_link_cache (max_uses: 1 in security.yaml) - without this,
-        // either can bleed state between tests that hit the same limiter/signature.
+        // persists across kernel reboots, i.e. across test methods, unless cleared. The
+        // login-code rate limiters rely on it - without clearing it, rate-limit state can
+        // bleed between tests that hit the same limiter key.
         self::getContainer()->get('cache.app')->clear();
         self::getContainer()->get('cache.rate_limiter')->clear();
 
