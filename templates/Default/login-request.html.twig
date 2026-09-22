@@ -6,24 +6,22 @@
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">{{ 'magic_link.title'|trans }}</h1>
-                <p class="lead text-body-secondary">{{ 'magic_link.intro'|trans }}</p>
-                <!-- -->
+                <h1 class="fw-light">{{ 'login.title'|trans }}</h1>
+                <p class="lead text-body-secondary">{{ 'login.intro'|trans }}</p>
                 <div class="py-5 text-start">
-                    <form class="needs-validation" method="POST" action="{{ path('app_magic_link_send') }}">
+                    <form class="needs-validation" method="POST" action="{{ path('app_login_send') }}">
                         <div class="row g-3">
                             <div class="col-12">
-                                <input type="hidden" name="_token" value="{{ csrf_token('magic-link') }}"/>
+                                <input type="hidden" name="_token" value="{{ csrf_token('login') }}"/>
                                 <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com" required="required"/>
                                 <div class="invalid-feedback">
-                                    {{ 'magic_link.email_invalid_feedback'|trans }}
+                                    {{ 'login.email_invalid_feedback'|trans }}
                                 </div>
                             </div>
                         </div>
-                        <button class="w-100 btn btn-primary btn-lg mt-4" type="submit">{{ 'magic_link.send'|trans }}</button>
+                        <button class="w-100 btn btn-primary btn-lg mt-4" type="submit">{{ 'login.send'|trans }}</button>
                     </form>
                 </div>
-                <!-- -->
             </div>
         </div>
     </section>

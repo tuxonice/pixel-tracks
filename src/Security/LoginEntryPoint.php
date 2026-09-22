@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class MagicLinkEntryPoint implements AuthenticationEntryPointInterface
+class LoginEntryPoint implements AuthenticationEntryPointInterface
 {
     public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
     {
@@ -17,6 +17,6 @@ class MagicLinkEntryPoint implements AuthenticationEntryPointInterface
 
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
-        return new RedirectResponse($this->urlGenerator->generate('app_magic_link_request'));
+        return new RedirectResponse($this->urlGenerator->generate('app_login_request'));
     }
 }

@@ -92,7 +92,7 @@ class UploadControllerTest extends WebTestCase
 
     public function testMissingCsrfTokenIsForbiddenForAnAuthenticatedUser(): void
     {
-        // Unlike the unauthenticated magic-link case, an authenticated user hitting the
+        // Unlike the unauthenticated login case, an authenticated user hitting the
         // same AccessDeniedException gets a real 403: the security exception listener only
         // falls back to the firewall's entry point when the token isn't fully authenticated.
         $user = $this->persistUser();

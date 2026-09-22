@@ -4,23 +4,23 @@ namespace App\Tests\Functional;
 
 class AccessControlTest extends WebTestCase
 {
-    public function testAProtectedRouteRedirectsAnUnauthenticatedVisitorToTheMagicLinkForm(): void
+    public function testAProtectedRouteRedirectsAnUnauthenticatedVisitorToTheLoginForm(): void
     {
         $this->client->request('GET', '/en/profile/');
 
-        self::assertResponseRedirects('/en/send-magic-link');
+        self::assertResponseRedirects('/en/login');
     }
 
-    public function testTheMagicLinkRouteIsReachableWithoutAuthentication(): void
+    public function testTheLoginRouteIsReachableWithoutAuthentication(): void
     {
-        $this->client->request('GET', '/en/send-magic-link');
+        $this->client->request('GET', '/en/login');
 
         self::assertResponseIsSuccessful();
     }
 
     public function testSecurityHeadersAreSetOnEveryResponse(): void
     {
-        $this->client->request('GET', '/en/send-magic-link');
+        $this->client->request('GET', '/en/login');
 
         $response = $this->client->getResponse();
         self::assertTrue($response->headers->has('Content-Security-Policy'));

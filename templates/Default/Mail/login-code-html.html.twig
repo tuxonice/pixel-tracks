@@ -73,7 +73,7 @@
                                                     </tbody>
                                                 </table>
                                                 <p class="" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">
-                                                    {{ 'mail.magic_link_body'|trans }}
+                                                    {{ 'mail.login_code_body'|trans }}
                                                 </p>
                                                 <table class="s-4 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                                     <tbody>
@@ -84,11 +84,11 @@
                                                     </tr>
                                                     </tbody>
                                                 </table>
-                                                <table class="btn btn-primary p-3 fw-700" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important; font-weight: 700 !important;">
+                                                <table class="p-3" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important; width: 100%; background-color: #f7fafc; border: 1px solid #e2e8f0;">
                                                     <tbody>
                                                     <tr>
-                                                        <td style="line-height: 24px; font-size: 16px; border-radius: 6px; font-weight: 700 !important; margin: 0;" align="center" bgcolor="#0d6efd">
-                                                            <a href="{{ link }}" style="color: #ffffff; font-size: 16px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 6px; line-height: 20px; display: block; font-weight: 700 !important; white-space: nowrap; background-color: #0d6efd; padding: 12px; border: 1px solid #0d6efd;">{{ 'mail.magic_link_button'|trans }}</a>
+                                                        <td style="line-height: 24px; font-size: 36px; font-weight: 700; letter-spacing: 8px; border-radius: 6px; margin: 0; padding: 16px;" align="center">
+                                                            {{ code }}
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -125,7 +125,7 @@
                                         </tbody>
                                     </table>
                                     <div class="text-muted text-center" style="color: #718096;" align="center">
-                                        {{ 'mail.magic_link_footer_prefix'|trans }} Pixel Tracks<br>
+                                        {{ 'mail.login_code_footer_prefix'|trans }} Pixel Tracks<br>
                                     </div>
                                     <table class="s-6 w-full" role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
                                         <tbody>

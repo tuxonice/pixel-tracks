@@ -11,7 +11,7 @@
  - view tracks on a map
  - delete tracks you no longer want
  
- Authentication is handled via email “magic links”.
+ Authentication is handled via a numeric login code sent by email.
  
  ## Requirements
  
@@ -28,16 +28,16 @@
  Key variables:
  - `APP_ENV` (`dev|prod|test`) — **set this to `prod` for any real deployment**, otherwise
    Symfony serves full debug stack traces instead of the app's own error pages
- - `APP_SECRET` — HMAC key for magic-link signatures; generate your own
+ - `APP_SECRET` — Symfony's general application secret (CSRF tokens, signed values); generate your own
    (`php -r "echo bin2hex(random_bytes(16));"`) and never reuse the committed sample value
  - `SYMFONY_TRUSTED_HOSTS` — regex of `Host` headers the app accepts; anything else gets a
-   `400`. This is what stops magic-link URLs from being Host-header spoofed
+   `400`. This is what stops generated absolute URLs from being Host-header spoofed
  - `SYMFONY_TRUSTED_PROXIES` — set to your reverse proxy's IP/CIDR (or `REMOTE_ADDR`) when
    running behind one, so `X-Forwarded-*` headers are trusted; leave empty if there is none
  - `DATABASE_URL` (SQLite file used by Doctrine)
  - `MAILER_DSN` (Symfony Mailer DSN; the default points at the included Mailpit container)
  - `EMAIL_FROM`
- - `LOGIN_TOLERANCE_TIME` (magic-link lifetime, in seconds)
+ - `LOGIN_TOLERANCE_TIME` (login code lifetime, in seconds)
  - `PAGINATION_IPP` (tracks per page on the profile list)
  - `ALLOW_COUNTRY_CODE` (restrict access to a single country code; empty disables the check)
  
@@ -69,7 +69,7 @@
 
    `http://localhost/`
 
-Mailpit UI (for catching magic-link emails in dev):
+Mailpit UI (for catching login-code emails in dev):
 
 `http://localhost:8125/`
  

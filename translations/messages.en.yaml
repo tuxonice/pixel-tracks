@@ -4,7 +4,6 @@ nav:
     logout: Logout
 
 flash:
-    invalid_or_expired_link: 'Invalid or expired magic link. Please request a new magic link'
     no_file_uploaded: No file was uploaded
     track_name_required: Track name is required
     upload_failed: Unable to upload the file
@@ -13,7 +12,11 @@ flash:
     track_file_not_found: Track file does not exist
     track_deleted: Track deleted
     invalid_email: Invalid email
-    please_verify_mailbox: Please verify your mailbox
+    code_sent: We've sent you a login code. Check your email.
+    invalid_code: Incorrect code. Please try again.
+    code_expired: Your code has expired. Please request a new one.
+    too_many_attempts: Too many incorrect attempts. Please request a new code.
+    no_pending_login: Please request a new code to log in.
 
 error:
     invalid_security_token: Invalid security token
@@ -56,14 +59,18 @@ track:
     delete_confirm_js: Are you sure?
     cancel: Cancel
 
-magic_link:
-    title: Send me a Magic link
-    intro: Submit your email to be able to access your profile
+login:
+    title: Log in
+    intro: Enter your email and we'll send you a login code
     email_invalid_feedback: Please enter a valid email address.
-    send: Send
+    send: Send code
+    verify_title: Enter your code
+    verify_intro: 'We sent a 6-digit code to %email%'
+    code_invalid_feedback: Please enter the 6-digit code.
+    verify: Verify
+    start_over: Use a different email
 
 mail:
-    magic_link_subject: Here is your magic link
-    magic_link_body: Here is a magic link to access your profile.
-    magic_link_button: My Profile
-    magic_link_footer_prefix: 'Sent with <3 from'
+    login_code_subject: Your login code
+    login_code_body: 'Here is your login code:'
+    login_code_footer_prefix: 'Sent with <3 from'

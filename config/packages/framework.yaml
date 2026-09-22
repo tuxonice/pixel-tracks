@@ -5,7 +5,7 @@ framework:
     set_locale_from_accept_language: true
 
     # Only Host headers matching one of these regexes are accepted; anything else gets a 400.
-    # This is what keeps generated absolute URLs (magic links!) from being Host-header spoofed.
+    # This is what keeps generated absolute URLs from being Host-header spoofed.
     trusted_hosts: '%env(SYMFONY_TRUSTED_HOSTS)%'
 
     # Empty resolves to null via the `default::` processor, i.e. "trust no proxies".
@@ -19,11 +19,15 @@ framework:
     #fragments: true
 
     rate_limiter:
-        magic_link_by_ip:
+        login_code_by_ip:
             policy: 'token_bucket'
             limit: '%env(int:RATE_LIMITER_MAX_CAPACITY)%'
             rate: { interval: '%app.rate_limiter_interval%', amount: '%env(int:RATE_LIMITER_MAX_CAPACITY)%' }
-        magic_link_by_email:
+        login_code_by_email:
+            policy: 'token_bucket'
+            limit: '%env(int:RATE_LIMITER_MAX_CAPACITY)%'
+            rate: { interval: '%app.rate_limiter_interval%', amount: '%env(int:RATE_LIMITER_MAX_CAPACITY)%' }
+        login_code_verify_by_email:
             policy: 'token_bucket'
             limit: '%env(int:RATE_LIMITER_MAX_CAPACITY)%'
             rate: { interval: '%app.rate_limiter_interval%', amount: '%env(int:RATE_LIMITER_MAX_CAPACITY)%' }

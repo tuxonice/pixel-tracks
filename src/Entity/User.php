@@ -27,6 +27,15 @@ class User implements UserInterface
     #[ORM\Column(length: 5, options: ['default' => 'en'])]
     private string $locale = 'en';
 
+    #[ORM\Column(nullable: true)]
+    private ?string $loginCodeHash = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $loginCodeExpiresAt = null;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private int $loginCodeAttempts = 0;
+
     /** @var Collection<int, Track> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Track::class, orphanRemoval: true)]
     private Collection $tracks;
@@ -67,6 +76,48 @@ class User implements UserInterface
     public function setLocale(string $locale): void
     {
         $this->locale = $locale;
+    }
+
+    public function getLoginCodeHash(): ?string
+    {
+        return $this->loginCodeHash;
+    }
+
+    public function setLoginCodeHash(string $loginCodeHash): void
+    {
+        $this->loginCodeHash = $loginCodeHash;
+    }
+
+    public function getLoginCodeExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->loginCodeExpiresAt;
+    }
+
+    public function setLoginCodeExpiresAt(\DateTimeImmutable $loginCodeExpiresAt): void
+    {
+        $this->loginCodeExpiresAt = $loginCodeExpiresAt;
+    }
+
+    public function getLoginCodeAttempts(): int
+    {
+        return $this->loginCodeAttempts;
+    }
+
+    public function setLoginCodeAttempts(int $loginCodeAttempts): void
+    {
+        $this->loginCodeAttempts = $loginCodeAttempts;
+    }
+
+    public function incrementLoginCodeAttempts(): void
+    {
+        ++$this->loginCodeAttempts;
+    }
+
+    public function clearLoginCode(): void
+    {
+        $this->loginCodeHash = null;
+        $this->loginCodeExpiresAt = null;
+        $this->loginCodeAttempts = 0;
     }
 
     public function getUserIdentifier(): string

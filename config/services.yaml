@@ -23,6 +23,7 @@ services:
             string $gpxSchemaPath: '%kernel.project_dir%/src/Schemas/gpx.xsd'
             string $dataPath: '%app.data_path%'
             string $allowCountryCode: '%env(ALLOW_COUNTRY_CODE)%'
+            int $loginCodeTtl: '%env(int:LOGIN_TOLERANCE_TIME)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
