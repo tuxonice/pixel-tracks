@@ -24,6 +24,9 @@ class User implements UserInterface
     #[ORM\Column(length: 255, unique: true)]
     private string $email;
 
+    #[ORM\Column(length: 5, options: ['default' => 'en'])]
+    private string $locale = 'en';
+
     /** @var Collection<int, Track> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Track::class, orphanRemoval: true)]
     private Collection $tracks;
@@ -54,6 +57,16 @@ class User implements UserInterface
     public function getTracks(): Collection
     {
         return $this->tracks;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
     }
 
     public function getUserIdentifier(): string

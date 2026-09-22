@@ -3,13 +3,13 @@
 {% block content %}
 <div class="container my-5">
     <div class="p-5 text-center bg-body-tertiary rounded-3">
-        <h1 class="text-body-emphasis">404 Page not found</h1>
+        <h1 class="text-body-emphasis">{{ 'error.not_found_title'|trans }}</h1>
         <p class="col-lg-8 mx-auto fs-5 text-muted">
-            Sorry the page you are looking for doesn't exist...
+            {{ 'error.not_found_body'|trans }}
         </p>
         <div class="d-inline-flex gap-2 mb-5">
             <a href="/" class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill">
-                Home page
+                {{ 'error.home_page'|trans }}
             </a>
         </div>
     </div>

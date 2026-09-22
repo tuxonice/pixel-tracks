@@ -1,0 +1,69 @@
+nav:
+    profile: Profile
+    about: About
+    logout: Logout
+
+flash:
+    invalid_or_expired_link: 'Invalid or expired magic link. Please request a new magic link'
+    no_file_uploaded: No file was uploaded
+    track_name_required: Track name is required
+    upload_failed: Unable to upload the file
+    upload_success: New file uploaded
+    track_not_found: Track does not exist
+    track_file_not_found: Track file does not exist
+    track_deleted: Track deleted
+    invalid_email: Invalid email
+    please_verify_mailbox: Please verify your mailbox
+
+error:
+    invalid_security_token: Invalid security token
+    not_found_title: 404 Page not found
+    not_found_body: Sorry the page you are looking for doesn't exist...
+    home_page: Home page
+    server_error: An unexpected error occurred. Please try again later.
+
+home:
+    tracks_title: Tracks
+    table_name: Name
+    no_tracks: No tracks yet!
+    upload_title: Upload Track
+    track_name_label: Track Name
+    track_name_placeholder: Enter track name
+    track_file_label: Track File (Only GPX files)
+    submit: Submit
+    pagination_previous: Previous
+    pagination_next: Next
+
+gpx_validation:
+    file_too_large: File size exceeds maximum allowed size of 10MB
+    invalid_file_type: 'Invalid file type. Only GPX files are allowed.'
+    invalid_xml_structure: 'Invalid XML structure: %details%'
+    invalid_namespace: Invalid GPX namespace
+    no_track_data: No valid track data found in GPX file
+    invalid_gpx_format: Invalid GPX file format
+    validation_error: 'Error validating GPX file: %details%'
+
+track:
+    info_title: Track Info
+    points: Points
+    distance: Distance
+    elevation: Elevation
+    date: Date
+    back_to_list: Back to List
+    delete: Delete
+    delete_title: Delete Track
+    delete_confirm_body: 'Are you sure do you want to delete <b>%name%</b> track?'
+    delete_confirm_js: Are you sure?
+    cancel: Cancel
+
+magic_link:
+    title: Send me a Magic link
+    intro: Submit your email to be able to access your profile
+    email_invalid_feedback: Please enter a valid email address.
+    send: Send
+
+mail:
+    magic_link_subject: Here is your magic link
+    magic_link_body: Here is a magic link to access your profile.
+    magic_link_button: My Profile
+    magic_link_footer_prefix: 'Sent with <3 from'

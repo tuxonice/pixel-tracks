@@ -8,7 +8,7 @@ class MagicLinkControllerTest extends WebTestCase
 {
     public function testRequestFormRendersForAnUnauthenticatedVisitor(): void
     {
-        $this->client->request('GET', '/send-magic-link');
+        $this->client->request('GET', '/en/send-magic-link');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('input[name="email"]');
@@ -16,12 +16,12 @@ class MagicLinkControllerTest extends WebTestCase
 
     public function testValidEmailSendsALoginLinkAndRedirectsWithASuccessFlash(): void
     {
-        $this->client->request('POST', '/send-magic-link', [
+        $this->client->request('POST', '/en/send-magic-link', [
             'email' => 'someone@example.com',
             '_token' => $this->csrfToken(),
         ]);
 
-        self::assertResponseRedirects('/send-magic-link');
+        self::assertResponseRedirects('/en/send-magic-link');
 
         self::assertEmailCount(1);
         $email = self::getMailerMessage(0);
@@ -38,12 +38,12 @@ class MagicLinkControllerTest extends WebTestCase
 
     public function testInvalidEmailRedirectsWithADangerFlashAndSendsNoEmail(): void
     {
-        $this->client->request('POST', '/send-magic-link', [
+        $this->client->request('POST', '/en/send-magic-link', [
             'email' => 'not-an-email',
             '_token' => $this->csrfToken(),
         ]);
 
-        self::assertResponseRedirects('/send-magic-link');
+        self::assertResponseRedirects('/en/send-magic-link');
         self::assertEmailCount(0);
 
         $this->client->followRedirect();
@@ -57,9 +57,9 @@ class MagicLinkControllerTest extends WebTestCase
         // entry point (MagicLinkEntryPoint) rather than rendering a bare 403 - which just
         // redirects back to this same form, so from the outside this looks identical to a
         // normal visit.
-        $this->client->request('POST', '/send-magic-link', ['email' => 'someone@example.com']);
+        $this->client->request('POST', '/en/send-magic-link', ['email' => 'someone@example.com']);
 
-        self::assertResponseRedirects('/send-magic-link');
+        self::assertResponseRedirects('/en/send-magic-link');
         self::assertEmailCount(0);
     }
 
@@ -74,14 +74,14 @@ class MagicLinkControllerTest extends WebTestCase
 
         // RATE_LIMITER_MAX_CAPACITY defaults to 5 in .env.dist/.env.test.
         for ($i = 0; $i < 5; ++$i) {
-            $this->client->request('POST', '/send-magic-link', [
+            $this->client->request('POST', '/en/send-magic-link', [
                 'email' => 'someone@example.com',
                 '_token' => $token,
             ]);
-            self::assertResponseRedirects('/send-magic-link');
+            self::assertResponseRedirects('/en/send-magic-link');
         }
 
-        $this->client->request('POST', '/send-magic-link', [
+        $this->client->request('POST', '/en/send-magic-link', [
             'email' => 'someone@example.com',
             '_token' => $token,
         ]);
@@ -99,7 +99,7 @@ class MagicLinkControllerTest extends WebTestCase
      */
     private function csrfToken(): string
     {
-        $crawler = $this->client->request('GET', '/send-magic-link');
+        $crawler = $this->client->request('GET', '/en/send-magic-link');
 
         return (string) $crawler->filter('input[name="_token"]')->attr('value');
     }

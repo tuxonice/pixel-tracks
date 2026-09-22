@@ -22,7 +22,7 @@ class GpxValidator
     private function validateFileSize(UploadedFile $file): void
     {
         if ($file->getSize() > self::MAX_FILE_SIZE) {
-            throw new GpxValidationException('File size exceeds maximum allowed size of 10MB');
+            throw new GpxValidationException('gpx_validation.file_too_large');
         }
     }
 
@@ -30,7 +30,7 @@ class GpxValidator
     {
         $mimeType = $file->getMimeType();
         if (!in_array($mimeType, self::ALLOWED_MIME_TYPES)) {
-            throw new GpxValidationException('Invalid file type. Only GPX files are allowed.');
+            throw new GpxValidationException('gpx_validation.invalid_file_type');
         }
     }
 
@@ -42,7 +42,7 @@ class GpxValidator
         if ($xml === false) {
             $errors = libxml_get_errors();
             libxml_clear_errors();
-            throw new GpxValidationException('Invalid XML structure: ' . $errors[0]->message);
+            throw new GpxValidationException('gpx_validation.invalid_xml_structure', ['%details%' => $errors[0]->message]);
         }
     }
 
@@ -52,11 +52,11 @@ class GpxValidator
         $dom->load($file->getPathname());
 
         if (!$this->isValidGpxNamespace($dom)) {
-            throw new GpxValidationException('Invalid GPX namespace');
+            throw new GpxValidationException('gpx_validation.invalid_namespace');
         }
 
         if (!$this->hasValidTracks($dom)) {
-            throw new GpxValidationException('No valid track data found in GPX file');
+            throw new GpxValidationException('gpx_validation.no_track_data');
         }
     }
 

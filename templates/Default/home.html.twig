@@ -8,14 +8,14 @@
         <div class="col-md-8">
             <div class="card border shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Tracks</h3>
+                    <h3 class="card-title">{{ 'home.tracks_title'|trans }}</h3>
                 </div>
                 <div class="card-body">
                     {% if tracks %}
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>{{ 'home.table_name'|trans }}</th>
                             <th style="width: 40px">&nbsp;</th>
                             <th style="width: 40px">&nbsp;</th>
                         </tr>
@@ -27,12 +27,12 @@
                                         {{ track.name }}
                                     </td>
                                     <td>
-                                        <a href="/map/{{ track.key }}" target="_blank" class="nav-link" title="Show on map">
+                                        <a href="{{ path('app_track_map', {trackKey: track.key}) }}" target="_blank" class="nav-link" title="Show on map">
                                             <i class="bi bi-map"></i>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/track/info/{{track.key}}" class="nav-link" title="Show info">
+                                        <a href="{{ path('app_track_info', {trackKey: track.key}) }}" class="nav-link" title="Show info">
                                             <i class="bi bi-info-circle"></i>
                                         </a>
                                     </td>
@@ -42,7 +42,7 @@
                         </tbody>
                     </table>
                     {% else %}
-                        <div class="text-center">No tracks yet!</div>
+                        <div class="text-center">{{ 'home.no_tracks'|trans }}</div>
                     {% endif %}
                 </div>
 
@@ -58,23 +58,23 @@
         <div class="col-md-8">
             <div class="card border shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Upload Track</h3>
+                    <h3 class="card-title">{{ 'home.upload_title'|trans }}</h3>
                 </div>
-                <form method="POST" enctype="multipart/form-data" action="/track/upload">
+                <form method="POST" enctype="multipart/form-data" action="{{ path('app_track_upload') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('track-upload') }}"/>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="trackName" class="form-label">Track Name</label>
-                            <input type="text" class="form-control" id="trackName" name="trackName" placeholder="Enter track name" required/>
+                            <label for="trackName" class="form-label">{{ 'home.track_name_label'|trans }}</label>
+                            <input type="text" class="form-control" id="trackName" name="trackName" placeholder="{{ 'home.track_name_placeholder'|trans }}" required/>
                         </div>
                         <div class="mb-3">
-                            <label for="trackFile" class="form-label">Track File (Only GPX files)</label>
+                            <label for="trackFile" class="form-label">{{ 'home.track_file_label'|trans }}</label>
                             <input name="trackFile" type="file" id="trackFile" class="form-control" required/>
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">{{ 'home.submit'|trans }}</button>
                     </div>
                 </form>
             </div>

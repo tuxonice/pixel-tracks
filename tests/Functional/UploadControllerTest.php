@@ -21,7 +21,7 @@ class UploadControllerTest extends WebTestCase
             ['trackFile' => $this->gpxUpload('valid-track.gpx')]
         );
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-success', 'New file uploaded');
 
@@ -49,7 +49,7 @@ class UploadControllerTest extends WebTestCase
             ['trackFile' => $this->gpxUpload('no-track-points.gpx')]
         );
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'No valid track data found');
 
@@ -68,7 +68,7 @@ class UploadControllerTest extends WebTestCase
             ['trackFile' => $this->gpxUpload('valid-track.gpx')]
         );
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'Track name is required');
 
@@ -85,7 +85,7 @@ class UploadControllerTest extends WebTestCase
             '_token' => $this->csrfToken(),
         ]);
 
-        self::assertResponseRedirects('/profile/');
+        self::assertResponseRedirects('/en/profile/');
         $this->client->followRedirect();
         self::assertSelectorTextContains('.alert-danger', 'No file was uploaded');
     }
@@ -122,7 +122,7 @@ class UploadControllerTest extends WebTestCase
 
     private function csrfToken(): string
     {
-        $crawler = $this->client->request('GET', '/profile/');
+        $crawler = $this->client->request('GET', '/en/profile/');
 
         return (string) $crawler->filter('form[action="/track/upload"] input[name="_token"]')->attr('value');
     }

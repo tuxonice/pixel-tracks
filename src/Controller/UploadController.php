@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadController extends AbstractController
 {
@@ -24,6 +25,7 @@ class UploadController extends AbstractController
         private readonly FileUploaderService $fileUploaderService,
         private readonly GpsTrack $gpsTrack,
         private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
         private readonly string $gpxSchemaPath,
     ) {
     }
@@ -35,37 +37,39 @@ class UploadController extends AbstractController
             throw $this->createAccessDeniedException('Invalid CSRF token');
         }
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $locale = $user->getLocale();
+
         /** @var UploadedFile|null $file */
         $file = $request->files->get('trackFile');
         if (!$file) {
-            $this->addFlash('danger', 'No file was uploaded');
+            $this->addFlash('danger', $this->translator->trans('flash.no_file_uploaded', [], null, $locale));
 
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile', ['_locale' => $locale]);
         }
 
         $trackName = trim(htmlspecialchars((string) $request->request->get('trackName', '')));
         if ($trackName === '') {
-            $this->addFlash('danger', 'Track name is required');
+            $this->addFlash('danger', $this->translator->trans('flash.track_name_required', [], null, $locale));
 
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile', ['_locale' => $locale]);
         }
 
         try {
             $this->assertValidGpxFile($file);
         } catch (GpxValidationException $e) {
-            $this->addFlash('danger', $e->getMessage());
+            $this->addFlash('danger', $this->translator->trans($e->getMessage(), $e->getParameters(), null, $locale));
 
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile', ['_locale' => $locale]);
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
         $targetFileName = uniqid() . '.gpx';
 
         if (!$this->fileUploaderService->uploadFile($user, $file, $targetFileName)) {
-            $this->addFlash('danger', 'Unable to upload the file');
+            $this->addFlash('danger', $this->translator->trans('flash.upload_failed', [], null, $locale));
 
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_profile', ['_locale' => $locale]);
         }
 
         $trackFilePath = $this->fileUploaderService->getUserDataPath($user) . '/' . $targetFileName;
@@ -80,9 +84,9 @@ class UploadController extends AbstractController
         $this->entityManager->persist($track);
         $this->entityManager->flush();
 
-        $this->addFlash('success', 'New file uploaded');
+        $this->addFlash('success', $this->translator->trans('flash.upload_success', [], null, $locale));
 
-        return $this->redirectToRoute('app_profile');
+        return $this->redirectToRoute('app_profile', ['_locale' => $locale]);
     }
 
     private function assertValidGpxFile(UploadedFile $file): void
@@ -94,14 +98,14 @@ class UploadController extends AbstractController
             );
 
             if (!$isValidXml) {
-                throw new GpxValidationException('Invalid GPX file format');
+                throw new GpxValidationException('gpx_validation.invalid_gpx_format');
             }
 
             $this->gpxValidator->validate($file);
         } catch (GpxValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            throw new GpxValidationException('Error validating GPX file: ' . $e->getMessage());
+            throw new GpxValidationException('gpx_validation.validation_error', ['%details%' => $e->getMessage()]);
         }
     }
 }

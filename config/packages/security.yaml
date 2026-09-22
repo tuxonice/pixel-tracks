@@ -25,6 +25,6 @@ security:
                 path: app_logout
 
     access_control:
-        - { path: ^/send-magic-link, roles: PUBLIC_ACCESS }
+        - { path: ^/(en/send-magic-link|pt/link-magico), roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
