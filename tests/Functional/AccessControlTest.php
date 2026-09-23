@@ -18,6 +18,13 @@ class AccessControlTest extends WebTestCase
         self::assertResponseIsSuccessful();
     }
 
+    public function testTheAboutRouteIsReachableWithoutAuthentication(): void
+    {
+        $this->client->request('GET', '/en/about');
+
+        self::assertResponseIsSuccessful();
+    }
+
     public function testSecurityHeadersAreSetOnEveryResponse(): void
     {
         $this->client->request('GET', '/en/login');

@@ -20,4 +20,5 @@ security:
 
     access_control:
         - { path: ^/(en/login(/verify)?|pt/entrar(/verificar)?)$, roles: PUBLIC_ACCESS }
+        - { path: ^/(en/about|pt/sobre)$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
