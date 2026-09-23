@@ -1,0 +1,33 @@
+{% extends "Default/base.html.twig" %}
+
+{% block title %}About PixelTracks{% endblock %}
+
+{% block content %}
+    <section class="py-5 container">
+        <div class="row py-lg-5">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h1 class="fw-light">About PixelTracks</h1>
+                <p class="lead text-body-secondary">
+                    PixelTracks is a lightweight, self-hosted app for keeping track of your outdoor
+                    adventures. Upload your GPX files, browse them, check their stats, and see them
+                    laid out on a map — all from your own server.
+                </p>
+
+                <h2 class="h4 mt-5">What you can do here</h2>
+                <ul>
+                    <li>Upload GPX files</li>
+                    <li>Browse your uploaded tracks</li>
+                    <li>View basic stats: distance, elevation, and number of points</li>
+                    <li>View any track on a map</li>
+                    <li>Delete tracks you no longer need</li>
+                </ul>
+
+                <h2 class="h4 mt-5">No passwords</h2>
+                <p>
+                    Logging in doesn't need a password — just request a code by email and you're
+                    in. Your data stays on your own server, under your own control.
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
