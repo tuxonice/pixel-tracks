@@ -48,6 +48,9 @@ gpx_validation:
 
 track:
     info_title: Track Info
+    view_title: Track
+    full_screen: Full Screen
+    elevation_profile: Elevation Profile
     points: Points
     distance: Distance
     elevation: Elevation

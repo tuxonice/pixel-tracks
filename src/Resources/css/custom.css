@@ -11,3 +11,11 @@
     color: #fff;
     text-decoration: underline;
 }
+
+#track-map {
+    height: 500px;
+}
+
+#elevation-chart {
+    height: 300px;
+}

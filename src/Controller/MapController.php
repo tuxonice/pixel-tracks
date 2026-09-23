@@ -51,4 +51,35 @@ class MapController extends AbstractController
             'info' => $this->gpsTrack->getInfo(),
         ]);
     }
+
+    #[Route(path: ['en' => '/en/track/view/{trackKey}', 'pt' => '/pt/percurso/ver/{trackKey}'], name: 'app_track_view', methods: ['GET'])]
+    public function view(string $trackKey): Response
+    {
+        $track = $this->trackRepository->findOneByKey($trackKey);
+        if (!$track) {
+            $this->addFlash('danger', $this->translator->trans('flash.track_file_not_found'));
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        if ($track->getUser() !== $this->getUser()) {
+            $this->addFlash('danger', $this->translator->trans('flash.track_not_found'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $trackFilePath = $this->fileUploaderService->getUserDataPath($track->getUser()) . '/' . $track->getFilename();
+        if (!file_exists($trackFilePath)) {
+            $this->addFlash('danger', $this->translator->trans('flash.track_file_not_found'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $this->gpsTrack->process($trackFilePath);
+
+        return $this->render('Default/track-view.html.twig', [
+            'track' => $track,
+            'points' => $this->gpsTrack->getJsonPoints(),
+        ]);
+    }
 }

@@ -1,0 +1,142 @@
+{% extends "Default/base.html.twig" %}
+
+{% block title %}{{ 'track.view_title'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div id="track-map" class="rounded shadow-sm"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'track.elevation_profile'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <div id="elevation-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">{{ track.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th style="width:50%">{{ 'track.points'|trans }}</th>
+                                <td>{{ track.totalPoints }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'track.distance'|trans }}</th>
+                                <td>{{ track.distance }} Km</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'track.elevation'|trans }}</th>
+                                <td>{{ track.elevation }} m</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'track.date'|trans }}</th>
+                                <td>{{ track.createdAt|full_datetime }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ path('app_track_map', {trackKey: track.key}) }}" target="_blank" class="btn btn-secondary">
+                        <i class="bi bi-arrows-fullscreen"></i> {{ 'track.full_screen'|trans }}
+                    </a>
+                    <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                        <i class="bi bi-list"></i> {{ 'track.back_to_list'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script>
+        let jsonData = JSON.parse({{ points|json_encode|raw }});
+        let latlngs = jsonData.map((point) => [point.latitude, point.longitude]);
+
+        let trackMap = L.map('track-map');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(trackMap);
+
+        let polyline = L.polyline(latlngs, {color: 'red'}).addTo(trackMap);
+        trackMap.fitBounds(polyline.getBounds());
+
+        am5.ready(function () {
+            let root = am5.Root.new('elevation-chart');
+            root.setThemes([am5themes_Animated.new(root)]);
+
+            let chart = root.container.children.push(am5xy.XYChart.new(root, {
+                panX: true,
+                panY: false,
+                wheelX: 'panX',
+                wheelY: 'zoomX',
+                pinchZoomX: true,
+                layout: root.verticalLayout,
+            }));
+
+            let cursor = chart.set('cursor', am5xy.XYCursor.new(root, {behavior: 'none'}));
+            cursor.lineY.set('visible', false);
+
+            let xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
+                min: 0,
+                extraTooltipPrecision: 2,
+                numberFormat: "#.## ' km'",
+                renderer: am5xy.AxisRendererX.new(root, {minGridDistance: 50}),
+            }));
+
+            let yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+                numberFormat: "#.# ' m'",
+                renderer: am5xy.AxisRendererY.new(root, {}),
+            }));
+
+            let series = chart.series.push(am5xy.SmoothedXLineSeries.new(root, {
+                name: 'Elevation',
+                xAxis: xAxis,
+                yAxis: yAxis,
+                valueXField: 'distance',
+                valueYField: 'elevation',
+                stroke: am5.color(0x0d6efd),
+                fill: am5.color(0x0d6efd),
+                tooltip: am5.Tooltip.new(root, {labelText: '{valueX} km: {valueY} m'}),
+            }));
+            series.fills.template.setAll({fillOpacity: 0.2, visible: true});
+            series.strokes.template.setAll({strokeWidth: 2});
+
+            series.data.setAll(jsonData.map((point) => ({
+                distance: point.totalDistance / 1000,
+                elevation: point.elevation,
+            })));
+
+            chart.set('scrollbarX', am5.Scrollbar.new(root, {orientation: 'horizontal'}));
+
+            series.appear(1000);
+            chart.appear(1000, 100);
+        });
+    </script>
+{% endblock %}

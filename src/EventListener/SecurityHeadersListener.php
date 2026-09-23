@@ -22,7 +22,7 @@ class SecurityHeadersListener
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; "
-            . "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com; "
+            . "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com https://cdn.amcharts.com; "
             . "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; "
             . "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "
             . "img-src 'self' data: https://*.tile.openstreetmap.org; "
