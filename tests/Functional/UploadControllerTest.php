@@ -31,10 +31,32 @@ class UploadControllerTest extends WebTestCase
         // Matches the known fixture stats already verified in GpsTrackTest.
         self::assertSame(2, $track->getTotalPoints());
         self::assertSame(10.0, $track->getElevation());
+        self::assertEquals(new \DateTimeImmutable('2026-01-01T10:00:00Z'), $track->getRecordedAt());
+        self::assertEquals($track->getRecordedAt(), $track->getDisplayDate());
 
         $uploadedFilePath = self::getContainer()->getParameter('app.data_path')
             . sprintf('/profile-%03d/%s', $user->getId(), $track->getFilename());
         self::assertFileExists($uploadedFilePath);
+    }
+
+    public function testDisplayDateFallsBackToUploadTimeWhenTheGpxFileHasNoTimeData(): void
+    {
+        $user = $this->persistUser();
+        $this->client->loginUser($user);
+
+        $this->client->request(
+            'POST',
+            '/track/upload',
+            ['trackName' => 'Untimed Run', '_token' => $this->csrfToken()],
+            ['trackFile' => $this->gpxUpload('valid-track-no-time.gpx')]
+        );
+
+        self::assertResponseRedirects('/en/profile/');
+
+        $track = $this->trackRepository()->findPageForUser($user, 0, 10)[0] ?? null;
+        self::assertNotNull($track);
+        self::assertNull($track->getRecordedAt());
+        self::assertEquals($track->getCreatedAt(), $track->getDisplayDate());
     }
 
     public function testInvalidGpxFileIsRejectedAndNoTrackIsCreated(): void

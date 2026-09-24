@@ -76,4 +76,36 @@ class GpsTrackTest extends TestCase
 
         self::assertSame(json_encode($track->getPoints()), $track->getJsonPoints());
     }
+
+    public function testGetRecordedAtReturnsTheFirstTrackPointsTime(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/valid-track.gpx');
+
+        self::assertEquals(new \DateTimeImmutable('2026-01-01T10:00:00Z'), $track->getRecordedAt());
+    }
+
+    public function testGetRecordedAtReturnsTheFirstRoutePointsTimeWhenThereAreNoTracks(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/route-with-time.gpx');
+
+        self::assertEquals(new \DateTimeImmutable('2026-02-01T08:00:00Z'), $track->getRecordedAt());
+    }
+
+    public function testGetRecordedAtFallsBackToMetadataTimeWhenPointsHaveNone(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/metadata-time-only.gpx');
+
+        self::assertEquals(new \DateTimeImmutable('2026-03-01T09:00:00Z'), $track->getRecordedAt());
+    }
+
+    public function testGetRecordedAtIsNullWhenTheFileHasNoTimeDataAtAll(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/missing-creator.gpx');
+
+        self::assertNull($track->getRecordedAt());
+    }
 }

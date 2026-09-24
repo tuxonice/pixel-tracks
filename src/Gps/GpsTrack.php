@@ -16,6 +16,7 @@ class GpsTrack
 
     private float $totalDistance = 0.0;
     private float $vDistance = 0.0;
+    private ?\DateTimeImmutable $recordedAt = null;
 
     public function __construct()
     {
@@ -36,6 +37,7 @@ class GpsTrack
     public function process(string $filename): void
     {
         $this->data = [];
+        $this->recordedAt = null;
         $this->gpxFile = $this->gpx->load($filename);
 
         $carryHDistance = 0.0;
@@ -43,15 +45,41 @@ class GpsTrack
             foreach ($track->segments as $segment) {
                 $carryHDistance = 0.0;
                 $this->processPoints($segment->points, $carryHDistance);
+                $this->recordedAt ??= $this->earliestPointTime($segment->points);
             }
         }
 
         foreach ($this->gpxFile->routes as $route) {
             $carryHDistance = 0.0;
             $this->processPoints($route->points, $carryHDistance);
+            $this->recordedAt ??= $this->earliestPointTime($route->points);
         }
 
+        $this->recordedAt ??= $this->metadataTime();
+
         $this->totalDistance = $carryHDistance;
+    }
+
+    /** The time recorded in the GPX file for this track, if any: the first track/route point's
+     * time, falling back to the file's metadata time. Null when the file has no time data at all. */
+    public function getRecordedAt(): ?\DateTimeImmutable
+    {
+        return $this->recordedAt;
+    }
+
+    /** @param Point[] $points */
+    private function earliestPointTime(array $points): ?\DateTimeImmutable
+    {
+        $time = ($points[0] ?? null)?->time;
+
+        return $time !== null ? \DateTimeImmutable::createFromMutable($time) : null;
+    }
+
+    private function metadataTime(): ?\DateTimeImmutable
+    {
+        $time = $this->gpxFile->metadata?->time;
+
+        return $time !== null ? \DateTimeImmutable::createFromMutable($time) : null;
     }
 
     /** @param Point[] $points */

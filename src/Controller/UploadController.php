@@ -81,6 +81,7 @@ class UploadController extends AbstractController
         $track->setTotalPoints($trackInfo['points']);
         $track->setElevation((float) $trackInfo['totalHeight']);
         $track->setDistance((float) $trackInfo['totalDistance']);
+        $track->setRecordedAt($this->gpsTrack->getRecordedAt());
 
         $this->entityManager->persist($track);
         $this->entityManager->flush();

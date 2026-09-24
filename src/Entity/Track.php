@@ -40,6 +40,9 @@ class Track
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $recordedAt = null;
+
     public function __construct(User $user, string $name, string $filename)
     {
         $this->user = $user;
@@ -113,5 +116,23 @@ class Track
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getRecordedAt(): ?\DateTimeImmutable
+    {
+        return $this->recordedAt;
+    }
+
+    public function setRecordedAt(?\DateTimeImmutable $recordedAt): static
+    {
+        $this->recordedAt = $recordedAt;
+
+        return $this;
+    }
+
+    /** The date/time to show the user: the track's own recorded time when the GPX file had one, else the upload time. */
+    public function getDisplayDate(): \DateTimeImmutable
+    {
+        return $this->recordedAt ?? $this->createdAt;
     }
 }
