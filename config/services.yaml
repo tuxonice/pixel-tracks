@@ -21,6 +21,7 @@ services:
             string $emailFrom: '%env(EMAIL_FROM)%'
             int $paginationIpp: '%env(int:PAGINATION_IPP)%'
             string $gpxSchemaPath: '%kernel.project_dir%/src/Schemas/gpx.xsd'
+            string $gpxSchema10Path: '%kernel.project_dir%/src/Schemas/gpx-1.0.xsd'
             string $dataPath: '%app.data_path%'
             string $allowCountryCode: '%env(ALLOW_COUNTRY_CODE)%'
             int $loginCodeTtl: '%env(int:LOGIN_TOLERANCE_TIME)%'

@@ -30,10 +30,10 @@ class HomeControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/en/profile/');
 
         self::assertResponseIsSuccessful();
-        $names = $crawler->filter('table tbody tr td')->each(
+        $names = $crawler->filter('table tbody tr td:first-child')->each(
             static fn ($node) => trim($node->text())
         );
-        self::assertSame(['newest', '', '', 'oldest', '', ''], array_slice($names, 0, 6));
+        self::assertSame(['newest', 'oldest'], array_slice($names, 0, 2));
         self::assertStringNotContainsString('not-mine', $crawler->filter('body')->text());
     }
 

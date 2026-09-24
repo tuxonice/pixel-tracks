@@ -42,19 +42,30 @@ class GpsTrack
         foreach ($this->gpxFile->tracks as $track) {
             foreach ($track->segments as $segment) {
                 $carryHDistance = 0.0;
-                foreach ($segment->points as $key => $point) {
-                    if (!isset($segment->points[$key + 1])) {
-                        break;
-                    }
-                    $endPoint = $segment->points[$key + 1];
-                    $parseDiffPoints = $this->parseDiffPoints($point, $endPoint, $carryHDistance);
-                    $this->data[] = $parseDiffPoints;
-                    $this->vDistance += $parseDiffPoints['vDistance'] > 0 ? $parseDiffPoints['vDistance'] : 0.0;
-                }
+                $this->processPoints($segment->points, $carryHDistance);
             }
         }
 
+        foreach ($this->gpxFile->routes as $route) {
+            $carryHDistance = 0.0;
+            $this->processPoints($route->points, $carryHDistance);
+        }
+
         $this->totalDistance = $carryHDistance;
+    }
+
+    /** @param Point[] $points */
+    private function processPoints(array $points, float &$carryHDistance): void
+    {
+        foreach ($points as $key => $point) {
+            if (!isset($points[$key + 1])) {
+                break;
+            }
+            $endPoint = $points[$key + 1];
+            $parseDiffPoints = $this->parseDiffPoints($point, $endPoint, $carryHDistance);
+            $this->data[] = $parseDiffPoints;
+            $this->vDistance += $parseDiffPoints['vDistance'] > 0 ? $parseDiffPoints['vDistance'] : 0.0;
+        }
     }
 
     /** @return array<string,mixed> */

@@ -9,7 +9,10 @@ class GpxValidator
 {
     private const MAX_FILE_SIZE = 10485760;
     private const ALLOWED_MIME_TYPES = ['application/gpx+xml', 'application/xml', 'text/xml'];
-    private const GPX_NAMESPACE = 'http://www.topografix.com/GPX/1/1';
+    private const SUPPORTED_NAMESPACES = [
+        'http://www.topografix.com/GPX/1/0',
+        'http://www.topografix.com/GPX/1/1',
+    ];
 
     public function validate(UploadedFile $file): void
     {
@@ -17,6 +20,17 @@ class GpxValidator
         $this->validateMimeType($file);
         $this->validateXmlStructure($file);
         $this->validateGpxContent($file);
+    }
+
+    /** Reads the root element's namespace so callers can pick a matching XSD schema before validating. */
+    public function detectNamespace(UploadedFile $file): ?string
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->load($file->getPathname());
+        libxml_clear_errors();
+
+        return $this->matchSupportedNamespace($dom);
     }
 
     private function validateFileSize(UploadedFile $file): void
@@ -51,26 +65,30 @@ class GpxValidator
         $dom = new \DOMDocument();
         $dom->load($file->getPathname());
 
-        if (!$this->isValidGpxNamespace($dom)) {
+        $namespace = $this->matchSupportedNamespace($dom);
+        if ($namespace === null) {
             throw new GpxValidationException('gpx_validation.invalid_namespace');
         }
 
-        if (!$this->hasValidTracks($dom)) {
+        if (!$this->hasValidTracks($dom, $namespace)) {
             throw new GpxValidationException('gpx_validation.no_track_data');
         }
     }
 
-    private function isValidGpxNamespace(\DOMDocument $dom): bool
+    private function matchSupportedNamespace(\DOMDocument $dom): ?string
     {
         $root = $dom->documentElement;
+        if (!$root || !in_array($root->namespaceURI, self::SUPPORTED_NAMESPACES, true)) {
+            return null;
+        }
 
-        return $root && $root->namespaceURI === self::GPX_NAMESPACE;
+        return $root->namespaceURI;
     }
 
-    private function hasValidTracks(\DOMDocument $dom): bool
+    private function hasValidTracks(\DOMDocument $dom, string $namespace): bool
     {
         $xpath = new \DOMXPath($dom);
-        $xpath->registerNamespace('gpx', self::GPX_NAMESPACE);
+        $xpath->registerNamespace('gpx', $namespace);
 
         $tracks = $xpath->query('//gpx:trk | //gpx:rte');
         if ($tracks->length === 0) {

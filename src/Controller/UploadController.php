@@ -27,6 +27,7 @@ class UploadController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
         private readonly string $gpxSchemaPath,
+        private readonly string $gpxSchema10Path,
     ) {
     }
 
@@ -92,9 +93,20 @@ class UploadController extends AbstractController
     private function assertValidGpxFile(UploadedFile $file): void
     {
         try {
+            $namespace = $this->gpxValidator->detectNamespace($file);
+            $schemaPath = match ($namespace) {
+                'http://www.topografix.com/GPX/1/0' => $this->gpxSchema10Path,
+                'http://www.topografix.com/GPX/1/1' => $this->gpxSchemaPath,
+                default => null,
+            };
+
+            if ($schemaPath === null) {
+                throw new GpxValidationException('gpx_validation.invalid_namespace');
+            }
+
             $isValidXml = $this->xmlValidator->isValid(
                 (string) file_get_contents($file->getPathname()),
-                (string) file_get_contents($this->gpxSchemaPath)
+                (string) file_get_contents($schemaPath)
             );
 
             if (!$isValidXml) {
