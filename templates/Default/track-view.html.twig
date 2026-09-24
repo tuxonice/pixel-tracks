@@ -36,6 +36,12 @@
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
+                            {% if track.gpxName %}
+                            <tr>
+                                <th style="width:50%">{{ 'track.gpx_name'|trans }}</th>
+                                <td>{{ track.gpxName }}</td>
+                            </tr>
+                            {% endif %}
                             <tr>
                                 <th style="width:50%">{{ 'track.points'|trans }}</th>
                                 <td>{{ track.totalPoints }}</td>

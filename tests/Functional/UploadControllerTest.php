@@ -33,6 +33,7 @@ class UploadControllerTest extends WebTestCase
         self::assertSame(10.0, $track->getElevation());
         self::assertEquals(new \DateTimeImmutable('2026-01-01T10:00:00Z'), $track->getRecordedAt());
         self::assertEquals($track->getRecordedAt(), $track->getDisplayDate());
+        self::assertSame('Fixture Track', $track->getGpxName());
 
         $uploadedFilePath = self::getContainer()->getParameter('app.data_path')
             . sprintf('/profile-%03d/%s', $user->getId(), $track->getFilename());

@@ -108,4 +108,28 @@ class GpsTrackTest extends TestCase
 
         self::assertNull($track->getRecordedAt());
     }
+
+    public function testGetNameReturnsTheTracksName(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/valid-track.gpx');
+
+        self::assertSame('Fixture Track', $track->getName());
+    }
+
+    public function testGetNameReturnsTheRoutesNameWhenThereAreNoTracks(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/route-with-time.gpx');
+
+        self::assertSame('Fixture Route', $track->getName());
+    }
+
+    public function testGetNameIsNullWhenTheFileHasNoName(): void
+    {
+        $track = new GpsTrack();
+        $track->process(__DIR__ . '/../../Fixtures/gpx/valid-track-no-name.gpx');
+
+        self::assertNull($track->getName());
+    }
 }

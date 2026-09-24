@@ -51,6 +51,7 @@ track:
     view_title: Percurso
     full_screen: Ecrã Inteiro
     elevation_profile: Perfil de Elevação
+    gpx_name: Nome GPX
     points: Pontos
     distance: Distância
     elevation: Elevação

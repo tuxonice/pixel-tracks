@@ -67,6 +67,13 @@ class GpsTrack
         return $this->recordedAt;
     }
 
+    /** The <trk>/<rte> name declared in the GPX file, if any: the first track's name, falling
+     * back to the first route's name. Null when neither has one. */
+    public function getName(): ?string
+    {
+        return $this->gpxFile->tracks[0]->name ?? $this->gpxFile->routes[0]->name ?? null;
+    }
+
     /** @param Point[] $points */
     private function earliestPointTime(array $points): ?\DateTimeImmutable
     {

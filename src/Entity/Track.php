@@ -43,6 +43,9 @@ class Track
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $recordedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $gpxName = null;
+
     public function __construct(User $user, string $name, string $filename)
     {
         $this->user = $user;
@@ -134,5 +137,18 @@ class Track
     public function getDisplayDate(): \DateTimeImmutable
     {
         return $this->recordedAt ?? $this->createdAt;
+    }
+
+    /** The <trk>/<rte> name declared inside the GPX file itself, distinct from `name` (what the user typed at upload). */
+    public function getGpxName(): ?string
+    {
+        return $this->gpxName;
+    }
+
+    public function setGpxName(?string $gpxName): static
+    {
+        $this->gpxName = $gpxName;
+
+        return $this;
     }
 }
