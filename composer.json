@@ -37,7 +37,7 @@
         "symfony/cache": "7.4.19",
         "symfony/uid": "7.4.17",
         "symfony/http-client": "7.4.19",
-        "doctrine/dbal": "^4.4",
+        "doctrine/dbal": "^4.5",
         "ext-simplexml": "*",
         "symfony/mime": "7.4.19",
         "symfony/flex": "^2.11",
