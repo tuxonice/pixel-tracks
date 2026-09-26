@@ -1,15 +1,29 @@
-/* Navbar contrast: Bootstrap's dark-theme navbar sets .nav-link to
-   rgba(255,255,255,.55) by default, which falls short of WCAG AA's 4.5:1
-   ratio on the bg-primary (#0d6efd) background used here. Force full white. */
-.navbar.bg-primary .nav-link,
-.navbar.bg-primary .navbar-brand {
-    color: #fff;
+/* Navbar background matches the TrackMix brand green. Bootstrap's default
+   navbar-light .nav-link (rgba(0,0,0,.55)) falls short of WCAG AA's 4.5:1
+   ratio on this background, so force the logo's ink color (~7.4:1) instead. */
+.navbar-trackmix {
+    background-color: #98b800;
 }
 
-.navbar.bg-primary .nav-link:hover,
-.navbar.bg-primary .nav-link:focus {
-    color: #fff;
+.navbar-trackmix .nav-link,
+.navbar-trackmix .navbar-brand {
+    color: #151e28;
+}
+
+.navbar-trackmix .nav-link:hover,
+.navbar-trackmix .nav-link:focus {
+    color: #151e28;
     text-decoration: underline;
+}
+
+/* Bootstrap's default focus ring (rgba(13,110,253,.25)) is a ~1.3:1 ratio
+   against this green — nearly invisible. Swap in a solid ink-colored
+   outline (~7.4:1) so keyboard focus stays visible. */
+.navbar-trackmix .nav-link:focus-visible,
+.navbar-trackmix .navbar-brand:focus-visible {
+    outline: 2px solid #151e28;
+    outline-offset: 2px;
+    box-shadow: none;
 }
 
 #track-map {
